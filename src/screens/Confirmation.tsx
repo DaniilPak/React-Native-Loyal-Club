@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import GrayButton from '../components/GrayButton';
 import { TextInputMask } from 'react-native-masked-text';
 import { makeAuth } from '../utils/api';
+import { AuthContext } from '../contexts/AuthContext';
+import { setItemToLocalStorage } from '../utils/async';
+import Con from '../constants';
 
 interface ConfirmationProps {
     navigation: any;
@@ -10,6 +13,8 @@ interface ConfirmationProps {
 }
 
 function Confirmation({ navigation, route }: ConfirmationProps) {
+    const { signIn } = useContext(AuthContext);
+
     const { phone } = route.params;
 
     const [password, setPassword] = useState('');
@@ -24,7 +29,16 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
     };
 
     const confirmPassword = () => {
-        makeAuth(phone, password);
+        makeAuth(phone, password)
+            .then(apidata => {
+                signIn(apidata);
+                // Saving credentials 
+                setItemToLocalStorage(Con.PHONE_ASYNC_KEY, phone)
+                setItemToLocalStorage(Con.PASSWORD_ASYNC_KEY, password);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     return (

@@ -1,1 +1,5 @@
 npx react-native run-android
+
+to use localhost api type:
+
+adb reverse tcp:3000 tcp:3000
