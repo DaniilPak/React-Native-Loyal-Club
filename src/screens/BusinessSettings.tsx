@@ -10,6 +10,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { getLoyaltyCardDetails } from '../utils/api';
+import NavigationRow from '../components/NavigationRow';
+import NavigationRowExtended from '../components/NavigationRowExtended';
 
 interface BusinessSettingsScreenProps {
     navigation: any;
@@ -17,9 +19,22 @@ interface BusinessSettingsScreenProps {
 }
 
 function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
+    // 1. Implement Add Worker by QR code
+    // 2. Manage workers (delete)
+    // 3. Change Loyalty Percent
+
+    const manageWorkersOnPress = () => {
+        navigation.navigate("ManageWorkers");
+    }
+
+    const loyaltyPercentOnPress = () => {
+        navigation.navigate("LoyaltyPercent");
+    }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginTop: 10 }}>
+            <NavigationRow text='Manage Workers' onPress={manageWorkersOnPress} />
+            <NavigationRowExtended text='Loyalty Percent' secondaryText='3%' onPress={loyaltyPercentOnPress} />
         </View>
     );
 }

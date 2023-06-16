@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import Con from '../constants';
 
-interface TextBlockV2Props {
+interface TipProps {
     text: string;
 }
 
-function TextBlockV2({ text }: TextBlockV2Props) {
+function Tip({ text }: TipProps) {
 
     return (
-        <View style={styles.textBlockContainer}>
+        <View style={styles.tipContainer}>
             <Text style={styles.textBlock}>
                 {text}
             </Text>
@@ -18,19 +18,16 @@ function TextBlockV2({ text }: TextBlockV2Props) {
 }
 
 const styles = StyleSheet.create({
-    textBlockContainer: {
-        width: '100%',
-        height: 60,
-        backgroundColor: 'white',
-        marginTop: 5,
-        padding: 17,
-        flexDirection: 'row',
+    tipContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 15,
     },
     textBlock: {
         color: 'black',
-        fontSize: 16,
+        fontSize: 14,
         alignItems: 'flex-start'
     }
 });
 
-export default TextBlockV2;
+export default Tip;

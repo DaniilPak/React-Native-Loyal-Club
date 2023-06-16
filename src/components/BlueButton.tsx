@@ -5,19 +5,30 @@ import Con from '../constants';
 interface BlueButtonProps {
     title: string;
     onPress: any;
+    icon?: any;
 }
 
-function BlueButton({ title, onPress }: BlueButtonProps) {
+function BlueButton({ title, onPress, icon = null }: BlueButtonProps) {
 
-    return (
-        <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={styles.buttonText}>{title}</Text>
-        </TouchableOpacity>
-    );
+    if (!icon) {
+        return (
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+                <Text style={styles.buttonText}>{title}</Text>
+            </TouchableOpacity>
+        );
+    } else {
+        return (
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+                <Text style={styles.buttonText}>{title}</Text>
+                {icon}
+            </TouchableOpacity>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
     button: {
+        flexDirection: 'row',
         backgroundColor: Con.AppleBlueLight,
         paddingVertical: 13,
         borderRadius: 4,
@@ -30,6 +41,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 18,
+        marginRight: 10,
     },
 });
 

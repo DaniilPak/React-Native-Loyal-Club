@@ -19,6 +19,11 @@ import { getArrayFromLocalStorage, saveArrayToLocalStorage } from './src/utils/a
 import MyLoyaltyCards from './src/screens/MyLoyaltyCards';
 import { updateAuth } from './src/utils/api';
 import BusinessSettings from './src/screens/BusinessSettings';
+import SuccessPayment from './src/screens/SuccessPayment';
+import ReceiptDetails from './src/screens/ReceiptDetails';
+import ManageWorkers from './src/screens/ManageWorkers';
+import LoyaltyPercent from './src/screens/LoyaltyPercent';
+import AddWorkerScanner from './src/screens/AddWorkerScanner';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -125,6 +130,11 @@ function App() {
           <Stack.Screen name="QRDetail" component={QRDetail} />
           <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
           <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
+          <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
+          <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
+          <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
+          <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
+          <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
         </Stack.Navigator>
       </NavigationContainer>
     );

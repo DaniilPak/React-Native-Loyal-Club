@@ -17,8 +17,6 @@ interface MyLoyaltyCardsScreenProps {
 }
 
 function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
-    const testLoyaltyName = "K.chicken";
-    const testBonus = 500;
 
     const [userData, setUserData] = useState([]);
     const [loyaltyCards, setLoyaltyCards] = useState([]);

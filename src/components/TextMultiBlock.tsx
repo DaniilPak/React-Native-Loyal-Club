@@ -5,16 +5,14 @@ import Con from '../constants';
 interface TextMultiBlockProps {
     text1: string;
     text2: string;
-    text3: string;
     text4: string;
 
     switcher: any;
     value2: string;
-    value3: string;
     value4: string;
 }
 
-function TextMultiBlock({ text1, text2, text3, text4, switcher, value2, value3, value4 }: TextMultiBlockProps) {
+function TextMultiBlock({ text1, text2, text4, switcher, value2, value4 }: TextMultiBlockProps) {
 
     return (
         <View style={styles.mainContainer}>
@@ -32,14 +30,6 @@ function TextMultiBlock({ text1, text2, text3, text4, switcher, value2, value3, 
                 </Text>
                 <Text style={styles.textBlockValue}>
                     {value2}
-                </Text>
-            </View>
-            <View style={styles.textBlockContainer}>
-                <Text style={styles.textBlockOption}>
-                    {text3}
-                </Text>
-                <Text style={styles.textBlockValue}>
-                    {value3}
                 </Text>
             </View>
             <View style={styles.textBlockContainer}>
