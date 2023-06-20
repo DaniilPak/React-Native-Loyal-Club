@@ -129,3 +129,62 @@ export async function getDetailedReceipt(receiptId: string) {
         throw error; // You can choose to handle the error here or propagate it
     }
 }
+
+export async function getWorkersByBid(businessId: string) {
+    try {
+        const requestData = {
+            "businessId": businessId,
+        };
+
+        const response = await axios.post(`${Con.api}/business/getbusinesswithworkers`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+export async function deleteWorkerFromBusiness(workerId: string, businessId: string) {
+    try {
+        const requestData = {
+            "workerId": workerId,
+            "businessId": businessId,
+        };
+
+        const response = await axios.post(`${Con.api}/business/workerdelete`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+export async function addWorkerFromBusiness(workerId: string, businessId: string) {
+    try {
+        const requestData = {
+            "workerId": workerId,
+            "businessId": businessId,
+        };
+
+        const response = await axios.post(`${Con.api}/business/workeradd`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+export async function getUserById(userId: string) {
+    try {
+        const requestData = {
+            "userId": userId,
+        };
+
+        const response = await axios.post(`${Con.api}/user/getuserbyid`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+

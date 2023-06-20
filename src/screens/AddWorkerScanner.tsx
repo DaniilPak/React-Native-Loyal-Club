@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import { RNCamera, BarCodeReadEvent } from 'react-native-camera';
+import { getArrayFromLocalStorage } from '../utils/async';
+import Con from '../constants';
+import { addWorkerFromBusiness } from '../utils/api';
 
 interface AddWorkerScannerProps {
     navigation: any;
@@ -8,17 +11,52 @@ interface AddWorkerScannerProps {
 
 function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
     const cameraRef = useRef<RNCamera | null>(null);
+    const [userData, setUserData] = useState([]);
+
+    const [isScanned, setIsScanned] = useState(false);
 
     const handleBarCodeRead = (event: BarCodeReadEvent) => {
-        console.log(event.data);
+        if (userData && !isScanned) {
+            console.log(event.data);
 
+            setIsScanned(true);
+
+            // Add worker logic
+            const workerId = event.data;
+            const businessId = userData.business;
+
+            addWorkerFromBusiness(workerId, businessId)
+                .then(res => {
+                    console.log("Successfully added a new worker: ", res);
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        navigation.navigate("BusinessSettings");
+                    }, 1000);
+                })
+                .catch(err => {
+                    console.log("Error with adding a new worker: ", err);
+                    setIsScanned(false);
+                });
+        } else {
+            console.log("User data not loaded yet");
+        }
     };
+    useEffect(() => {
+        getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
+            .then(asyncdata => {
+                setUserData(asyncdata.userData);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <View style={styles.container}>
             <RNCamera
                 ref={cameraRef}
-                style={styles.preview}
+                style={styles.rncamera}
                 type={RNCamera.Constants.Type.back}
                 onBarCodeRead={handleBarCodeRead}
                 captureAudio={false}
@@ -29,53 +67,73 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
                     buttonNegative: 'Cancel',
                 }}
             />
-            <View style={styles.rectangle} />
-            <View style={styles.overlay} />
-            <View style={styles.square} />
+            <View style={styles.overlayTop} />
+            <View style={styles.overlayBottom} />
+            <View style={styles.overlayLeftSide} />
+            <View style={styles.overlayRightSide} />
+            <View style={styles.square}>
+                <Image source={require('../../assets/qrBorder.png')} style={styles.image} />
+            </View>
         </View>
     );
 }
 
-const radius = 10;
-
 const styles = StyleSheet.create({
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    },
-    square: {
-        position: 'absolute',
-        height: 250,
-        width: 250,
-        alignSelf: 'center',
-        zIndex: 1,
-        borderRadius: radius,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
     container: {
         flex: 1,
-        flexDirection: 'column',
+        position: 'relative',
         justifyContent: 'center',
-    },
-    preview: {
-        flex: 1,
-        justifyContent: 'flex-end',
         alignItems: 'center',
     },
-    rectangle: {
+    overlayTop: {
         position: 'absolute',
-        height: 250,
-        width: 250,
-        borderWidth: 3,
-        borderRadius: radius,
-        borderColor: '#00FF00',
-        alignSelf: 'center',
-        zIndex: 1
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '35%',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        zIndex: 1,
     },
-    text: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: 'white',
+    overlayBottom: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: '35%',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        zIndex: 1,
+    },
+    overlayLeftSide: {
+        position: 'absolute',
+        top: '35%',
+        left: 0,
+        width: '21.5%',
+        height: '30%',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        zIndex: 1,
+    },
+    overlayRightSide: {
+        position: 'absolute',
+        top: '35%',
+        right: 0,
+        width: '21.5%',
+        height: '30%',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
+        zIndex: 1,
+    },
+    square: {
+        zIndex: 3,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    image: {
+        width: Con.borderSize,
+        height: Con.borderSize,
+    },
+    rncamera: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
     },
 });
 

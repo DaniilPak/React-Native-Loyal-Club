@@ -33,6 +33,7 @@ const Con = {
     AppleGrayLight: 'rgb(174, 174, 178)',
     AppleGrayDark: 'rgb(99, 99, 102)',
     AppleGray6: 'rgb(242, 242, 247)',
+    AppleOrange: 'rgb(255, 149, 0)',
 
     api: 'http://localhost:3000/api',
     API_AUTH_DATA_KEY: 'authdata',
@@ -41,6 +42,8 @@ const Con = {
 
     iconSize: 25,
     iconColor: 'rgb(0, 122, 255)',
+
+    borderSize: 220,
 }
 
 export default Con

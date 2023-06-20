@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
 import GrayButton from '../components/GrayButton';
+import BlueButton from '../components/BlueButton';
 
 interface QRScreenProps {
     navigation: any;
@@ -29,17 +30,59 @@ function QRScreen({ navigation }: QRScreenProps) {
     }
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.parentStyle}>
             {qr &&
-                <QRCode
-                    value={qr}
-                    size={200}
-                    color='black'
-                    backgroundColor='white'
-                />}
-            <GrayButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+                <>
+                    <Text style={styles.tip}>Show Your Personal QR to the Host</Text>
+                    <View style={styles.mainContainer}>
+                        <Image source={require('../../assets/qrBorderBlue.png')} style={styles.image} />
+
+                        <QRCode
+                            value={qr}
+                            size={160}
+                            color='black'
+                            backgroundColor='white'
+                        />
+                    </View>
+                </>
+            }
+            <View style={styles.lowerContainer}>
+                <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+            </View>
         </View>
     );
 }
+
+const borderSize = 270;
+
+const styles = StyleSheet.create({
+    tip: {
+        color: 'black',
+        flex: 0.5,
+        textAlignVertical: 'center',
+        fontSize: 18,
+        fontWeight: '500'
+    },
+    image: {
+        position: 'absolute',
+        width: borderSize,
+        height: borderSize,
+    },
+    mainContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 2,
+    },
+    lowerContainer: {
+        flex: 1,
+        width: '100%',
+    },
+    parentStyle: {
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+});
 
 export default QRScreen;

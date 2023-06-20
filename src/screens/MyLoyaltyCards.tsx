@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList, ActivityIndicator } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Con from '../constants';
@@ -21,6 +21,8 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     const [userData, setUserData] = useState([]);
     const [loyaltyCards, setLoyaltyCards] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
@@ -33,6 +35,10 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
                         .then(loyaltyCardDetails => {
                             console.log("++++++++", loyaltyCardDetails);
                             setLoyaltyCards(prev => [...prev, loyaltyCardDetails]);
+                        })
+                        .finally(() => {
+                            // Loading done
+                            setIsLoading(false);
                         })
                         .catch(err => {
                             console.log("Can't get loyalty card details ", err);
@@ -47,23 +53,25 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     }, []);
 
     const renderItem = ({ item }: any) => (
-        <TextBlockV2 text={`${item.businessName} bonus: ${item.bonusAmount}`} />
+        <TextBlockV2 text={`${item.businessName} bonus: ${item.bonusAmount} ${item.currencySign}`} />
     );
 
     return (
         <View style={{ flex: 1 }}>
-            {userData.loyaltyCards &&
+            {!isLoading &&
                 <FlatList
                     data={loyaltyCards}
                     renderItem={renderItem}
                     keyExtractor={(item) => item}
                 />
             }
+            {isLoading &&
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color={Con.AppleBlueLight} />
+                </View>
+            }
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-});
 
 export default MyLoyaltyCards;
