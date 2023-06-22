@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Switch, ActivityIndicator } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Con from '../constants';
@@ -7,7 +7,7 @@ import TextBlock from '../components/TextBlock';
 import TextMultiBlock from '../components/TextMultiBlock';
 import BlueButton from '../components/BlueButton';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { addPayment, getBusinessInfoByBid, getLoyaltyCardDetails, getOrCreateLoyaltyCardByClientIdAndBusinessId } from '../utils/api';
+import { addPayment, getBusinessInfoByBid, getLoyaltyCardDetails, getOrCreateLoyaltyCardByClientIdAndBusinessId, getUserById } from '../utils/api';
 
 interface QRDetailScreenProps {
     navigation: any;
@@ -18,13 +18,19 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
     const { qrData } = route.params;
     const clientId = qrData;
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const [userData, setUserData] = useState([]);
+    const [userToken, setUserToken] = useState('');
+    const [client, setClient] = useState([]);
 
     const [moneyValue, setMoneyValue] = useState('');
     const [saveBonus, setSaveBonus] = useState(0);
     const [summary, setSummary] = useState('');
 
     const [switcherEnabled, setSwitcherEnabled] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
     // API data
     const [currencySign, setCurrencySign] = useState('');
@@ -48,6 +54,10 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
     const confirmPayment = () => {
         console.log("Button triggered", summary);
+
+        // Button management
+        setButtonDisabled(true);
+        setButtonIsLoading(true);
 
         const pureNumberSummary = summary.replace(/[^0-9]/g, '');
         let intSummary = parseInt(pureNumberSummary)
@@ -86,6 +96,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
         );
 
         addPayment(
+            userToken,
             intSummary,
             existingOrCreatedLoyaltyCard._id, // LoyaltycardId
             clientId, // clientId from QR
@@ -93,9 +104,22 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
             Math.ceil(finalBonus),
             Math.ceil(minusBonus),
         )
-            .then(apidata => {
-                console.log("Response from confirming payment", apidata);
-                navigation.navigate("SuccessPayment");
+            .then(receiptResponse => {
+                console.log("Response from confirming payment", receiptResponse);
+                navigation.navigate("SuccessPayment", { receiptResponse });
+
+                navigation.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: 'SuccessPayment',
+                            params: {
+                                receiptResponse: receiptResponse,
+                            },
+                        },
+                    ],
+                });
+
             })
             .catch(err => {
                 console.log("Error with adding a payment", err);
@@ -114,8 +138,9 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                     // Setting user data from async storage
                     console.log("Local storage async data: (QRDetails) ", asyncdata);
                     setUserData(asyncdata.userData);
+                    setUserToken(asyncdata.token);
 
-                    const businessId = asyncdata.userData.business;
+                    const businessId = asyncdata.userData.type == 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
 
                     // Get User's Loyalty Card by businessId & userId
                     // if LoyaltyCard doesn't exist => then create one
@@ -144,7 +169,22 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                         .catch(err => {
                             console.log("Error with getting business details", err);
                         });
+
+                    console.log("client id", clientId);
+                    // Get clients info
+                    getUserById(clientId)
+                        .then(user => {
+                            console.log("Client got: ", user);
+
+                            setClient(user);
+                        })
+                        .catch(err => {
+
+                        })
                 }
+            })
+            .finally(() => {
+                setIsLoading(false);
             })
             .catch(err => {
                 console.log(err);
@@ -182,31 +222,49 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
     return (
         <View style={{ flex: 1 }}>
-            <TextBlock text='Name Surname' icon={personIcon}></TextBlock>
-            <TextInputMask
-                type="money"
-                options={{
-                    precision: 0, // The number of decimal places
-                    separator: '.', // Decimal separator
-                    delimiter: ' ', // Thousand separator
-                    unit: currencySign, // Currency symbol
-                    suffixUnit: '', // Optional suffix unit
-                }}
-                value={moneyValue} // Pass your input value here
-                onChangeText={text => handleMoneyChange(text)} // Handle the input change
-                keyboardType="numeric" // Set the keyboard type to numeric
-                style={styles.input}
-            />
-            <TextMultiBlock
-                text1={`Spend bonus ${saveBonus} ${currencySign}`}
-                text2='Loyalty percent'
-                text4='Summary'
-                switcher={switcher}
-                value2={`${loyaltyPercent}%`}
-                value4={`${summary}`}
-            />
+            {!isLoading &&
+                <View>
+                    <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
+                    <TextInputMask
+                        type="money"
+                        autoFocus={true}
+                        options={{
+                            precision: 0, // The number of decimal places
+                            separator: '.', // Decimal separator
+                            delimiter: ' ', // Thousand separator
+                            unit: currencySign, // Currency symbol
+                            suffixUnit: '', // Optional suffix unit
+                        }}
+                        value={moneyValue} // Pass your input value here
+                        onChangeText={text => handleMoneyChange(text)} // Handle the input change
+                        keyboardType="numeric" // Set the keyboard type to numeric
+                        placeholder='Enter check amount'
+                        placeholderTextColor={'gray'}
+                        style={styles.input}
+                    />
+                    <TextMultiBlock
+                        text1={`Spend bonus ${saveBonus} ${currencySign}`}
+                        text2='Loyalty percent'
+                        text4='Summary'
+                        switcher={switcher}
+                        value2={`${loyaltyPercent}%`}
+                        value4={`${summary}`}
+                    />
 
-            <BlueButton title={`${buttonOffset} ${summary}`} onPress={confirmPayment} />
+                    <BlueButton
+                        title={`${buttonOffset} ${summary}`}
+                        onPress={confirmPayment}
+                        isLoading={buttonIsLoading}
+                        isDisabled={buttonDisabled}
+                    />
+                </View>
+            }
+
+            {isLoading &&
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color={Con.AppleBlueLight} />
+                </View>
+            }
         </View>
     );
 }

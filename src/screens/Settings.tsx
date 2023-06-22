@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { View, Text, Button, StyleSheet, Alert } from 'react-native';
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import NavigationRow from '../components/NavigationRow';
+import GrayButton from '../components/GrayButton';
+import { AuthContext } from '../contexts/AuthContext';
 
 interface SettingsProps {
     navigation: any;
@@ -13,6 +15,8 @@ interface SettingsProps {
 
 function Settings({ route, navigation }: SettingsProps) {
     const [userData, setUserData] = useState([]);
+
+    const { signOut } = useContext(AuthContext);
 
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
@@ -33,6 +37,28 @@ function Settings({ route, navigation }: SettingsProps) {
         navigation.navigate("BusinessSettings");
     }
 
+    const signOutAlert = () => {
+        Alert.alert(
+            'Confirmation',
+            'Are you sure you want to delete this worker?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Sign out',
+                    style: 'destructive',
+                    onPress: () => {
+                        // Handle delete logic here
+                        signOut();
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+
     return (
         <View style={{ flex: 1 }}>
             {userData &&
@@ -40,9 +66,13 @@ function Settings({ route, navigation }: SettingsProps) {
                     <TextBlock text={`Account type: ${userData.type}`} icon={userTypeIcon}></TextBlock>
                     <TextBlock text={`${userData.name} ${userData.surname}`} icon={userNameIcon}></TextBlock>
                     <TextBlock text={`${userData.phoneNumber}`} icon={phoneIcon}></TextBlock>
-                    <View style={styles.settingsContainer}>
-                        <NavigationRow text='Business settings' onPress={businessSettingsOnPress} />
-                    </View>
+                    {/* Show settings only for business */}
+                    {userData.type == 'Business' &&
+                        <View style={styles.settingsContainer}>
+                            <NavigationRow text='Business settings' onPress={businessSettingsOnPress} />
+                        </View>
+                    }
+                    <GrayButton title='Quit' onPress={signOutAlert} />
                 </View>
             }
         </View>

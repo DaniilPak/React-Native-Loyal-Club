@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import NavigationRow from '../components/NavigationRow';
 import NavigationRowExtended from '../components/NavigationRowExtended';
 import { getBusinessInfoByBid } from '../utils/api';
@@ -19,6 +19,7 @@ function History({ route, navigation }: SettingsProps) {
     const [businessId, setBusinessId] = useState('');
 
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const receiptDetails = (_receiptId: string) => {
         console.log("Receipt details", _receiptId);
@@ -28,6 +29,8 @@ function History({ route, navigation }: SettingsProps) {
     const onRefresh = () => {
         try {
             setIsRefreshing(true);
+            // Indicate that loading started
+            setIsLoading(true);
             initFunc();
         } catch {
             console.log("Failed to refresh");
@@ -40,7 +43,7 @@ function History({ route, navigation }: SettingsProps) {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
                 console.log("Got async data in History page", asyncdata);
-                const businessId = asyncdata.userData.business;
+                const businessId = asyncdata.userData.type == 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
                 setBusinessId(businessId);
 
                 // Get business info, and then receipts
@@ -57,6 +60,8 @@ function History({ route, navigation }: SettingsProps) {
                         setReceipts(sortedReceipts);
                         // Setting currency of the business
                         setCurrencySign(businessDetails.currencySign);
+
+                        setIsLoading(false);
                     })
                     .catch(err => {
                         console.log(err);
@@ -85,7 +90,7 @@ function History({ route, navigation }: SettingsProps) {
 
     return (
         <View style={{ flex: 1, paddingTop: 10 }}>
-            {receipts &&
+            {!isLoading &&
                 <FlatList
                     data={receipts}
                     renderItem={renderItem}
@@ -93,6 +98,11 @@ function History({ route, navigation }: SettingsProps) {
                     refreshing={isRefreshing}
                     onRefresh={onRefresh}
                 />
+            }
+            {isLoading &&
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color={Con.AppleBlueLight} />
+                </View>
             }
         </View>
     );

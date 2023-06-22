@@ -5,8 +5,8 @@ import { getItemFromLocalStorage, saveArrayToLocalStorage } from './async';
 export async function makeAuth(phone: string, password: string): Promise<any> {
 
     const requestData = {
-        "phoneNumber": '+7 (000) 000-00-00',
-        "password": 'password',
+        "phoneNumber": phone,
+        "password": password,
     };
 
     try {
@@ -76,6 +76,7 @@ export async function getBusinessInfoByBid(_bid: string): Promise<any> {
 }
 
 export async function addPayment(
+    jwtToken: string,
     purchaseAmount: number,
     card: string,
     clientId: string,
@@ -93,7 +94,15 @@ export async function addPayment(
             "minusBonus": minusBonus,
         };
 
-        const response = await axios.post(`${Con.api}/receipt`, requestData);
+        const headers = {
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/receipt`, requestData, config);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -187,4 +196,43 @@ export async function getUserById(userId: string) {
         throw error; // You can choose to handle the error here or propagate it
     }
 }
+
+export async function getUserByPhoneNumber(phoneNumber: string) {
+    try {
+        const requestData = {
+            "phoneNumber": phoneNumber,
+        };
+
+        const response = await axios.post(`${Con.api}/user/getuserbyphone`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+export async function createNewUser(phoneNumber: string, name: string, surname: string, password: string) {
+    try {
+        const requestData = {
+            "type": "Client",
+            "email": "email",
+            "homeAddress": "homeAddress",
+            "paymentInfo": "paymentInfo",
+            "workBusiness": "",
+
+            "phoneNumber": phoneNumber,
+            "name": name,
+            "surname": surname,
+            "password": password,
+        };
+
+        const response = await axios.post(`${Con.api}/user`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+
 

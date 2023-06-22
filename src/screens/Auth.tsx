@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import GrayButton from '../components/GrayButton';
 import { TextInputMask } from 'react-native-masked-text';
+import { getUserByPhoneNumber } from '../utils/api';
+import BlueButton from '../components/BlueButton';
 
 interface AuthProps {
     navigation: any;
@@ -11,7 +13,18 @@ function Auth({ navigation }: AuthProps) {
     const [phoneNumber, setPhoneNumber] = useState('');
 
     const logIn = () => {
-        navigation.navigate("Confirmation", { phone: phoneNumber });
+        getUserByPhoneNumber(phoneNumber)
+            .then(user => {
+                if (user) {
+                    navigation.navigate("Confirmation", { phone: phoneNumber });
+                } else {
+                    // navigate to registration and creation new user
+                    navigation.navigate("Registration", { phone: phoneNumber });
+                }
+            })
+            .catch(err => {
+                console.log("Cant get user by phone number: ", err);
+            })
     }
 
     return (
@@ -33,7 +46,7 @@ function Auth({ navigation }: AuthProps) {
                 placeholderTextColor="#111"
                 style={styles.input}
             />
-            <GrayButton title='Log in' onPress={logIn} />
+            <BlueButton title='Log in' onPress={logIn} />
         </View>
     );
 }

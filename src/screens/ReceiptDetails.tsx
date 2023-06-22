@@ -5,6 +5,8 @@ import TextBlock from '../components/TextBlock';
 import TextBlockV2 from '../components/TextBlockV2';
 import Con from '../constants';
 
+import moment from 'moment';
+
 interface ReceiptDetailsProps {
     navigation: any;
     route: any;
@@ -46,7 +48,7 @@ function ReceiptDetails({ route }: ReceiptDetailsProps) {
                     <TextBlockV2 text={`Client: ${detailedReceipt.clientObject.name} ${detailedReceipt.clientObject.surname}`} />
                     <TextBlockV2 text={`Worker: ${detailedReceipt.workerObject.name} ${detailedReceipt.workerObject.surname}`} />
 
-                    <TextBlockV2 text={`Purchase date: ${detailedReceipt.receiptObject.purchaseDate}`} />
+                    <TextBlockV2 text={`Purchase date: ${moment(detailedReceipt.receiptObject.purchaseDate).format("DD.MM.YYYY HH:mm")}`} />
                     <TextBlockV2 text={`Purchase amount: ${detailedReceipt.receiptObject.purchaseAmount} ${businessObject.currencySign}`} />
                     <TextBlockV2 text={`Bonus given: ${detailedReceipt.receiptObject.bonusAmount} ${businessObject.currencySign}`} />
                 </View>

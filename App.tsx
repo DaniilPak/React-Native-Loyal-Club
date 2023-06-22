@@ -24,6 +24,8 @@ import ReceiptDetails from './src/screens/ReceiptDetails';
 import ManageWorkers from './src/screens/ManageWorkers';
 import LoyaltyPercent from './src/screens/LoyaltyPercent';
 import AddWorkerScanner from './src/screens/AddWorkerScanner';
+import Registration from './src/screens/Registration';
+import Loading from './src/screens/Loading';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,56 +40,83 @@ function HomeStack() {
   useEffect(() => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then(asyncdata => {
-        if (asyncdata) {
-          setUserData(asyncdata.userData);
-          console.log("userData.type", asyncdata.userData.type);
-          const isAdmin = asyncdata.userData.type == 'Business' || asyncdata.userData.type == 'Worker';
-          setIsWorkerOrBusiness(isAdmin);
-        }
+        setUserData(asyncdata.userData);
+        console.log("userData.type", asyncdata.userData.type);
+        console.log("userData._id", asyncdata.userData._id);
+        const isAdmin = asyncdata.userData.type == 'Business' || asyncdata.userData.type == 'Worker';
+        setIsWorkerOrBusiness(isAdmin);
       })
       .catch(err => {
         console.log(err);
       });
   }, []);
 
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => {
-          let iconColor;
-          let rn = route.name;
-          if (rn === 'Scan QR') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="scan-outline" size={iconSize} color={iconColor} />
-          } else if (rn === 'QR card') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="qr-code-outline" size={iconSize} color={iconColor} />
-          } else if (rn === 'History') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
-          } else if (rn === 'Setttings') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />
+  if (isWorkerOrBusiness) {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconColor;
+            let rn = route.name;
+            if (rn === 'Scan QR') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="scan-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'QR card') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="qr-code-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'History') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'Setttings') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />
+            }
           }
-        }
-      })}
-    >
-      {isWorkerOrBusiness &&
-        <>
-          <Tab.Screen name="Scan QR" component={HomeScanner} />
-          <Tab.Screen name="History" component={History} />
-        </>
-      }
-      <Tab.Screen name="QR card" component={QRScreen} />
-      <Tab.Screen name="Setttings" component={Settings} />
-    </Tab.Navigator>
-  );
+        })}
+      >
+        <Tab.Screen name="Scan QR" component={HomeScanner} />
+        <Tab.Screen name="History" component={History} />
+        <Tab.Screen name="QR card" component={QRScreen} />
+        <Tab.Screen name="Setttings" component={Settings} />
+      </Tab.Navigator>
+    );
+
+  } else {
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconColor;
+            let rn = route.name;
+            if (rn === 'Scan QR') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="scan-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'QR card') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="qr-code-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'History') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
+            } else if (rn === 'Setttings') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />
+            }
+          }
+        })}
+      >
+        <Tab.Screen name="QR card" component={QRScreen} />
+        <Tab.Screen name="Setttings" component={Settings} />
+      </Tab.Navigator>
+    );
+  }
 }
 
 function App() {
   const [token, setToken] = useState('');
 
-  useEffect(() => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const init = () => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then(asyncdata => {
         console.log("App init", asyncdata);
@@ -98,25 +127,44 @@ function App() {
               setToken(apidata.token);
               // Saving updated data to LocalStorage
               saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
+
+              // WIpe
+              // setToken('');
+            })
+            .finally(() => {
+              setIsLoading(false);
             })
             .catch(err => {
               console.log(err);
+              setIsLoading
             })
+        } else {
+          setIsLoading(false);
         }
       })
       .catch(err => {
         console.log(err);
+        setIsLoading(false);
       });
+  }
+
+  useEffect(() => {
+    init();
   }, []);
 
   const authContext = useMemo(
     () => ({
       signIn: (apidata: any) => {
-        setToken(apidata.token);
-        saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
+        saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY)
+          .then(() => {
+            setToken(apidata.token);
+            init();
+          })
+          .catch(err => console.log("Error in App tsx", err));
       },
       signOut: () => {
         setToken('');
+        saveArrayToLocalStorage([], Con.API_AUTH_DATA_KEY);
       }
     }), []
   );
@@ -125,31 +173,44 @@ function App() {
     // Logged in
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
-          <Stack.Screen name="QRDetail" component={QRDetail} />
-          <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
-          <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
-          <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
-          <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
-          <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
-          <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
-          <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  } else {
-    // Not logged in
-    return (
-      <NavigationContainer>
         <AuthContext.Provider value={authContext}>
           <Stack.Navigator>
-            <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
-            <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
+            <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
+            <Stack.Screen name="QRDetail" component={QRDetail} />
+            <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
+            <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
+            <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
+            <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
+            <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
+            <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
+            <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
           </Stack.Navigator>
         </AuthContext.Provider>
       </NavigationContainer>
     );
+  } else {
+    // Not logged in
+    if (isLoading) {
+      return (
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      );
+    } else {
+      return (
+        <NavigationContainer>
+          <AuthContext.Provider value={authContext}>
+            <Stack.Navigator>
+              <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
+              <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
+              <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
+            </Stack.Navigator>
+          </AuthContext.Provider>
+        </NavigationContainer>
+      );
+    }
   }
 }
 
