@@ -13,7 +13,7 @@ import {
  * * IOS system colors
  */
 
-const { width, height } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen');
 
 const Con = {
     width,
@@ -35,7 +35,12 @@ const Con = {
     AppleGray6: 'rgb(242, 242, 247)',
     AppleOrange: 'rgb(255, 149, 0)',
 
-    api: 'http://localhost:3000/api',
+    // LOCAL
+    // 'http://localhost:3000/api' 
+
+    // AWS
+    // http://18.118.84.185:3000/api
+    api: 'http://18.118.84.185:3000/api',
     API_AUTH_DATA_KEY: 'authdata',
     PHONE_ASYNC_KEY: 'phone',
     PASSWORD_ASYNC_KEY: 'password',

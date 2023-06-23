@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, Dimensions } from 'react-native';
 import { RNCamera, BarCodeReadEvent } from 'react-native-camera';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
@@ -12,40 +12,70 @@ interface AddWorkerScannerProps {
 function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
     const cameraRef = useRef<RNCamera | null>(null);
     const [userData, setUserData] = useState([]);
+    const [jwtToken, setjwtToken] = useState('');
 
     const [isScanned, setIsScanned] = useState(false);
 
     const handleBarCodeRead = (event: BarCodeReadEvent) => {
-        if (userData && !isScanned) {
-            console.log(event.data);
+        if (!userData || isScanned) {
+            console.log("User data not loaded yet or already scanned");
+            return;
+        }
 
-            setIsScanned(true);
+        setIsScanned(true);
+        console.log(event.data);
 
-            // Add worker logic
-            const workerId = event.data;
-            const businessId = userData.business;
+        // Add worker logic
+        const workerId = event.data;
+        const businessId = userData.business;
 
-            addWorkerFromBusiness(workerId, businessId)
-                .then(res => {
-                    console.log("Successfully added a new worker: ", res);
-                })
-                .finally(() => {
-                    setTimeout(() => {
-                        navigation.navigate("BusinessSettings");
-                    }, 1000);
-                })
-                .catch(err => {
-                    console.log("Error with adding a new worker: ", err);
-                    setIsScanned(false);
-                });
-        } else {
-            console.log("User data not loaded yet");
+        addWorkerFromBusiness(workerId, businessId, jwtToken)
+            .then(res => {
+                console.log("Successfully added a new worker: ", res);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    navigation.navigate("BusinessSettings");
+                }, 1000);
+            })
+            .catch(err => {
+                console.log("Error with adding a new worker: ", err);
+                setIsScanned(false);
+            });
+    };
+
+    const objectRef = useRef(null);
+    const [distanceToTop, setDistanceToTop] = useState(0);
+    const [distanceToBottom, setDistanceToBottom] = useState(0);
+    const [distanceToLeft, setDistanceToLeft] = useState(0);
+    const [distanceToRight, setDistanceToRight] = useState(0);
+
+    const [objectWidth, setobjectWidth] = useState(0);
+    const [objectHeight, setobjectHeight] = useState(0);
+
+    const updateDistances = () => {
+        if (objectRef.current) {
+            objectRef.current.measure((a, b, width, height, px, py) => {
+                const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
+                setDistanceToTop(py);
+                setDistanceToBottom(screenHeight - py - height);
+                setDistanceToLeft(px);
+                setDistanceToRight(screenWidth - px - width);
+
+                setobjectHeight(height);
+                setobjectWidth(width);
+
+                console.log(px, py);
+            });
         }
     };
+
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
                 setUserData(asyncdata.userData);
+                setjwtToken(asyncdata.token);
             })
             .catch(err => {
                 console.log(err);
@@ -67,13 +97,16 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
                     buttonNegative: 'Cancel',
                 }}
             />
-            <View style={styles.overlayTop} />
-            <View style={styles.overlayBottom} />
-            <View style={styles.overlayLeftSide} />
-            <View style={styles.overlayRightSide} />
-            <View style={styles.square}>
-                <Image source={require('../../assets/qrBorder.png')} style={styles.image} />
-            </View>
+            <View style={[styles.overlayTop, { height: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayBottom, { height: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayLeftSide, { width: distanceToLeft, height: objectHeight - 1, top: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayRightSide, { width: distanceToRight, height: objectHeight - 1, top: distanceToTop - (200 / 3.6) }]} />
+            <Image
+                ref={objectRef}
+                onLayout={() => { updateDistances() }}
+                source={require('../../assets/qrBorder.png')}
+                style={styles.image}
+            />
         </View>
     );
 }
@@ -120,11 +153,6 @@ const styles = StyleSheet.create({
         height: '30%',
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         zIndex: 1,
-    },
-    square: {
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     image: {
         width: Con.borderSize,

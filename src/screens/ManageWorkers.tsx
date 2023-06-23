@@ -18,6 +18,8 @@ function ManageWorkers({ route, navigation }: ManageWorkersProps) {
     const [userData, setUserData] = useState([]);
     const [workers, setWorkers] = useState([]);
 
+    const [jwtToken, setjwtToken] = useState('');
+
     const addWorker = () => {
         navigation.navigate("AddWorkerScanner");
     }
@@ -47,7 +49,7 @@ function ManageWorkers({ route, navigation }: ManageWorkersProps) {
     const confirmDeleteWorker = (workerId: string, businessId: string) => {
         console.log("Worker id ", workerId, "businessId ", businessId);
 
-        deleteWorkerFromBusiness(workerId, businessId)
+        deleteWorkerFromBusiness(workerId, businessId, jwtToken)
             .then(onDelete => {
                 console.log("Worker deleted succesfully ", onDelete);
             })
@@ -62,6 +64,7 @@ function ManageWorkers({ route, navigation }: ManageWorkersProps) {
             .then(asyncdata => {
                 console.log("Got async data ", asyncdata);
                 setUserData(asyncdata.userData);
+                setjwtToken(asyncdata.token);
 
                 const businessId = asyncdata.userData.business;
                 getWorkersByBid(businessId)

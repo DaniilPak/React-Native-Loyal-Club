@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, Dimensions, StatusBar } from 'react-native';
 import { RNCamera, BarCodeReadEvent } from 'react-native-camera';
 import Con from '../constants';
 import { getUserById } from '../utils/api';
 import { pushAlert } from '../utils/alert';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 interface HomeScannerProps {
     navigation: any;
@@ -41,6 +42,33 @@ function HomeScanner({ navigation }: HomeScannerProps) {
             })
     };
 
+    const objectRef = useRef(null);
+    const [distanceToTop, setDistanceToTop] = useState(0);
+    const [distanceToBottom, setDistanceToBottom] = useState(0);
+    const [distanceToLeft, setDistanceToLeft] = useState(0);
+    const [distanceToRight, setDistanceToRight] = useState(0);
+
+    const [objectWidth, setobjectWidth] = useState(0);
+    const [objectHeight, setobjectHeight] = useState(0);
+
+    const updateDistances = () => {
+        if (objectRef.current) {
+            objectRef.current.measure((a, b, width, height, px, py) => {
+                const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+
+                setDistanceToTop(py);
+                setDistanceToBottom(screenHeight - py - height);
+                setDistanceToLeft(px);
+                setDistanceToRight(screenWidth - px - width);
+
+                setobjectHeight(height);
+                setobjectWidth(width);
+
+                console.log(px, py);
+            });
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.tip}>Scan Client's QR code</Text>
@@ -57,16 +85,16 @@ function HomeScanner({ navigation }: HomeScannerProps) {
                     buttonNegative: 'Cancel',
                 }}
             />
-            <View style={styles.overlayTop} />
-            <View style={styles.overlayBottom} />
-            <View style={styles.overlayLeftSide} />
-            <View style={styles.overlayRightSide} />
-            <View style={styles.square}>
-                <Image
-                    source={require('../../assets/qrBorder.png')}
-                    style={styles.image}
-                />
-            </View>
+            <View style={[styles.overlayTop, { height: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayBottom, { height: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayLeftSide, { width: distanceToLeft, height: objectHeight - 1, top: distanceToTop - (200 / 3.6) }]} />
+            <View style={[styles.overlayRightSide, { width: distanceToRight, height: objectHeight - 1, top: distanceToTop - (200 / 3.6) }]} />
+            <Image
+                ref={objectRef}
+                onLayout={() => { updateDistances() }}
+                source={require('../../assets/qrBorder.png')}
+                style={styles.image}
+            />
         </View>
     );
 }
@@ -121,11 +149,6 @@ const styles = StyleSheet.create({
         height: '33%',
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         zIndex: 1,
-    },
-    square: {
-        zIndex: 3,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     image: {
         width: Con.borderSize,

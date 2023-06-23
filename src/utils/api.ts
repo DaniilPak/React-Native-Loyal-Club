@@ -153,14 +153,22 @@ export async function getWorkersByBid(businessId: string) {
     }
 }
 
-export async function deleteWorkerFromBusiness(workerId: string, businessId: string) {
+export async function deleteWorkerFromBusiness(workerId: string, businessId: string, jwtToken: string) {
     try {
         const requestData = {
             "workerId": workerId,
             "businessId": businessId,
         };
 
-        const response = await axios.post(`${Con.api}/business/workerdelete`, requestData);
+        const headers = {
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/business/workerdelete`, requestData, config);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -168,14 +176,22 @@ export async function deleteWorkerFromBusiness(workerId: string, businessId: str
     }
 }
 
-export async function addWorkerFromBusiness(workerId: string, businessId: string) {
+export async function addWorkerFromBusiness(workerId: string, businessId: string, jwtToken: string) {
     try {
         const requestData = {
             "workerId": workerId,
             "businessId": businessId,
         };
 
-        const response = await axios.post(`${Con.api}/business/workeradd`, requestData);
+        const headers = {
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/business/workeradd`, requestData, config);
         return response.data;
     } catch (error) {
         console.error(error);
