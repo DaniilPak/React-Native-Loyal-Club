@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, Alert } from 'react-native';
 import BlueButton from '../components/BlueButton';
 import DeletableObject from '../components/DeletableObject';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { deleteWorkerFromBusiness, getWorkersByBid } from '../utils/api';

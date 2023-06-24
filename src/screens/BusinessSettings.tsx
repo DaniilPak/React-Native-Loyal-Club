@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 import Con from '../constants';
 import TextBlock from '../components/TextBlock';
 import TextMultiBlock from '../components/TextMultiBlock';

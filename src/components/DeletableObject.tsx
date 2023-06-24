@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import Con from '../constants';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface DeletableObjectProps {

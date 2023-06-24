@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
 import Con from '../constants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+MaterialIcons.loadFont();
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface NavigationRowProps {

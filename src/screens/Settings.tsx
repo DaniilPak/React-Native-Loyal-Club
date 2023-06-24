@@ -4,6 +4,7 @@ import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 import NavigationRow from '../components/NavigationRow';
 import GrayButton from '../components/GrayButton';
 import { AuthContext } from '../contexts/AuthContext';
