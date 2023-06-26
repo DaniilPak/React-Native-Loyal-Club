@@ -38,6 +38,10 @@ function Settings({ route, navigation }: SettingsProps) {
         navigation.navigate("BusinessSettings");
     }
 
+    const accountDeletionOnPress = () => {
+        navigation.navigate("AccountDeletion");
+    }
+
     const signOutAlert = () => {
         Alert.alert(
             'Confirmation',
@@ -73,6 +77,7 @@ function Settings({ route, navigation }: SettingsProps) {
                             <NavigationRow text='Business settings' onPress={businessSettingsOnPress} />
                         </View>
                     }
+                    <NavigationRow text='Account deletion' onPress={accountDeletionOnPress} />
                     <GrayButton title='Quit' onPress={signOutAlert} />
                 </View>
             }

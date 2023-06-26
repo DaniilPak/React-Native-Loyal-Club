@@ -250,5 +250,27 @@ export async function createNewUser(phoneNumber: string, name: string, surname: 
     }
 }
 
+export async function deleteAccountForever(userId: string, jwtToken: string) {
+    try {
+        const requestData = {
+            "userId": userId,
+        };
+
+        const headers = {
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/user/calluser`, requestData, config);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
 
 

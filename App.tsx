@@ -27,6 +27,7 @@ import LoyaltyPercent from './src/screens/LoyaltyPercent';
 import AddWorkerScanner from './src/screens/AddWorkerScanner';
 import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
+import AccountDeletion from './src/screens/AccountDeletion';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -185,6 +186,7 @@ function App() {
             <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
             <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
             <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
+            <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
           </Stack.Navigator>
         </AuthContext.Provider>
       </NavigationContainer>
