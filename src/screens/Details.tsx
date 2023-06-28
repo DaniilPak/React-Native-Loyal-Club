@@ -70,19 +70,6 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
         if (switcherEnabled) {
             minusBonus = saveBonus;
-
-            // if intSummary(summary pay amount) is smaller than bonus amount
-            // user should pay 0 money, and program should divide bonus 
-            // with amount of intSummary
-            if (intSummary <= saveBonus) {
-                // get digit money value
-                // Remove all non-digit characters
-                const pureNumber = moneyValue.replace(/[^0-9]/g, '');
-                const digitMoneyValue = parseInt(pureNumber);
-
-                minusBonus = digitMoneyValue;
-            }
-
             console.log("minusBonus", minusBonus);
         }
 
@@ -92,8 +79,8 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
             existingOrCreatedLoyaltyCard._id,
             clientId,
             userData._id,
-            finalBonus,
-            minusBonus
+            Math.ceil(finalBonus),
+            Math.ceil(minusBonus),
         );
 
         addPayment(
