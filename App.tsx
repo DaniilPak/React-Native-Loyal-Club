@@ -130,7 +130,7 @@ function App() {
               // Saving updated data to LocalStorage
               saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
 
-              // WIpe
+              // WIpe token for test
               // setToken('');
             })
             .finally(() => {
