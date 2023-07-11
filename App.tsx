@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useMemo } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -28,7 +28,6 @@ import AddWorkerScanner from './src/screens/AddWorkerScanner';
 import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
 import AccountDeletion from './src/screens/AccountDeletion';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -152,6 +151,11 @@ function App() {
   }
 
   useEffect(() => {
+    // Uncomment to reset local data
+
+    //// setToken('');
+    //// saveArrayToLocalStorage([], Con.API_AUTH_DATA_KEY);
+
     init();
   }, []);
 
@@ -175,7 +179,7 @@ function App() {
   if (token) {
     // Logged in
     return (
-      <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 1)' }}>
         <NavigationContainer>
           <AuthContext.Provider value={authContext}>
             <Stack.Navigator>
@@ -192,23 +196,20 @@ function App() {
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>
-      </SafeAreaProvider>
+      </SafeAreaView>
     );
   } else {
     // Not logged in
     if (isLoading) {
       return (
-        <SafeAreaProvider>
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
             </Stack.Navigator>
           </NavigationContainer>
-        </SafeAreaProvider>
       );
     } else {
       return (
-        <SafeAreaProvider>
           <NavigationContainer>
             <AuthContext.Provider value={authContext}>
               <Stack.Navigator>
@@ -218,7 +219,6 @@ function App() {
               </Stack.Navigator>
             </AuthContext.Provider>
           </NavigationContainer>
-        </SafeAreaProvider>
       );
     }
   }
