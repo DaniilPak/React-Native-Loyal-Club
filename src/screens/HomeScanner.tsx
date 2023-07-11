@@ -42,10 +42,6 @@ function HomeScanner({ navigation }: HomeScannerProps) {
             })
     };
 
-    useEffect(() => {
-        navigation.navigate("QRDetail", { qrData: "64aa80b79e86230355a6e576" });
-    }, []);
-
     return (
         <View style={styles.container}>
             <Text style={styles.tip}>Scan Client's QR code</Text>
