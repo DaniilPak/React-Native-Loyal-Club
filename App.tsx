@@ -28,6 +28,7 @@ import AddWorkerScanner from './src/screens/AddWorkerScanner';
 import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
 import AccountDeletion from './src/screens/AccountDeletion';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -130,7 +131,7 @@ function App() {
               // Saving updated data to LocalStorage
               saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
 
-              // WIpe
+              // WIpe token for test
               // setToken('');
             })
             .finally(() => {
@@ -174,44 +175,50 @@ function App() {
   if (token) {
     // Logged in
     return (
-      <NavigationContainer>
-        <AuthContext.Provider value={authContext}>
-          <Stack.Navigator>
-            <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
-            <Stack.Screen name="QRDetail" component={QRDetail} />
-            <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
-            <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
-            <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
-            <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
-            <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
-            <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
-            <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
-            <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
-          </Stack.Navigator>
-        </AuthContext.Provider>
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <AuthContext.Provider value={authContext}>
+            <Stack.Navigator>
+              <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
+              <Stack.Screen name="QRDetail" component={QRDetail} />
+              <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
+              <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
+              <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
+              <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
+              <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
+              <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
+              <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
+              <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
+            </Stack.Navigator>
+          </AuthContext.Provider>
+        </NavigationContainer>
+      </SafeAreaProvider>
     );
   } else {
     // Not logged in
     if (isLoading) {
       return (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
       );
     } else {
       return (
-        <NavigationContainer>
-          <AuthContext.Provider value={authContext}>
-            <Stack.Navigator>
-              <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
-              <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
-              <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
-            </Stack.Navigator>
-          </AuthContext.Provider>
-        </NavigationContainer>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <AuthContext.Provider value={authContext}>
+              <Stack.Navigator>
+                <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
+                <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
+                <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
+              </Stack.Navigator>
+            </AuthContext.Provider>
+          </NavigationContainer>
+        </SafeAreaProvider>
       );
     }
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, ActivityIndicator } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, Switch, ActivityIndicator, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
@@ -9,6 +9,7 @@ import TextMultiBlock from '../components/TextMultiBlock';
 import BlueButton from '../components/BlueButton';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { addPayment, getBusinessInfoByBid, getLoyaltyCardDetails, getOrCreateLoyaltyCardByClientIdAndBusinessId, getUserById } from '../utils/api';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface QRDetailScreenProps {
     navigation: any;
@@ -208,52 +209,76 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
         value={switcherEnabled}
     />
 
+    const scrollViewRef = useRef();
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                scrollViewRef.current.scrollToEnd({ animated: true });
+            }
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
     return (
-        <View style={{ flex: 1 }}>
-            {!isLoading &&
-                <View>
-                    <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
-                    <TextInputMask
-                        type="money"
-                        autoFocus={true}
-                        options={{
-                            precision: 0, // The number of decimal places
-                            separator: '.', // Decimal separator
-                            delimiter: ' ', // Thousand separator
-                            unit: currencySign, // Currency symbol
-                            suffixUnit: '', // Optional suffix unit
-                        }}
-                        value={moneyValue} // Pass your input value here
-                        onChangeText={text => handleMoneyChange(text)} // Handle the input change
-                        keyboardType="numeric" // Set the keyboard type to numeric
-                        placeholder='Enter check amount'
-                        placeholderTextColor={'gray'}
-                        style={styles.input}
-                    />
-                    <TextMultiBlock
-                        text1={`Spend bonus ${saveBonus} ${currencySign}`}
-                        text2='Loyalty percent'
-                        text4='Summary'
-                        switcher={switcher}
-                        value2={`${loyaltyPercent}%`}
-                        value4={`${summary}`}
-                    />
+        <ScrollView
+            ref={scrollViewRef}
+            style={{ marginBottom: 15 }}
+        >
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}>
+                {!isLoading &&
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View>
+                            <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
+                            <TextInputMask
+                                type="money"
+                                autoFocus={true}
+                                options={{
+                                    precision: 0, // The number of decimal places
+                                    separator: '.', // Decimal separator
+                                    delimiter: ' ', // Thousand separator
+                                    unit: currencySign, // Currency symbol
+                                    suffixUnit: '', // Optional suffix unit
+                                }}
+                                value={moneyValue} // Pass your input value here
+                                onChangeText={text => handleMoneyChange(text)} // Handle the input change
+                                keyboardType="numeric" // Set the keyboard type to numeric
+                                placeholder='Enter check amount'
+                                placeholderTextColor={'gray'}
+                                style={styles.input}
+                            />
+                            <TextMultiBlock
+                                text1={`Spend bonus ${saveBonus} ${currencySign}`}
+                                text2='Loyalty percent'
+                                text4='Summary'
+                                switcher={switcher}
+                                value2={`${loyaltyPercent}%`}
+                                value4={`${summary}`}
+                            />
 
-                    <BlueButton
-                        title={`${buttonOffset} ${summary}`}
-                        onPress={confirmPayment}
-                        isLoading={buttonIsLoading}
-                        isDisabled={buttonDisabled}
-                    />
-                </View>
-            }
+                            <BlueButton
+                                title={`${buttonOffset} ${summary}`}
+                                onPress={confirmPayment}
+                                isLoading={buttonIsLoading}
+                                isDisabled={buttonDisabled}
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                }
 
-            {isLoading &&
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator size="large" color={Con.AppleBlueLight} />
-                </View>
-            }
-        </View>
+                {isLoading &&
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <ActivityIndicator size="large" color={Con.AppleBlueLight} />
+                    </View>
+                }
+            </KeyboardAvoidingView>
+        </ScrollView>
     );
 }
 
