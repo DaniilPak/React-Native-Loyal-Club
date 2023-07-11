@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import GrayButton from '../components/GrayButton';
 import { TextInputMask } from 'react-native-masked-text';
 import { createNewUser, makeAuth } from '../utils/api';
@@ -113,38 +113,43 @@ function Registration({ navigation, route }: RegistrationProps) {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black' }}>
-                Lets create an account for
-            </Text>
-            <Text style={{ color: 'black' }}>
-                {phone}
-            </Text>
-            <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={handleNameChange}
-                placeholder="Name"
-                placeholderTextColor={'gray'}
-            />
-            <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={handleSurnameChange}
-                placeholder="Surname"
-                placeholderTextColor={'gray'}
-            />
-            <TextInput
-                style={styles.input}
-                value={password}
-                onChangeText={handlePasswordChange}
-                secureTextEntry={passwordVisibility}
-                placeholder="Password"
-                placeholderTextColor={'gray'}
-            />
-            <Button title="Show/Hide" onPress={handlePasswordVisibility} />
-            <BlueButton title='Register' onPress={registerNew} />
-        </View>
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: 'black' }}>
+                    Lets create an account for
+                </Text>
+                <Text style={{ color: 'black' }}>
+                    {phone}
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    value={name}
+                    onChangeText={handleNameChange}
+                    placeholder="Name"
+                    placeholderTextColor={'gray'}
+                />
+                <TextInput
+                    style={styles.input}
+                    value={surname}
+                    onChangeText={handleSurnameChange}
+                    placeholder="Surname"
+                    placeholderTextColor={'gray'}
+                />
+                <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={handlePasswordChange}
+                    secureTextEntry={passwordVisibility}
+                    placeholder="Password"
+                    placeholderTextColor={'gray'}
+                />
+                <Button title="Show/Hide" onPress={handlePasswordVisibility} />
+                <BlueButton title='Register' onPress={registerNew} />
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 

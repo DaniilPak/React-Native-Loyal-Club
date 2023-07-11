@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import GrayButton from '../components/GrayButton';
 import { TextInputMask } from 'react-native-masked-text';
 import { makeAuth } from '../utils/api';
@@ -42,23 +42,29 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black' }}>
-                Your account exists, please enter a password
-            </Text>
-            <Text style={{ color: 'black' }}>
-                {phone}
-            </Text>
-            <TextInput
-                style={styles.input}
-                value={password}
-                onChangeText={handlePasswordChange}
-                secureTextEntry={passwordVisibility}
-                placeholder="Enter your password"
-            />
-            <Button title="Show/Hide" onPress={handlePasswordVisibility} />
-            <GrayButton title='Confirm' onPress={confirmPassword} />
-        </View>
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: 'black' }}>
+                    Your account exists, please enter a password
+                </Text>
+                <Text style={{ color: 'black' }}>
+                    {phone}
+                </Text>
+                <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={handlePasswordChange}
+                    secureTextEntry={passwordVisibility}
+                    placeholder="Enter your password"
+                    placeholderTextColor={'gray'}
+                />
+                <Button title="Show/Hide" onPress={handlePasswordVisibility} />
+                <GrayButton title='Confirm' onPress={confirmPassword} />
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -66,7 +72,6 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         height: 60,
-        backgroundColor: 'white',
         textAlign: 'center',
         color: 'black',
         marginTop: 25,

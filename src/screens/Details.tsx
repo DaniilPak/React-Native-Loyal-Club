@@ -225,60 +225,58 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
     }, []);
 
     return (
-        <ScrollView
-            ref={scrollViewRef}
-            style={{ marginBottom: 15 }}
-        >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}>
-                {!isLoading &&
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View>
-                            <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
-                            <TextInputMask
-                                type="money"
-                                autoFocus={true}
-                                options={{
-                                    precision: 0, // The number of decimal places
-                                    separator: '.', // Decimal separator
-                                    delimiter: ' ', // Thousand separator
-                                    unit: currencySign, // Currency symbol
-                                    suffixUnit: '', // Optional suffix unit
-                                }}
-                                value={moneyValue} // Pass your input value here
-                                onChangeText={text => handleMoneyChange(text)} // Handle the input change
-                                keyboardType="numeric" // Set the keyboard type to numeric
-                                placeholder='Enter check amount'
-                                placeholderTextColor={'gray'}
-                                style={styles.input}
-                            />
-                            <TextMultiBlock
-                                text1={`Spend bonus ${saveBonus} ${currencySign}`}
-                                text2='Loyalty percent'
-                                text4='Summary'
-                                switcher={switcher}
-                                value2={`${loyaltyPercent}%`}
-                                value4={`${summary}`}
-                            />
+        <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }} behavior="padding" enabled keyboardVerticalOffset={100}>
+            <ScrollView
+                ref={scrollViewRef}
+                style={{ marginBottom: 15, flex: 1 }}
+            >
+                    {!isLoading &&
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                            <View>
+                                <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
+                                <TextInputMask
+                                    type="money"
+                                    autoFocus={true}
+                                    options={{
+                                        precision: 0, // The number of decimal places
+                                        separator: '.', // Decimal separator
+                                        delimiter: ' ', // Thousand separator
+                                        unit: currencySign, // Currency symbol
+                                        suffixUnit: '', // Optional suffix unit
+                                    }}
+                                    value={moneyValue} // Pass your input value here
+                                    onChangeText={text => handleMoneyChange(text)} // Handle the input change
+                                    keyboardType="numeric" // Set the keyboard type to numeric
+                                    placeholder='Enter check amount'
+                                    placeholderTextColor={'gray'}
+                                    style={styles.input}
+                                />
+                                <TextMultiBlock
+                                    text1={`Spend bonus ${saveBonus} ${currencySign}`}
+                                    text2='Loyalty percent'
+                                    text4='Summary'
+                                    switcher={switcher}
+                                    value2={`${loyaltyPercent}%`}
+                                    value4={`${summary}`}
+                                />
 
-                            <BlueButton
-                                title={`${buttonOffset} ${summary}`}
-                                onPress={confirmPayment}
-                                isLoading={buttonIsLoading}
-                                isDisabled={buttonDisabled}
-                            />
+                                <BlueButton
+                                    title={`${buttonOffset} ${summary}`}
+                                    onPress={confirmPayment}
+                                    isLoading={buttonIsLoading}
+                                    isDisabled={buttonDisabled}
+                                />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    }
+
+                    {isLoading &&
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <ActivityIndicator size="large" color={Con.AppleBlueLight} />
                         </View>
-                    </TouchableWithoutFeedback>
-                }
-
-                {isLoading &&
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <ActivityIndicator size="large" color={Con.AppleBlueLight} />
-                    </View>
-                }
-            </KeyboardAvoidingView>
-        </ScrollView>
+                    }
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
