@@ -69,8 +69,18 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
         let minusBonus = 0;
         console.log("Final bonus: ", finalBonus);
 
+        // get inpout money value
+        const inputMoneyValue = moneyValue.replace(/[^0-9]/g, '');
+        const inputDigitMoneyValue = parseInt(inputMoneyValue);
+
         if (switcherEnabled) {
-            minusBonus = saveBonus;
+            if (saveBonus > inputDigitMoneyValue) {
+                console.log("Save b and id", saveBonus, inputDigitMoneyValue);
+                minusBonus = inputDigitMoneyValue;
+            } else {
+                console.log("Else scenario");
+                minusBonus = saveBonus;
+            }
             console.log("minusBonus", minusBonus);
         }
 
