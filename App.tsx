@@ -202,23 +202,23 @@ function App() {
     // Not logged in
     if (isLoading) {
       return (
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
-            </Stack.Navigator>
-          </NavigationContainer>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Loading" component={Loading} options={{ header: () => null }} />
+          </Stack.Navigator>
+        </NavigationContainer>
       );
     } else {
       return (
-          <NavigationContainer>
-            <AuthContext.Provider value={authContext}>
-              <Stack.Navigator>
-                <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
-                <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
-                <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
-              </Stack.Navigator>
-            </AuthContext.Provider>
-          </NavigationContainer>
+        <NavigationContainer>
+          <AuthContext.Provider value={authContext}>
+            <Stack.Navigator>
+              <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
+              <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
+              <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
+            </Stack.Navigator>
+          </AuthContext.Provider>
+        </NavigationContainer>
       );
     }
   }
