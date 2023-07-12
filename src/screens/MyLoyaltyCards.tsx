@@ -40,59 +40,50 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     }
 
     const initFunc = async () => {
-        updateAuth()
-            .then(apidata => {
-                // Saving updated data to LocalStorage
-                saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
+        getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
+            .then(asyncdata => {
+                console.log("async data my loyalty cards", asyncdata.userData.loyaltyCards);
+                setUserData(asyncdata.userData);
+                const apiLoyaltyCards = asyncdata.userData.loyaltyCards;
+
+                let tempLoyaltyCards: any[] = [];
+
+                apiLoyaltyCards.forEach((loyaltyCardId: string) => {
+                    getLoyaltyCardDetails(loyaltyCardId)
+                        .then(loyaltyCardDetails => {
+                            console.log("++++++++", loyaltyCardDetails);
+                            tempLoyaltyCards.push(loyaltyCardDetails);
+                        })
+                        .finally(() => {
+                            // Sorting the array alphabetically
+                            tempLoyaltyCards.sort((a, b) => {
+                                const nameA = a.businessName.toUpperCase();
+                                const nameB = b.businessName.toUpperCase();
+
+                                if (nameA < nameB) {
+                                    return -1;
+                                }
+                                if (nameA > nameB) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+
+                            setLoyaltyCards(tempLoyaltyCards);
+                        })
+                        .catch(err => {
+                            console.log("Can't get loyalty card details ", err);
+                        })
+                });
             })
             .finally(() => {
-                getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-                    .then(asyncdata => {
-                        console.log("async data my loyalty cards", asyncdata.userData.loyaltyCards);
-                        setUserData(asyncdata.userData);
-                        const apiLoyaltyCards = asyncdata.userData.loyaltyCards;
-
-                        let tempLoyaltyCards: any[] = [];
-
-                        apiLoyaltyCards.forEach((loyaltyCardId: string) => {
-                            getLoyaltyCardDetails(loyaltyCardId)
-                                .then(loyaltyCardDetails => {
-                                    console.log("++++++++", loyaltyCardDetails);
-                                    tempLoyaltyCards.push(loyaltyCardDetails);
-                                })
-                                .finally(() => {
-                                    // Sorting the array alphabetically
-                                    tempLoyaltyCards.sort((a, b) => {
-                                        const nameA = a.businessName.toUpperCase();
-                                        const nameB = b.businessName.toUpperCase();
-
-                                        if (nameA < nameB) {
-                                            return -1;
-                                        }
-                                        if (nameA > nameB) {
-                                            return 1;
-                                        }
-                                        return 0;
-                                    });
-
-                                    setLoyaltyCards(tempLoyaltyCards);
-                                })
-                                .catch(err => {
-                                    console.log("Can't get loyalty card details ", err);
-                                })
-                        });
-                    })
-                    .finally(() => {
-                        setIsLoading(false);
-                        console.log("Loyalty cards: ", loyaltyCards);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                setIsLoading(false);
+                console.log("Loyalty cards: ", loyaltyCards);
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
-            })
+            });
+
     }
 
     useEffect(() => {
