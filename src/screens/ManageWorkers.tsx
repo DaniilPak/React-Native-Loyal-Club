@@ -73,9 +73,6 @@ function ManageWorkers({ route, navigation }: ManageWorkersProps) {
                         console.log("Got workers", workers);
                         setWorkers(workers);
                     })
-                    .finally(() => {
-
-                    })
                     .catch(err => console.log(err));
             })
             .catch(err => {
