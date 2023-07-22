@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 import Con from './src/constants';
+import FlashMessage from "react-native-flash-message";
 
 import QRDetail from './src/screens/Details';
 import QRScreen from './src/screens/QRScreen';
@@ -31,6 +32,7 @@ import AccountDeletion from './src/screens/AccountDeletion';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 
 function HomeStack() {
   let iconSize = 22;
@@ -224,4 +226,9 @@ function App() {
   }
 }
 
-export default App;
+export default () => (
+  <>
+    <App />
+    <FlashMessage position="top" />
+  </>
+);

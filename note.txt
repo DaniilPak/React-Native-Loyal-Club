@@ -3,3 +3,46 @@ npx react-native run-android
 to use localhost api type:
 
 adb reverse tcp:3000 tcp:3000
+
+//// Code documentaion:
+
+// to show Flash Message
+
+showMessage({
+  message: "Hello World",
+  description: "This is our second message",
+  type: "success",
+});
+
+// To show modal
+
+import Modal from "react-native-modal";
+
+const [isModalVisible, setModalVisible] = useState(true);
+
+<Modal
+    isVisible={isModalVisible}
+    style={styles.bottomModal}
+    onBackdropPress={() => setModalVisible(false)}
+    onSwipeComplete={() => setModalVisible(false)}
+    swipeDirection={['down', 'left', 'right']}
+>
+    <View style={styles.modalContent}>
+        <Text>You Clicked On Modal !</Text>
+    </View>
+</Modal>
+
+styles: 
+
+bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+},
+modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+},
