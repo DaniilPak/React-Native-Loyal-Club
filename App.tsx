@@ -20,7 +20,7 @@ import Confirmation from './src/screens/Confirmation';
 import { AuthContext } from './src/contexts/AuthContext';
 import { getArrayFromLocalStorage, saveArrayToLocalStorage } from './src/utils/async';
 import MyLoyaltyCards from './src/screens/MyLoyaltyCards';
-import { updateAuth } from './src/utils/api';
+import { setFcmToken, updateAuth } from './src/utils/api';
 import BusinessSettings from './src/screens/BusinessSettings';
 import SuccessPayment from './src/screens/SuccessPayment';
 import ReceiptDetails from './src/screens/ReceiptDetails';
@@ -148,6 +148,11 @@ function App() {
 
                   // Check data
                   console.log("User Id: ", userId, "FCM token: ", FCMtoken);
+
+                  // Save FCM token to server
+                  setFcmToken(userId, FCMtoken)
+                    .then(() => console.log("Set new FCM token successfully"))
+                    .catch(() => console.log("Failed to set new FCM token"));
                 })
                 .then(() => {
                   // Register the foreground listener

@@ -272,5 +272,17 @@ export async function deleteAccountForever(userId: string, jwtToken: string) {
     }
 }
 
+export async function setFcmToken(userId: string, fcmToken?: string) {
+    try {
+        const requestData = {
+            "userId": userId,
+            "fcmToken": fcmToken,
+        };
 
-
+        const response = await axios.post(`${Con.api}/user/setfcmtoken`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
