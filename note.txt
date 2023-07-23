@@ -1,3 +1,8 @@
+// Before release
+update release.keystore 
+
+check constants api endpoint
+
 npx react-native run-android
 
 to use localhost api type:

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "482925941374",
+    "project_id": "loyalclub-9b007",
+    "storage_bucket": "loyalclub-9b007.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482925941374:android:ce7d14ab3a00e3a5787e2f",
+        "android_client_info": {
+          "package_name": "com.loyalclub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482925941374-0sfcot2tuqri1rhj0bvk1jvu7bg1d6jr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loyalclub",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "482925941374-0osgu6lnbhvd8br26avip3gepu9r0bf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXq28bC0X5CFa0gozfkhRxsylFL_3UDaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482925941374-0osgu6lnbhvd8br26avip3gepu9r0bf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

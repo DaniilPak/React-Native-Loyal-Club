@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, createContext, useMemo } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 import Con from './src/constants';
-import FlashMessage from "react-native-flash-message";
+import FlashMessage, { showMessage } from "react-native-flash-message";
+import messaging from '@react-native-firebase/messaging';
 
 import QRDetail from './src/screens/Details';
 import QRScreen from './src/screens/QRScreen';
@@ -29,6 +30,7 @@ import AddWorkerScanner from './src/screens/AddWorkerScanner';
 import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
 import AccountDeletion from './src/screens/AccountDeletion';
+import { displayNotification, getFCMToken, requestNotificationPermission } from './src/utils/notification';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -117,7 +119,6 @@ function HomeStack() {
 
 function App() {
   const [token, setToken] = useState('');
-
   const [isLoading, setIsLoading] = useState(true);
 
   const init = () => {
@@ -125,12 +126,43 @@ function App() {
       .then(asyncdata => {
         console.log("App init", asyncdata);
         if (asyncdata.token != null) {
+          // Update Auth Setup
           updateAuth()
             .then(apidata => {
               console.log("update auth apidata", apidata);
               setToken(apidata.token);
+
               // Saving updated data to LocalStorage
               saveArrayToLocalStorage(apidata, Con.API_AUTH_DATA_KEY);
+
+              // Foreground notifications setup
+              requestNotificationPermission()
+                .then(async () => {
+                  // Get and send to server FCM token
+
+                  // Get id of the user taken from server
+                  const userId = apidata.userData._id;
+
+                  // Get FCM Token
+                  const FCMtoken = await getFCMToken();
+
+                  // Check data
+                  console.log("User Id: ", userId, "FCM token: ", FCMtoken);
+                })
+                .then(() => {
+                  // Register the foreground listener
+                  messaging().onMessage(async remoteMessage => {
+                    console.log('Foreground notification:', remoteMessage);
+                    displayNotification(remoteMessage);
+                    // Show Flash message
+                    showMessage({
+                      message: remoteMessage.notification?.title,
+                      description: remoteMessage.notification?.body,
+                      type: "success",
+                    });
+                  });
+                })
+                .catch(err => console.log("Error with setting up Notifications in App.tsx", err))
 
               // WIpe token for test
               // setToken('');
