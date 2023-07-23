@@ -130,64 +130,54 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
         recalculateSummary();
     }
 
+    const fetchDataAndSetState = async () => {
+        try {
+            const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+
+            if (asyncdata) {
+                // Setting user data from async storage
+                console.log("Local storage async data: (QRDetails) ", asyncdata);
+                setUserData(asyncdata.userData);
+                setUserToken(asyncdata.token);
+
+                const businessId =
+                    asyncdata.userData.type === 'Business'
+                        ? asyncdata.userData.business
+                        : asyncdata.userData.workBusiness;
+
+                // Get User's Loyalty Card by businessId & userId
+                // if LoyaltyCard doesn't exist => then create one
+                const existingOrCreatedCard = await getOrCreateLoyaltyCardByClientIdAndBusinessId(clientId, businessId);
+                console.log("Existing or created loyalty card", existingOrCreatedCard);
+                setExistingOrCreatedLoyaltyCard(existingOrCreatedCard);
+                // Get and set Save bonus (How much bonus on the loyalty card)
+                setSaveBonus(existingOrCreatedCard.bonusAmount);
+
+                const businessDetails = await getBusinessInfoByBid(businessId);
+                console.log("Business details", businessDetails);
+                // set business settings
+                setCurrencySign(businessDetails.currencySign);
+                setLoyaltyPercent(businessDetails.loyalPercent);
+
+                // changing title
+                navigation.setOptions({ title: businessDetails.name });
+
+                console.log("client id", clientId);
+                // Get clients info
+                const user = await getUserById(clientId);
+                console.log("Client got: ", user);
+                setClient(user);
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
     useEffect(() => {
-        getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-            .then(asyncdata => {
-                if (asyncdata) {
-                    // Setting user data from async storage
-                    console.log("Local storage async data: (QRDetails) ", asyncdata);
-                    setUserData(asyncdata.userData);
-                    setUserToken(asyncdata.token);
-
-                    const businessId = asyncdata.userData.type == 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
-
-                    // Get User's Loyalty Card by businessId & userId
-                    // if LoyaltyCard doesn't exist => then create one
-                    getOrCreateLoyaltyCardByClientIdAndBusinessId(clientId, businessId)
-                        .then(existingOrCreatedCard => {
-                            console.log("Existing or created loyalty card", existingOrCreatedCard);
-                            setExistingOrCreatedLoyaltyCard(existingOrCreatedCard);
-                            // Get and set Save bonus (How much bonus on the loyalty card)
-                            setSaveBonus(existingOrCreatedCard.bonusAmount)
-                        })
-                        .catch(err => {
-                            console.log("Error with getting business details", err);
-                        });
-
-
-                    getBusinessInfoByBid(businessId)
-                        .then(businessDetails => {
-                            console.log("Business details", businessDetails);
-                            // set business settings
-                            setCurrencySign(businessDetails.currencySign);
-                            setLoyaltyPercent(businessDetails.loyalPercent);
-
-                            // changing title
-                            navigation.setOptions({ title: businessDetails.name });
-                        })
-                        .catch(err => {
-                            console.log("Error with getting business details", err);
-                        });
-
-                    console.log("client id", clientId);
-                    // Get clients info
-                    getUserById(clientId)
-                        .then(user => {
-                            console.log("Client got: ", user);
-
-                            setClient(user);
-                        })
-                        .catch(err => {
-
-                        })
-                }
-            })
-            .finally(() => {
-                setIsLoading(false);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        fetchDataAndSetState();
     }, []);
 
     const recalculateSummary = () => {

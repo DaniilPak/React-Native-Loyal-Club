@@ -25,9 +25,12 @@ function QRScreen({ navigation }: QRScreenProps) {
     }, [])
 
     const myLoyaltyCards = "My loyalty cards";
+
     const showMyLoyaltyCards = () => {
         navigation.navigate("MyLoyaltyCards");
     }
+
+    const qrSize = 200;
 
     return (
         <View style={styles.parentStyle}>
@@ -39,7 +42,7 @@ function QRScreen({ navigation }: QRScreenProps) {
 
                         <QRCode
                             value={qr}
-                            size={160}
+                            size={qrSize}
                             color='black'
                             backgroundColor='white'
                         />
