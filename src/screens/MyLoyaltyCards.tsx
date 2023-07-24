@@ -10,7 +10,7 @@ import BlueButton from '../components/BlueButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage, saveArrayToLocalStorage } from '../utils/async';
-import { getLoyaltyCardDetails, updateAuth } from '../utils/api';
+import { getLoyaltyCardDetails, getUserById, updateAuth } from '../utils/api';
 
 interface MyLoyaltyCardsScreenProps {
     navigation: any;
@@ -40,51 +40,41 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     }
 
     const initFunc = async () => {
-        getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-            .then(asyncdata => {
-                console.log("async data my loyalty cards", asyncdata.userData.loyaltyCards);
-                setUserData(asyncdata.userData);
-                const apiLoyaltyCards = asyncdata.userData.loyaltyCards;
+        try {
+            const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+            const user = await getUserById(asyncdata.userData._id);
+            console.log("User got: ", user);
 
-                let tempLoyaltyCards: any[] = [];
+            setUserData(asyncdata.userData);
+            const apiLoyaltyCards = user.loyaltyCards;
 
-                apiLoyaltyCards.forEach((loyaltyCardId: string) => {
-                    getLoyaltyCardDetails(loyaltyCardId)
-                        .then(loyaltyCardDetails => {
-                            console.log("++++++++", loyaltyCardDetails);
-                            tempLoyaltyCards.push(loyaltyCardDetails);
-                        })
-                        .finally(() => {
-                            // Sorting the array alphabetically
-                            tempLoyaltyCards.sort((a, b) => {
-                                const nameA = a.businessName.toUpperCase();
-                                const nameB = b.businessName.toUpperCase();
+            const loyaltyCardPromises = apiLoyaltyCards.map(loyaltyCardId => getLoyaltyCardDetails(loyaltyCardId));
 
-                                if (nameA < nameB) {
-                                    return -1;
-                                }
-                                if (nameA > nameB) {
-                                    return 1;
-                                }
-                                return 0;
-                            });
+            const tempLoyaltyCards = await Promise.all(loyaltyCardPromises);
+            console.log("++++++++", tempLoyaltyCards);
 
-                            setLoyaltyCards(tempLoyaltyCards);
-                        })
-                        .catch(err => {
-                            console.log("Can't get loyalty card details ", err);
-                        })
-                });
-            })
-            .finally(() => {
-                setIsLoading(false);
-                console.log("Loyalty cards: ", loyaltyCards);
-            })
-            .catch(err => {
-                console.log(err);
+            // Sorting the array alphabetically
+            tempLoyaltyCards.sort((a, b) => {
+                const nameA = a.businessName.toUpperCase();
+                const nameB = b.businessName.toUpperCase();
+
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
             });
 
-    }
+            setLoyaltyCards(tempLoyaltyCards);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     useEffect(() => {
         initFunc();
