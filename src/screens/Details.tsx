@@ -102,6 +102,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
             userData._id, // Worker id
             Math.ceil(finalBonus),
             Math.ceil(minusBonus),
+            inputDigitMoneyValue,
         )
             .then(receiptResponse => {
                 console.log("Response from confirming payment", receiptResponse);

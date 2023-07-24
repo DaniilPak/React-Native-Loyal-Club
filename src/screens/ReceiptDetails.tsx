@@ -25,17 +25,8 @@ function ReceiptDetails({ route }: ReceiptDetailsProps) {
             .then(detailedReceipt => {
                 console.log("Got detailed receipt", detailedReceipt);
                 setDetailedReceipt(detailedReceipt);
-
-                getBusinessInfoByBid(businessId)
-                    .then(business => {
-                        console.log("Business: ", business);
-                        setBusinessObject(business);
-                    })
-                    .finally(() => setAllSet(true))
-                    .catch(err => {
-                        console.log("Error with getting business info by id in Receipt Details", err);
-                    })
             })
+            .finally(() => setAllSet(true))
             .catch(err => {
                 console.log(err);
             });
@@ -45,12 +36,14 @@ function ReceiptDetails({ route }: ReceiptDetailsProps) {
         <View style={{ flex: 1 }}>
             {allSet &&
                 <View>
-                    <TextBlockV2 text={`Client: ${detailedReceipt.clientObject.name} ${detailedReceipt.clientObject.surname}`} />
-                    <TextBlockV2 text={`Worker: ${detailedReceipt.workerObject.name} ${detailedReceipt.workerObject.surname}`} />
+                    <TextBlockV2 text={`Client: ${detailedReceipt.receiptObject.clientNameSurname}`} />
+                    <TextBlockV2 text={`Worker: ${detailedReceipt.receiptObject.workerNameSurname}`} />
 
                     <TextBlockV2 text={`Purchase date: ${moment(detailedReceipt.receiptObject.purchaseDate).format("DD.MM.YYYY HH:mm")}`} />
-                    <TextBlockV2 text={`Purchase amount: ${detailedReceipt.receiptObject.purchaseAmount} ${businessObject.currencySign}`} />
-                    <TextBlockV2 text={`Bonus given: ${detailedReceipt.receiptObject.bonusAmount} ${businessObject.currencySign}`} />
+                    <TextBlockV2 text={`Payment: ${detailedReceipt.receiptObject.inputDigitMoneyValue} ${detailedReceipt.receiptObject.currencySign}`} />
+                    <TextBlockV2 text={`Paid with bonus: ${detailedReceipt.receiptObject.minusBonus} ${detailedReceipt.receiptObject.currencySign}`} />
+                    <TextBlockV2 text={`Paid: ${detailedReceipt.receiptObject.purchaseAmount} ${detailedReceipt.receiptObject.currencySign}`} />
+                    <TextBlockV2 text={`Bonus given: ${detailedReceipt.receiptObject.bonusAmount} ${detailedReceipt.receiptObject.currencySign}`} />
                 </View>
             }
             {!allSet &&

@@ -82,7 +82,8 @@ export async function addPayment(
     clientId: string,
     workerId: string,
     bonusAmount: number,
-    minusBonus: number): Promise<any> {
+    minusBonus: number,
+    inputDigitMoneyValue: number): Promise<any> {
 
     try {
         const requestData = {
@@ -92,6 +93,7 @@ export async function addPayment(
             "workerId": workerId,
             "bonusAmount": bonusAmount,
             "minusBonus": minusBonus,
+            "inputDigitMoneyValue": inputDigitMoneyValue,
         };
 
         const headers = {
