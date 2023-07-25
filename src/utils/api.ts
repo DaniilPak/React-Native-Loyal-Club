@@ -75,6 +75,22 @@ export async function getBusinessInfoByBid(_bid: string): Promise<any> {
 
 }
 
+export async function getBusinessReceiptsWithFilter(businessId: string, startdate: Date, enddate: Date): Promise<any> {
+    try {
+        const requestData = {
+            "businessId": businessId,
+            "startDate": startdate,
+            "endDate": enddate,
+        };
+
+        const response = await axios.post(`${Con.api}/business/getBusinessReceiptsWithFilter`, requestData);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
 export async function addPayment(
     jwtToken: string,
     purchaseAmount: number,
