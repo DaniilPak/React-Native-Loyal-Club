@@ -25,7 +25,6 @@ import BusinessSettings from './src/screens/BusinessSettings';
 import SuccessPayment from './src/screens/SuccessPayment';
 import ReceiptDetails from './src/screens/ReceiptDetails';
 import ManageWorkers from './src/screens/ManageWorkers';
-import LoyaltyPercent from './src/screens/LoyaltyPercent';
 import AddWorkerScanner from './src/screens/AddWorkerScanner';
 import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
@@ -229,7 +228,6 @@ function App() {
               <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
               <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
               <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
-              <Stack.Screen name="LoyaltyPercent" component={LoyaltyPercent} />
               <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
               <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
             </Stack.Navigator>

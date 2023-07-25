@@ -128,6 +128,33 @@ export async function addPayment(
     }
 }
 
+export async function updateBusinessLoyaltyPercent(
+    jwtToken: string,
+    loyaltyPercent: number,
+    businessId: string): Promise<any> {
+
+    try {
+        const requestData = {
+            "loyaltyPercent": loyaltyPercent,
+        };
+
+        const headers = {
+            businessId: businessId,
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/business/updatebusinessloyaltypercent`, requestData, config);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
 export async function getOrCreateLoyaltyCardByClientIdAndBusinessId(cliendId: string, businessId: string) {
     try {
         const requestData = {
