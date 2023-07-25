@@ -7,6 +7,7 @@ import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
 
 import moment from 'moment';
+import ReceiptRow from '../components/ReceiptRow';
 
 interface SettingsProps {
     navigation: any;
@@ -40,37 +41,33 @@ function History({ route, navigation }: SettingsProps) {
     }
 
     const initFunc = async () => {
-        getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-            .then(asyncdata => {
-                console.log("Got async data in History page", asyncdata);
-                const businessId = asyncdata.userData.type == 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
-                setBusinessId(businessId);
+        try {
+            const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+            console.log("Got async data in History page", asyncdata);
 
-                // Get business info, and then receipts
-                getBusinessInfoByBid(businessId)
-                    .then(businessDetails => {
-                        console.log("Business details: ", businessDetails);
-                        // Setting receipts 
-                        const businessReceipts = businessDetails.receipts
-                        // Sorting by new date
-                        const sortedReceipts = [...businessReceipts].sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
+            const businessId = asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
+            setBusinessId(businessId);
 
-                        console.log("Sorted receipts: ", sortedReceipts);
+            // Get business info, and then receipts
+            const businessDetails = await getBusinessInfoByBid(businessId);
+            console.log("Business details: ", businessDetails);
 
-                        setReceipts(sortedReceipts);
-                        // Setting currency of the business
-                        setCurrencySign(businessDetails.currencySign);
+            // Setting receipts
+            const businessReceipts = businessDetails.receipts;
+            // Sorting by new date
+            const sortedReceipts = [...businessReceipts].sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
+            console.log("Sorted receipts: ", sortedReceipts);
 
-                        setIsLoading(false);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+            setReceipts(sortedReceipts);
+            // Setting currency of the business
+            setCurrencySign(businessDetails.currencySign);
+
+            setIsLoading(false);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
 
     useEffect(() => {
         initFunc();
@@ -80,9 +77,11 @@ function History({ route, navigation }: SettingsProps) {
         const formattedDate = moment(item.purchaseDate).format("DD.MM.YYYY HH:mm");
 
         return (
-            <NavigationRowExtended
-                text={`${item.purchaseAmount} ${currencySign}`}
+            <ReceiptRow
+                text={`${item.clientNameSurname}`}
                 secondaryText={formattedDate}
+                value={`${item.purchaseAmount} ${currencySign}`}
+                valueSecondary={`+ ${item.bonusAmount} ${currencySign}`}
                 onPress={() => receiptDetails(item._id)}
             />
         );
