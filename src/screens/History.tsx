@@ -84,66 +84,66 @@ function History({ route, navigation }: SettingsProps) {
     const filterByLast7Days = async () => {
         // Close modal
         setModalVisible(false);
-      
+
         // Start loading layout
         setIsLoading(true);
-      
+
         // Get the current date
         const currentDate = new Date();
-      
+
         // Get the date of 7 days ago
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      
+
         // Filter receipts for the last 7 days
         const filteredReceipts = businessDetails.receipts.filter(
-          (receipt) => new Date(receipt.purchaseDate) >= sevenDaysAgo && new Date(receipt.purchaseDate) <= currentDate
+            (receipt) => new Date(receipt.purchaseDate) >= sevenDaysAgo && new Date(receipt.purchaseDate) <= currentDate
         );
         console.log("Filtered receipts within last 7 days: ", filteredReceipts);
-      
+
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
         console.log("Sorted receipts: ", sortedReceipts);
-      
+
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
-      
+
         // End loading
         setIsLoading(false);
-      };
-      
+    };
+
 
     const filterByThisMonth = async () => {
         // Close modal
         setModalVisible(false);
-      
+
         // Start loading layout
         setIsLoading(true);
-      
+
         // Get the current date
         const currentDate = new Date();
-      
+
         // Get the first day of the current month
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         console.log("First month day: ", firstDayOfMonth);
-      
+
         // Filter receipts for the current month
         const filteredReceipts = businessDetails.receipts.filter(
-          (receipt) => new Date(receipt.purchaseDate) >= firstDayOfMonth && new Date(receipt.purchaseDate) <= currentDate
+            (receipt) => new Date(receipt.purchaseDate) >= firstDayOfMonth && new Date(receipt.purchaseDate) <= currentDate
         );
         console.log("Filtered receipts within this month: ", filteredReceipts);
-      
+
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
         console.log("Sorted receipts: ", sortedReceipts);
-      
+
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
-      
+
         // End loading
         setIsLoading(false);
-      };
-      
+    };
+
 
     const filterByAllTime = async () => {
         // Close modal
@@ -187,6 +187,7 @@ function History({ route, navigation }: SettingsProps) {
                 secondaryText={formattedDate}
                 value={`${item.purchaseAmount} ${currencySign}`}
                 valueSecondary={`+ ${item.bonusAmount} ${currencySign}`}
+                valueThird={`- ${item.minusBonus} ${currencySign}`}
                 onPress={() => receiptDetails(item._id)}
             />
         );

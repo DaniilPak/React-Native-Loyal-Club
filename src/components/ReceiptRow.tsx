@@ -8,10 +8,11 @@ interface ReceiptRowProps {
     secondaryText: string;
     value: string;
     valueSecondary: string;
+    valueThird: string;
     onPress: any;
 }
 
-function ReceiptRow({ text, secondaryText, value, valueSecondary, onPress }: ReceiptRowProps) {
+function ReceiptRow({ text, secondaryText, value, valueSecondary, valueThird, onPress }: ReceiptRowProps) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.buttonContainer}>
@@ -20,7 +21,9 @@ function ReceiptRow({ text, secondaryText, value, valueSecondary, onPress }: Rec
                         {text}
                     </Text>
                     <View style={styles.iconStyle}>
-                        <Text style={{ color: 'black' }}>{value}</Text>
+                        <Text style={styles.mainPayment}>
+                            {value}
+                        </Text>
                     </View>
                 </View>
 
@@ -29,8 +32,14 @@ function ReceiptRow({ text, secondaryText, value, valueSecondary, onPress }: Rec
                         {secondaryText}
                     </Text>
                     <View style={styles.iconStyle}>
-                        <Text style={{ color: Con.AppleGreenLight }}>{valueSecondary}</Text>
+                        <Text style={styles.bonusGiven}>
+                            {valueSecondary}
+                        </Text>
+                        <Text style={styles.bonusMinus}>
+                            {valueThird}
+                        </Text>
                     </View>
+
                 </View>
             </View>
         </TouchableOpacity>
@@ -38,6 +47,18 @@ function ReceiptRow({ text, secondaryText, value, valueSecondary, onPress }: Rec
 }
 
 const styles = StyleSheet.create({
+    mainPayment: {
+        color: 'black',
+        fontSize: 18,
+    },
+    bonusGiven: {
+        color: Con.AppleGreenLight,
+        fontSize: 13
+    },
+    bonusMinus: {
+        color: Con.AppleRedLight,
+        fontSize: 13,
+    },
     iconStyle: {
         flex: 1,
         alignItems: 'flex-end',
