@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>482925941374-abppm1di0doilo238vsgb8nua9p5cq70.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.482925941374-abppm1di0doilo238vsgb8nua9p5cq70</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>482925941374-0sfcot2tuqri1rhj0bvk1jvu7bg1d6jr.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB0ydLg6xtV8E50vOep7HNXTotBvGUUS8k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>482925941374</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.LoyalClub</string>
+	<key>PROJECT_ID</key>
+	<string>loyalclub-9b007</string>
+	<key>STORAGE_BUCKET</key>
+	<string>loyalclub-9b007.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:482925941374:ios:39bb7d8d690861e7787e2f</string>
+</dict>
+</plist>

@@ -67,7 +67,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
             updateBusinessLoyaltyPercent(userData.token, numberValue, userData.userData.business)
                 .then(() => {
                     showMessage({
-                        message: `Loyalty percent successfully updated to ${numberValue}`,
+                        message: `Loyalty percent successfully updated to ${numberValue}%`,
                         description: "Let's continue work!",
                         type: "success",
                     });
@@ -104,8 +104,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
             {businessDetails && <NavigationRowExtended text='Loyalty Percent' secondaryText={`${businessDetails.loyalPercent} %`} onPress={loyaltyPercentOnPress} />}
 
             <Modal visible={modalVisible} animationType='slide'>
-                <View style={{ backgroundColor: 'white', padding: 20 }}>
-                    <Text>Enter a Number:</Text>
+                <View style={styles.modalContainer}>
                     <TextInputMask
                         type="only-numbers"
                         autoFocus={true}
@@ -136,6 +135,11 @@ const styles = StyleSheet.create({
         marginTop: 25,
         fontSize: 30
     },
+    modalContainer: {
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+    }
 });
 
 export default BusinessSettings;

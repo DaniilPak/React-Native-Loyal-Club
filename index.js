@@ -7,6 +7,7 @@ import App from './App';
 import {name as appName} from './app.json';
 
 import messaging from '@react-native-firebase/messaging';
+import { firebase } from '@react-native-firebase/messaging';
 
 // Register background handler
 // Notifee and Firebase works automatically and dont need to additional

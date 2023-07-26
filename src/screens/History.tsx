@@ -77,70 +77,77 @@ function History({ route, navigation }: SettingsProps) {
     };
 
     const openFilterModal = () => {
-        setModalVisible(!modalVisible);
+        setModalVisible(true);
     }
 
     /// Filters
     const filterByLast7Days = async () => {
         // Close modal
-        setModalVisible(!modalVisible);
-
+        setModalVisible(false);
+      
         // Start loading layout
         setIsLoading(true);
-
+      
         // Get the current date
         const currentDate = new Date();
-
+      
         // Get the date of 7 days ago
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        const filteredReceipts = await getBusinessReceiptsWithFilter(businessDetails._id, sevenDaysAgo, currentDate);
-        console.log("Filtered receipts: ", filteredReceipts);
-
+      
+        // Filter receipts for the last 7 days
+        const filteredReceipts = businessDetails.receipts.filter(
+          (receipt) => new Date(receipt.purchaseDate) >= sevenDaysAgo && new Date(receipt.purchaseDate) <= currentDate
+        );
+        console.log("Filtered receipts within last 7 days: ", filteredReceipts);
+      
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
         console.log("Sorted receipts: ", sortedReceipts);
-
+      
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
-
-        /// End loading
+      
+        // End loading
         setIsLoading(false);
-    }
+      };
+      
 
     const filterByThisMonth = async () => {
         // Close modal
-        setModalVisible(!modalVisible);
-
+        setModalVisible(false);
+      
         // Start loading layout
         setIsLoading(true);
-
+      
         // Get the current date
         const currentDate = new Date();
-
+      
         // Get the first day of the current month
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         console.log("First month day: ", firstDayOfMonth);
-
-        const filteredReceipts = await getBusinessReceiptsWithFilter(businessDetails._id, firstDayOfMonth, currentDate);
-        console.log("Filtered receipts: ", filteredReceipts);
-
+      
+        // Filter receipts for the current month
+        const filteredReceipts = businessDetails.receipts.filter(
+          (receipt) => new Date(receipt.purchaseDate) >= firstDayOfMonth && new Date(receipt.purchaseDate) <= currentDate
+        );
+        console.log("Filtered receipts within this month: ", filteredReceipts);
+      
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
         console.log("Sorted receipts: ", sortedReceipts);
-
+      
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
-
-        /// End loading
+      
+        // End loading
         setIsLoading(false);
-
-    }
+      };
+      
 
     const filterByAllTime = async () => {
         // Close modal
-        setModalVisible(!modalVisible);
+        setModalVisible(false);
 
         // Start loading layout
         setIsLoading(true);
@@ -155,7 +162,7 @@ function History({ route, navigation }: SettingsProps) {
         setReceipts(sortedReceipts);
 
         // Close modal
-        setModalVisible(!modalVisible);
+        setModalVisible(false);
 
         /// End loading
         setIsLoading(false);
@@ -203,7 +210,11 @@ function History({ route, navigation }: SettingsProps) {
                     <GrayButton title="All time" onPress={() => filterByAllTime()} />
                 </View>
             </Modal>
-            <LoadingOverlay loading={isLoading} />
+            {isLoading &&
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" color={Con.AppleBlueLight} />
+                </View>
+            }
         </View>
     );
 }
@@ -217,6 +228,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         backgroundColor: 'white',
+        justifyContent: 'center',
     },
 });
 
