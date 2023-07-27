@@ -46,13 +46,13 @@ function HomeStack() {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then(asyncdata => {
         setUserData(asyncdata.userData);
-        console.log("userData.type", asyncdata.userData.type);
-        console.log("userData._id", asyncdata.userData._id);
+        Con.DEBUG && console.log("userData.type", asyncdata.userData.type);
+        Con.DEBUG && console.log("userData._id", asyncdata.userData._id);
         const isAdmin = asyncdata.userData.type == 'Business' || asyncdata.userData.type == 'Worker';
         setIsWorkerOrBusiness(isAdmin);
       })
       .catch(err => {
-        console.log(err);
+        Con.DEBUG && console.log(err);
       });
   }, []);
 
@@ -123,12 +123,12 @@ function App() {
   const init = () => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then(asyncdata => {
-        console.log("App init", asyncdata);
+        Con.DEBUG && console.log("App init", asyncdata);
         if (asyncdata.token != null) {
           // Update Auth Setup
           updateAuth()
             .then(apidata => {
-              console.log("update auth apidata", apidata);
+              Con.DEBUG && console.log("update auth apidata", apidata);
               setToken(apidata.token);
 
               // Saving updated data to LocalStorage
@@ -146,17 +146,17 @@ function App() {
                   const FCMtoken = await getFCMToken();
 
                   // Check data
-                  console.log("User Id: ", userId, "FCM token: ", FCMtoken);
+                  Con.DEBUG && console.log("User Id: ", userId, "FCM token: ", FCMtoken);
 
                   // Save FCM token to server
                   setFcmToken(userId, FCMtoken)
-                    .then(() => console.log("Set new FCM token successfully"))
-                    .catch(() => console.log("Failed to set new FCM token"));
+                    .then(() => Con.DEBUG && console.log("Set new FCM token successfully"))
+                    .catch(() => Con.DEBUG && console.log("Failed to set new FCM token"));
                 })
                 .then(() => {
                   // Register the foreground listener
                   messaging().onMessage(async remoteMessage => {
-                    console.log('Foreground notification:', remoteMessage);
+                    Con.DEBUG && console.log('Foreground notification:', remoteMessage);
                     displayNotification(remoteMessage);
                     // Show Flash message
                     showMessage({
@@ -166,7 +166,7 @@ function App() {
                     });
                   });
                 })
-                .catch(err => console.log("Error with setting up Notifications in App.tsx", err))
+                .catch(err => Con.DEBUG && console.log("Error with setting up Notifications in App.tsx", err))
 
               // WIpe token for test
               // setToken('');
@@ -175,7 +175,7 @@ function App() {
               setIsLoading(false);
             })
             .catch(err => {
-              console.log(err);
+              Con.DEBUG && console.log(err);
               setIsLoading
             })
         } else {
@@ -183,7 +183,7 @@ function App() {
         }
       })
       .catch(err => {
-        console.log(err);
+        Con.DEBUG && console.log(err);
         setIsLoading(false);
       });
   }
@@ -205,7 +205,7 @@ function App() {
             setToken(apidata.token);
             init();
           })
-          .catch(err => console.log("Error in App tsx", err));
+          .catch(err => Con.DEBUG && console.log("Error in App tsx", err));
       },
       signOut: () => {
         setToken('');

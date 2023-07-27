@@ -44,7 +44,7 @@ const Con = {
     API_AUTH_DATA_KEY: 'authdata',
     PHONE_ASYNC_KEY: 'phone',
     PASSWORD_ASYNC_KEY: 'password',
-    DEBUG: true,
+    DEBUG: false,
 
     iconSize: 25,
     iconColor: 'rgb(0, 122, 255)',
