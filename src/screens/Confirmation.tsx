@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import GrayButton from '../components/GrayButton';
-import { TextInputMask } from 'react-native-masked-text';
 import { makeAuth } from '../utils/api';
 import { AuthContext } from '../contexts/AuthContext';
 import { setItemToLocalStorage } from '../utils/async';
@@ -37,12 +36,12 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
                 setItemToLocalStorage(Con.PASSWORD_ASYNC_KEY, password);
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }
 
     return (
-        <KeyboardAvoidingView 
+        <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >

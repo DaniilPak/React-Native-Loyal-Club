@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Image, Dimensions, StatusBar } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { RNCamera, BarCodeReadEvent } from 'react-native-camera';
 import Con from '../constants';
 import { getUserById } from '../utils/api';
 import { pushAlert } from '../utils/alert';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 interface HomeScannerProps {
     navigation: any;
@@ -16,24 +15,24 @@ function HomeScanner({ navigation }: HomeScannerProps) {
 
     const handleBarCodeRead = (event: BarCodeReadEvent) => {
         if (isReaded) {
-            console.log("Qr is readed");
+            Con.DEBUG && console.log("Qr is readed");
             return;
         }
 
-        console.log(event.data);
+        Con.DEBUG && console.log(event.data);
 
         const qrReadedCode = event.data;
 
         getUserById(qrReadedCode)
             .then(user => {
-                console.log("User got: ", user);
+                Con.DEBUG && console.log("User got: ", user);
 
                 if (user) {
                     navigation.navigate("QRDetail", { qrData: event.data });
                 }
             })
             .catch(err => {
-                console.log("Cant get user in home scanner: ", err);
+                Con.DEBUG && console.log("Cant get user in home scanner: ", err);
 
                 // User not found
                 setIsReaded(true);

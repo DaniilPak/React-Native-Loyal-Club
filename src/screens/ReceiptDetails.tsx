@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native';
-import { getBusinessInfoByBid, getDetailedReceipt } from '../utils/api';
-import TextBlock from '../components/TextBlock';
+import React, { useState, useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { getDetailedReceipt } from '../utils/api';
 import TextBlockV2 from '../components/TextBlockV2';
 import Con from '../constants';
 
@@ -19,16 +18,16 @@ function ReceiptDetails({ route }: ReceiptDetailsProps) {
     const [allSet, setAllSet] = useState(false);
 
     useEffect(() => {
-        console.log("Receipt details init ", _receiptId, "businessId: ", businessId);
+        Con.DEBUG && console.log("Receipt details init ", _receiptId, "businessId: ", businessId);
 
         getDetailedReceipt(_receiptId)
             .then(detailedReceipt => {
-                console.log("Got detailed receipt", detailedReceipt);
+                Con.DEBUG && console.log("Got detailed receipt", detailedReceipt);
                 setDetailedReceipt(detailedReceipt);
             })
             .finally(() => setAllSet(true))
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }, []);
 

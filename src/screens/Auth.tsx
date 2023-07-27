@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import GrayButton from '../components/GrayButton';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import { getUserByPhoneNumber } from '../utils/api';
 import BlueButton from '../components/BlueButton';
+import Con from '../constants';
 
 interface AuthProps {
     navigation: any;
@@ -23,7 +23,7 @@ function Auth({ navigation }: AuthProps) {
                 }
             })
             .catch(err => {
-                console.log("Cant get user by phone number: ", err);
+                Con.DEBUG && console.log("Cant get user by phone number: ", err);
             })
     }
 

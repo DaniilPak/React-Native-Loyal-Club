@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Alert } from 'react-native';
 import BlueButton from '../components/BlueButton';
 import DeletableObject from '../components/DeletableObject';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -48,35 +48,35 @@ function ManageWorkers({ route, navigation }: ManageWorkersProps) {
     }
 
     const confirmDeleteWorker = (workerId: string, businessId: string) => {
-        console.log("Worker id ", workerId, "businessId ", businessId);
+        Con.DEBUG && console.log("Worker id ", workerId, "businessId ", businessId);
 
         deleteWorkerFromBusiness(workerId, businessId, jwtToken)
             .then(onDelete => {
-                console.log("Worker deleted succesfully ", onDelete);
+                Con.DEBUG && console.log("Worker deleted succesfully ", onDelete);
             })
             .finally(() => navigation.replace('ManageWorkers'))
             .catch(err => {
-                console.log("Cant delete worker", err);
+                Con.DEBUG && console.log("Cant delete worker", err);
             });
     }
 
     const init = () => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
-                console.log("Got async data ", asyncdata);
+                Con.DEBUG && console.log("Got async data ", asyncdata);
                 setUserData(asyncdata.userData);
                 setjwtToken(asyncdata.token);
 
                 const businessId = asyncdata.userData.business;
                 getWorkersByBid(businessId)
                     .then(workers => {
-                        console.log("Got workers", workers);
+                        Con.DEBUG && console.log("Got workers", workers);
                         setWorkers(workers);
                     })
-                    .catch(err => console.log(err));
+                    .catch(err => Con.DEBUG && console.log(err));
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }
 

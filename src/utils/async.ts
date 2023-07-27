@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Con from '../constants';
 
 export async function saveArrayToLocalStorage(arrayToStore: any[], key: string) {
 
@@ -8,7 +9,7 @@ export async function saveArrayToLocalStorage(arrayToStore: any[], key: string) 
     try {
         await AsyncStorage.setItem(key, arrayString);
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -23,7 +24,7 @@ export async function getArrayFromLocalStorage(key: string) {
             return retrievedArray;
         }
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -34,7 +35,7 @@ export async function setItemToLocalStorage(key: string, value: string) {
     try {
         await AsyncStorage.setItem(key, value);
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -45,7 +46,7 @@ export async function getItemFromLocalStorage(key: string): Promise<string | nul
         const item = await AsyncStorage.getItem(key);
         return item !== null ? item : null;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }

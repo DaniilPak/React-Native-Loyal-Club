@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import Con from '../constants';
-import BlueButton from '../components/BlueButton';
 
 interface LoadingProps {
     navigation: any;

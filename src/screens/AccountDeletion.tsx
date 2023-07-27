@@ -1,18 +1,11 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList, Alert } from 'react-native';
-import { TextInputMask } from 'react-native-masked-text';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 import Con from '../constants';
-import TextBlock from '../components/TextBlock';
-import TextMultiBlock from '../components/TextMultiBlock';
 import BlueButton from '../components/BlueButton';
-import { ScrollView } from 'react-native-gesture-handler';
-import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { deleteAccountForever, getLoyaltyCardDetails } from '../utils/api';
-import NavigationRow from '../components/NavigationRow';
-import NavigationRowExtended from '../components/NavigationRowExtended';
+import { deleteAccountForever } from '../utils/api';
 import { AuthContext } from '../contexts/AuthContext';
 import { showMessage } from 'react-native-flash-message';
 
@@ -70,15 +63,15 @@ function AccountDeletion({ route, navigation }: AccountDeletionScreenProps) {
                                     style: 'destructive',
                                     onPress: () => {
                                         // Delete account here
-                                        console.log("asyncData.userData", asyncData.userData, "asyncData.token", asyncData.token);
+                                        Con.DEBUG && console.log("asyncData.userData", asyncData.userData, "asyncData.token", asyncData.token);
 
                                         deleteAccountForever(asyncData.userData._id, asyncData.token)
                                             .then(() => {
-                                                console.log("Calling user complete");
+                                                Con.DEBUG && console.log("Calling user complete");
                                                 signOut();
                                             })
                                             .catch(err => {
-                                                console.log("Error", err);
+                                                Con.DEBUG && console.log("Error", err);
                                             })
                                     },
                                 },

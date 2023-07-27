@@ -1,16 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList, ActivityIndicator } from 'react-native';
-import { TextInputMask } from 'react-native-masked-text';
+import React, { useState, useEffect } from 'react';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 import Con from '../constants';
-import TextBlock from '../components/TextBlock';
-import TextMultiBlock from '../components/TextMultiBlock';
-import BlueButton from '../components/BlueButton';
-import { ScrollView } from 'react-native-gesture-handler';
 import TextBlockV2 from '../components/TextBlockV2';
-import { getArrayFromLocalStorage, saveArrayToLocalStorage } from '../utils/async';
-import { getLoyaltyCardDetails, getUserById, updateAuth } from '../utils/api';
+import { getArrayFromLocalStorage } from '../utils/async';
+import { getLoyaltyCardDetails, getUserById } from '../utils/api';
 
 interface MyLoyaltyCardsScreenProps {
     navigation: any;
@@ -33,7 +28,7 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
             setIsLoading(true);
             initFunc();
         } catch {
-            console.log("Failed to refresh");
+            Con.DEBUG && console.log("Failed to refresh");
         } finally {
             setIsRefreshing(false);
         }
@@ -43,7 +38,7 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
         try {
             const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
             const user = await getUserById(asyncdata.userData._id);
-            console.log("User got: ", user);
+            Con.DEBUG && console.log("User got: ", user);
 
             setUserData(asyncdata.userData);
             const apiLoyaltyCards = user.loyaltyCards;
@@ -51,7 +46,7 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
             const loyaltyCardPromises = apiLoyaltyCards.map(loyaltyCardId => getLoyaltyCardDetails(loyaltyCardId));
 
             const tempLoyaltyCards = await Promise.all(loyaltyCardPromises);
-            console.log("++++++++", tempLoyaltyCards);
+            Con.DEBUG && console.log("++++++++", tempLoyaltyCards);
 
             // Sorting the array alphabetically
             tempLoyaltyCards.sort((a, b) => {
@@ -69,7 +64,7 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
 
             setLoyaltyCards(tempLoyaltyCards);
         } catch (err) {
-            console.log(err);
+            Con.DEBUG && console.log(err);
         } finally {
             setIsLoading(false);
         }

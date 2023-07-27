@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, StyleSheet, Alert } from 'react-native';
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
@@ -22,11 +22,11 @@ function Settings({ route, navigation }: SettingsProps) {
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
-                console.log("async data settings", asyncdata.userData);
+                Con.DEBUG && console.log("async data settings", asyncdata.userData);
                 setUserData(asyncdata.userData);
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }, [])
 

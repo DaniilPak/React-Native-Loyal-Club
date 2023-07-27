@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, FlatList, Modal, Alert } from 'react-native';
+import { View, StyleSheet, Modal } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
 import Con from '../constants';
-import TextBlock from '../components/TextBlock';
-import TextMultiBlock from '../components/TextMultiBlock';
 import BlueButton from '../components/BlueButton';
-import { ScrollView } from 'react-native-gesture-handler';
-import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { getBusinessInfoByBid, getLoyaltyCardDetails, updateBusinessLoyaltyPercent } from '../utils/api';
+import { getBusinessInfoByBid, updateBusinessLoyaltyPercent } from '../utils/api';
 import NavigationRow from '../components/NavigationRow';
 import NavigationRowExtended from '../components/NavigationRowExtended';
 import GrayButton from '../components/GrayButton';
@@ -62,7 +58,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
             setInputValue('');
             handleCloseModal();
 
-            console.log(userData.token, numberValue, userData.userData.business);
+            Con.DEBUG && console.log(userData.token, numberValue, userData.userData.business);
 
             updateBusinessLoyaltyPercent(userData.token, numberValue, userData.userData.business)
                 .then(() => {
@@ -86,7 +82,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
                 setUserData(asyncdata);
-                console.log("ASync data: ", asyncdata);
+                Con.DEBUG && console.log("ASync data: ", asyncdata);
 
                 // Get business 
                 getBusinessInfoByBid(asyncdata.userData.business)
@@ -94,7 +90,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
                     .catch(err => { });
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }, []);
 

@@ -11,10 +11,10 @@ export async function makeAuth(phone: string, password: string): Promise<any> {
 
     try {
         const response = await axios.post(`${Con.api}/auth`, requestData);
-        console.log(response.data);
+        Con.DEBUG && console.log(response.data);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -26,7 +26,7 @@ export async function updateAuth(): Promise<any> {
         const phone = await getItemFromLocalStorage(Con.PHONE_ASYNC_KEY);
         const password = await getItemFromLocalStorage(Con.PASSWORD_ASYNC_KEY);
 
-        console.log("Update auth with: ", phone, password);
+        Con.DEBUG && console.log("Update auth with: ", phone, password);
 
         const requestData = {
             "phoneNumber": phone,
@@ -36,7 +36,7 @@ export async function updateAuth(): Promise<any> {
         const response = await axios.post(`${Con.api}/auth`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -53,7 +53,7 @@ export async function getLoyaltyCardDetails(_loyaltyCardId: string): Promise<any
         const response = await axios.post(`${Con.api}/loyaltycard/getloyaltycardbyid`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -69,7 +69,7 @@ export async function getBusinessInfoByBid(_bid: string): Promise<any> {
         const response = await axios.post(`${Con.api}/business/getbusinessbyid`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 
@@ -86,7 +86,7 @@ export async function getBusinessReceiptsWithFilter(businessId: string, startdat
         const response = await axios.post(`${Con.api}/business/getBusinessReceiptsWithFilter`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -150,7 +150,7 @@ export async function updateBusinessLoyaltyPercent(
         const response = await axios.post(`${Con.api}/business/updatebusinessloyaltypercent`, requestData, config);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -165,7 +165,7 @@ export async function getOrCreateLoyaltyCardByClientIdAndBusinessId(cliendId: st
         const response = await axios.post(`${Con.api}/loyaltycard/getorcreatecard`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -179,7 +179,7 @@ export async function getDetailedReceipt(receiptId: string) {
         const response = await axios.post(`${Con.api}/receipt/getdetailedreceipt`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -193,7 +193,7 @@ export async function getWorkersByBid(businessId: string) {
         const response = await axios.post(`${Con.api}/business/getbusinesswithworkers`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -216,7 +216,7 @@ export async function deleteWorkerFromBusiness(workerId: string, businessId: str
         const response = await axios.post(`${Con.api}/business/workerdelete`, requestData, config);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -239,7 +239,7 @@ export async function addWorkerFromBusiness(workerId: string, businessId: string
         const response = await axios.post(`${Con.api}/business/workeradd`, requestData, config);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -253,7 +253,7 @@ export async function getUserById(userId: string) {
         const response = await axios.post(`${Con.api}/user/getuserbyid`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -267,7 +267,7 @@ export async function getUserByPhoneNumber(phoneNumber: string) {
         const response = await axios.post(`${Con.api}/user/getuserbyphone`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -290,7 +290,7 @@ export async function createNewUser(phoneNumber: string, name: string, surname: 
         const response = await axios.post(`${Con.api}/user`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -312,7 +312,7 @@ export async function deleteAccountForever(userId: string, jwtToken: string) {
         const response = await axios.post(`${Con.api}/user/calluser`, requestData, config);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }
@@ -327,7 +327,7 @@ export async function setFcmToken(userId: string, fcmToken?: string) {
         const response = await axios.post(`${Con.api}/user/setfcmtoken`, requestData);
         return response.data;
     } catch (error) {
-        console.error(error);
+        Con.DEBUG && console.error(error);
         throw error; // You can choose to handle the error here or propagate it
     }
 }

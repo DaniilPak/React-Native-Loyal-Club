@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import GrayButton from '../components/GrayButton';
-import { TextInputMask } from 'react-native-masked-text';
 import { createNewUser, makeAuth } from '../utils/api';
 import { AuthContext } from '../contexts/AuthContext';
 import { setItemToLocalStorage } from '../utils/async';
@@ -69,7 +67,7 @@ function Registration({ navigation, route }: RegistrationProps) {
     };
 
     const okFunc = () => {
-        console.log("Ok");
+        Con.DEBUG && console.log("Ok");
     }
 
     const registerNew = () => {
@@ -77,7 +75,7 @@ function Registration({ navigation, route }: RegistrationProps) {
         const errors = validateForm(name, surname, password);
 
         const errorKeys = Object.entries(errors);
-        console.log("Errors: ", errorKeys);
+        Con.DEBUG && console.log("Errors: ", errorKeys);
 
         if (errorKeys.length > 0) {
             errorKeys.forEach(err => {
@@ -90,7 +88,7 @@ function Registration({ navigation, route }: RegistrationProps) {
         // Create new user
         createNewUser(phone, name, surname, password)
             .then(newUser => {
-                console.log("newUser", newUser);
+                Con.DEBUG && console.log("newUser", newUser);
 
                 // Got new user info and now 
                 // lets auth
@@ -104,16 +102,16 @@ function Registration({ navigation, route }: RegistrationProps) {
                         signIn(apidata);
                     })
                     .catch(err => {
-                        console.log("Error with making auth after register ", err);
+                        Con.DEBUG && console.log("Error with making auth after register ", err);
                     });
             })
             .catch(err => {
-                console.log("Error with creating new user: ", err);
+                Con.DEBUG && console.log("Error with creating new user: ", err);
             })
     }
 
     return (
-        <KeyboardAvoidingView 
+        <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Switch, ActivityIndicator, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, Switch, ActivityIndicator, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
@@ -8,7 +8,7 @@ import TextBlock from '../components/TextBlock';
 import TextMultiBlock from '../components/TextMultiBlock';
 import BlueButton from '../components/BlueButton';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { addPayment, getBusinessInfoByBid, getLoyaltyCardDetails, getOrCreateLoyaltyCardByClientIdAndBusinessId, getUserById } from '../utils/api';
+import { addPayment, getBusinessInfoByBid, getOrCreateLoyaltyCardByClientIdAndBusinessId, getUserById } from '../utils/api';
 import { ScrollView } from 'react-native-gesture-handler';
 
 interface QRDetailScreenProps {
@@ -55,7 +55,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
     };
 
     const confirmPayment = () => {
-        console.log("Button triggered", summary);
+        Con.DEBUG && console.log("Button triggered", summary);
 
         // Button management
         setButtonDisabled(true);
@@ -63,11 +63,11 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
         const pureNumberSummary = summary.replace(/[^0-9]/g, '');
         let intSummary = parseInt(pureNumberSummary)
-        console.log("Summary number: ", pureNumberSummary);
+        Con.DEBUG && console.log("Summary number: ", pureNumberSummary);
 
         let finalBonus = (intSummary / 100) * loyaltyPercent;
         let minusBonus = 0;
-        console.log("Final bonus: ", finalBonus);
+        Con.DEBUG && console.log("Final bonus: ", finalBonus);
 
         // get inpout money value
         const inputMoneyValue = moneyValue.replace(/[^0-9]/g, '');
@@ -75,17 +75,17 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
         if (switcherEnabled) {
             if (saveBonus > inputDigitMoneyValue) {
-                console.log("Save b and id", saveBonus, inputDigitMoneyValue);
+                Con.DEBUG && console.log("Save b and id", saveBonus, inputDigitMoneyValue);
                 minusBonus = inputDigitMoneyValue;
             } else {
-                console.log("Else scenario");
+                Con.DEBUG && console.log("Else scenario");
                 minusBonus = saveBonus;
             }
-            console.log("minusBonus", minusBonus);
+            Con.DEBUG && console.log("minusBonus", minusBonus);
         }
 
-        console.log("intSummary: ", intSummary);
-        console.log("All data: ",
+        Con.DEBUG && console.log("intSummary: ", intSummary);
+        Con.DEBUG && console.log("All data: ",
             intSummary,
             existingOrCreatedLoyaltyCard._id,
             clientId,
@@ -105,7 +105,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
             inputDigitMoneyValue,
         )
             .then(receiptResponse => {
-                console.log("Response from confirming payment", receiptResponse);
+                Con.DEBUG && console.log("Response from confirming payment", receiptResponse);
                 navigation.navigate("SuccessPayment", { receiptResponse });
 
                 navigation.reset({
@@ -122,7 +122,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
             })
             .catch(err => {
-                console.log("Error with adding a payment", err);
+                Con.DEBUG && console.log("Error with adding a payment", err);
             })
     }
 
@@ -137,7 +137,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
 
             if (asyncdata) {
                 // Setting user data from async storage
-                console.log("Local storage async data: (QRDetails) ", asyncdata);
+                Con.DEBUG && console.log("Local storage async data: (QRDetails) ", asyncdata);
                 setUserData(asyncdata.userData);
                 setUserToken(asyncdata.token);
 
@@ -149,13 +149,13 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                 // Get User's Loyalty Card by businessId & userId
                 // if LoyaltyCard doesn't exist => then create one
                 const existingOrCreatedCard = await getOrCreateLoyaltyCardByClientIdAndBusinessId(clientId, businessId);
-                console.log("Existing or created loyalty card", existingOrCreatedCard);
+                Con.DEBUG && console.log("Existing or created loyalty card", existingOrCreatedCard);
                 setExistingOrCreatedLoyaltyCard(existingOrCreatedCard);
                 // Get and set Save bonus (How much bonus on the loyalty card)
                 setSaveBonus(existingOrCreatedCard.bonusAmount);
 
                 const businessDetails = await getBusinessInfoByBid(businessId);
-                console.log("Business details", businessDetails);
+                Con.DEBUG && console.log("Business details", businessDetails);
                 // set business settings
                 setCurrencySign(businessDetails.currencySign);
                 setLoyaltyPercent(businessDetails.loyalPercent);
@@ -163,14 +163,14 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                 // changing title
                 navigation.setOptions({ title: businessDetails.name });
 
-                console.log("client id", clientId);
+                Con.DEBUG && console.log("client id", clientId);
                 // Get clients info
                 const user = await getUserById(clientId);
-                console.log("Client got: ", user);
+                Con.DEBUG && console.log("Client got: ", user);
                 setClient(user);
             }
         } catch (err) {
-            console.log(err);
+            Con.DEBUG && console.log(err);
         } finally {
             setIsLoading(false);
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { RNCamera, BarCodeReadEvent } from 'react-native-camera';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
@@ -18,7 +18,7 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
 
     const handleBarCodeRead = (event: BarCodeReadEvent) => {
         if (!userData || isScanned) {
-            console.log("User data not loaded yet or already scanned");
+            Con.DEBUG && console.log("User data not loaded yet or already scanned");
             return;
         }
 
@@ -31,7 +31,7 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
 
         addWorkerFromBusiness(workerId, businessId, jwtToken)
             .then(res => {
-                console.log("Successfully added a new worker: ", res);
+                Con.DEBUG && console.log("Successfully added a new worker: ", res);
             })
             .finally(() => {
                 setTimeout(() => {
@@ -39,7 +39,7 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
                 }, 1000);
             })
             .catch(err => {
-                console.log("Error with adding a new worker: ", err);
+                Con.DEBUG && console.log("Error with adding a new worker: ", err);
                 setIsScanned(false);
             });
     };
@@ -51,7 +51,7 @@ function AddWorkerScanner({ navigation }: AddWorkerScannerProps) {
                 setjwtToken(asyncdata.token);
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }, []);
 

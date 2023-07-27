@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
-import GrayButton from '../components/GrayButton';
 import BlueButton from '../components/BlueButton';
 
 interface QRScreenProps {
@@ -16,11 +15,11 @@ function QRScreen({ navigation }: QRScreenProps) {
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
-                console.log("My async data token", asyncdata.userData._id);
+                Con.DEBUG && console.log("My async data token", asyncdata.userData._id);
                 setQr(asyncdata.userData._id);
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
             });
     }, [])
 

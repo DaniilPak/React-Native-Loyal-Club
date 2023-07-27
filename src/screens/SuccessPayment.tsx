@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 
@@ -16,7 +16,7 @@ function SuccessPayment({ route, navigation }: SuccessPaymentProps) {
     }
 
     useEffect(() => {
-        console.log("receiptResponse", receiptResponse);
+        Con.DEBUG && console.log("receiptResponse", receiptResponse);
     }, []);
 
     return (

@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator, Modal } from 'react-native';
-import NavigationRow from '../components/NavigationRow';
-import NavigationRowExtended from '../components/NavigationRowExtended';
-import { getBusinessInfoByBid, getBusinessReceiptsWithFilter } from '../utils/api';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, ActivityIndicator, Modal } from 'react-native';
+import { getBusinessInfoByBid } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
 
 import moment from 'moment';
 import ReceiptRow from '../components/ReceiptRow';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import PressableIcon from '../components/PressableIcon.';
 import GrayButton from '../components/GrayButton';
-import LoadingOverlay from '../components/LoadingOverlay';
 
 interface SettingsProps {
     navigation: any;
@@ -29,7 +25,7 @@ function History({ route, navigation }: SettingsProps) {
     const [businessDetails, setBusinessDetails] = useState([]);
 
     const receiptDetails = (_receiptId: string) => {
-        console.log("Receipt details", _receiptId);
+        Con.DEBUG && console.log("Receipt details", _receiptId);
         navigation.navigate("ReceiptDetails", { _receiptId, businessId: businessId })
     }
 
@@ -40,7 +36,7 @@ function History({ route, navigation }: SettingsProps) {
             setIsLoading(true);
             initFunc();
         } catch {
-            console.log("Failed to refresh");
+            Con.DEBUG && console.log("Failed to refresh");
         } finally {
             setIsRefreshing(false);
         }
@@ -49,7 +45,7 @@ function History({ route, navigation }: SettingsProps) {
     const initFunc = async () => {
         try {
             const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
-            console.log("Got async data in History page", asyncdata);
+            Con.DEBUG && console.log("Got async data in History page", asyncdata);
 
             const businessId = asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
             setBusinessId(businessId);
@@ -57,14 +53,14 @@ function History({ route, navigation }: SettingsProps) {
             // Get business info, and then receipts
             const businessDetails = await getBusinessInfoByBid(businessId);
             setBusinessDetails(businessDetails);
-            console.log("Business details: ", businessDetails);
+            Con.DEBUG && console.log("Business details: ", businessDetails);
 
             // Setting receipts
             const businessReceipts = businessDetails.receipts;
 
             // Sorting by new date
             const sortedReceipts = [...businessReceipts].sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
-            console.log("Sorted receipts: ", sortedReceipts);
+            Con.DEBUG && console.log("Sorted receipts: ", sortedReceipts);
 
             setReceipts(sortedReceipts);
             // Setting currency of the business
@@ -72,7 +68,7 @@ function History({ route, navigation }: SettingsProps) {
 
             setIsLoading(false);
         } catch (err) {
-            console.log(err);
+            Con.DEBUG && console.log(err);
         }
     };
 
@@ -99,11 +95,11 @@ function History({ route, navigation }: SettingsProps) {
         const filteredReceipts = businessDetails.receipts.filter(
             (receipt) => new Date(receipt.purchaseDate) >= sevenDaysAgo && new Date(receipt.purchaseDate) <= currentDate
         );
-        console.log("Filtered receipts within last 7 days: ", filteredReceipts);
+        Con.DEBUG && console.log("Filtered receipts within last 7 days: ", filteredReceipts);
 
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
-        console.log("Sorted receipts: ", sortedReceipts);
+        Con.DEBUG && console.log("Sorted receipts: ", sortedReceipts);
 
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
@@ -125,17 +121,17 @@ function History({ route, navigation }: SettingsProps) {
 
         // Get the first day of the current month
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        console.log("First month day: ", firstDayOfMonth);
+        Con.DEBUG && console.log("First month day: ", firstDayOfMonth);
 
         // Filter receipts for the current month
         const filteredReceipts = businessDetails.receipts.filter(
             (receipt) => new Date(receipt.purchaseDate) >= firstDayOfMonth && new Date(receipt.purchaseDate) <= currentDate
         );
-        console.log("Filtered receipts within this month: ", filteredReceipts);
+        Con.DEBUG && console.log("Filtered receipts within this month: ", filteredReceipts);
 
         // Sorting by new date
         const sortedReceipts = filteredReceipts.sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
-        console.log("Sorted receipts: ", sortedReceipts);
+        Con.DEBUG && console.log("Sorted receipts: ", sortedReceipts);
 
         // Setting Flat List filtered receipts
         setReceipts(sortedReceipts);
@@ -157,7 +153,7 @@ function History({ route, navigation }: SettingsProps) {
 
         // Sorting by new date
         const sortedReceipts = [...businessReceipts].sort((a, b) => new Date(b.purchaseDate) - new Date(a.purchaseDate));
-        console.log("Sorted receipts: ", sortedReceipts);
+        Con.DEBUG && console.log("Sorted receipts: ", sortedReceipts);
 
         setReceipts(sortedReceipts);
 
