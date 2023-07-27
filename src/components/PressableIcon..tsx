@@ -14,7 +14,7 @@ function PressableIcon({ onPress, icon }: PressableIconProps) {
     const iconColor = Con.AppleBlueLight;
 
     return (
-        <TouchableOpacity style={{ padding: 15 }} onPress={onPress}>
+        <TouchableOpacity style={{ paddingRight: 15 }} onPress={onPress}>
             <Ionicons name={icon} size={iconSize} color={iconColor} />
         </TouchableOpacity>
     );

@@ -14,9 +14,15 @@ adb reverse tcp:3000 tcp:3000
 // to show Flash Message
 
 showMessage({
-  message: "Hello World",
-  description: "This is our second message",
+  message: "Hello",
+  description: "This",
   type: "success",
+});
+
+showMessage({
+  message: "Hello",
+  description: "This",
+  type: "warning",
 });
 
 // To show modal

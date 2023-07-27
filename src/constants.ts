@@ -40,10 +40,11 @@ const Con = {
 
     // AWS
     // http://18.118.84.185:3000/api
-    api: 'http://18.118.84.185:3000/api',
+    api: 'http://localhost:3000/api',
     API_AUTH_DATA_KEY: 'authdata',
     PHONE_ASYNC_KEY: 'phone',
     PASSWORD_ASYNC_KEY: 'password',
+    DEBUG: true,
 
     iconSize: 25,
     iconColor: 'rgb(0, 122, 255)',

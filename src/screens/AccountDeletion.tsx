@@ -10,10 +10,11 @@ import BlueButton from '../components/BlueButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { deleteAccountForever, deleteUserAccount, getLoyaltyCardDetails } from '../utils/api';
+import { deleteAccountForever, getLoyaltyCardDetails } from '../utils/api';
 import NavigationRow from '../components/NavigationRow';
 import NavigationRowExtended from '../components/NavigationRowExtended';
 import { AuthContext } from '../contexts/AuthContext';
+import { showMessage } from 'react-native-flash-message';
 
 interface AccountDeletionScreenProps {
     navigation: any;
@@ -28,11 +29,17 @@ function AccountDeletion({ route, navigation }: AccountDeletionScreenProps) {
     useEffect(() => {
         getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
             .then(asyncdata => {
-                console.log("asyncdata", asyncdata);
+                Con.DEBUG && console.log("asyncdata", asyncdata);
                 setAsyncData(asyncdata);
             })
             .catch(err => {
-                console.log(err);
+                Con.DEBUG && console.log(err);
+
+                showMessage({
+                    message: "Can't get localstorage data",
+                    description: "",
+                    type: "warning",
+                });
             });
     }, []);
 
