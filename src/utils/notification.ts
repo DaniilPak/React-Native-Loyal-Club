@@ -1,12 +1,12 @@
 import notifee, { AndroidImportance } from '@notifee/react-native';
-import messaging from '@react-native-firebase/messaging';
+import { firebase } from '@react-native-firebase/messaging';
 import { Platform } from 'react-native';
 import Con from '../constants';
 
 // Get the FCM token
 export async function getFCMToken() {
     try {
-        const fcmToken = await messaging().getToken();
+        const fcmToken = await firebase.messaging().getToken();
         if (fcmToken) {
             Con.DEBUG && console.log('FCM Token:', fcmToken);
             return fcmToken;

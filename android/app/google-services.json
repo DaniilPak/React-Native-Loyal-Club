@@ -22,13 +22,21 @@
           }
         },
         {
+          "client_id": "482925941374-ht55jr4bp84ql2at9ullhcdk3aegss11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loyalclub",
+            "certificate_hash": "8abd44dec9875b7108394b83af097b0448636882"
+          }
+        },
+        {
           "client_id": "482925941374-0osgu6lnbhvd8br26avip3gepu9r0bf4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAXq28bC0X5CFa0gozfkhRxsylFL_3UDaA"
+          "current_key": "AIzaSyB9OqUwp8YHY9qgmnWHgEM_gi_aUvEv5HM"
         }
       ],
       "services": {
@@ -37,6 +45,14 @@
             {
               "client_id": "482925941374-0osgu6lnbhvd8br26avip3gepu9r0bf4.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "482925941374-121s2ej659aifhrga4mc4lme64b93k06.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.loyalclub",
+                "app_store_id": "6450631748"
+              }
             }
           ]
         }

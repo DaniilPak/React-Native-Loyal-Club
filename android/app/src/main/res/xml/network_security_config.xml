@@ -3,6 +3,7 @@
   <base-config cleartextTrafficPermitted="true">
     <trust-anchors>
       <!-- Include any additional certificates or CA certificates here if required -->
+      <certificates src="system" />  <!-- for Firebase -->
     </trust-anchors>
   </base-config>
 </network-security-config>

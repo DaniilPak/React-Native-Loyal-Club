@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, createContext, useMemo } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
