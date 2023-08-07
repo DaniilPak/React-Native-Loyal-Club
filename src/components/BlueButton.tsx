@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Animated, TouchableWithoutFeedback } from 'react-native';
 import Con from '../constants';
 
 interface BlueButtonProps {
@@ -11,25 +11,44 @@ interface BlueButtonProps {
 }
 
 function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading = false }: BlueButtonProps) {
+    const scaleAnim = useRef(new Animated.Value(1)).current;
 
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+        toValue: 0.9, // Desired smaller size
+        useNativeDriver: true,
+        }).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+        toValue: 1, // Back to original size
+        useNativeDriver: true,
+        }).start();
+    };
+  
     if (!icon) {
         return (
-            <TouchableOpacity style={styles.button} onPress={onPress} disabled={isDisabled}>
-                <Text style={styles.buttonText}>{title}</Text>
-                {isLoading &&
-                    <ActivityIndicator />
-                }
-            </TouchableOpacity>
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                <TouchableOpacity activeOpacity={1} onPressIn={handlePressIn} onPressOut={handlePressOut} style={styles.button} onPress={onPress} disabled={isDisabled}>
+                    <Text style={styles.buttonText}>{title}</Text>
+                    {isLoading &&
+                        <ActivityIndicator />
+                    }
+                </TouchableOpacity>
+            </Animated.View>
         );
     } else {
         return (
-            <TouchableOpacity style={styles.button} onPress={onPress}>
-                <Text style={styles.buttonText}>{title}</Text>
-                {icon}
-                {isLoading &&
-                    <ActivityIndicator />
-                }
-            </TouchableOpacity>
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                <TouchableOpacity activeOpacity={1} onPressIn={handlePressIn} onPressOut={handlePressOut} style={styles.button} onPress={onPress}>
+                    <Text style={styles.buttonText}>{title}</Text>
+                    {icon}
+                    {isLoading &&
+                        <ActivityIndicator />
+                    }
+                </TouchableOpacity>
+            </Animated.View>
         );
     }
 }
@@ -38,8 +57,8 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         backgroundColor: Con.AppleBlueLight,
-        paddingVertical: 13,
-        borderRadius: 4,
+        paddingVertical: 16,
+        borderRadius: 16,
         alignItems: 'center',
         justifyContent: 'center',
         width: '90%',
@@ -48,7 +67,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontSize: 18,
+        fontSize: 19,
+        fontWeight: '600',
         marginRight: 10,
     },
 });

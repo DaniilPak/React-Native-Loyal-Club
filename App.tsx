@@ -5,6 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 Ionicons.loadFont();
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+MaterialCommunityIcons.loadFont();
+
 import Con from './src/constants';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import messaging from '@react-native-firebase/messaging';
@@ -65,10 +68,10 @@ function HomeStack() {
             let rn = route.name;
             if (rn === 'Scan QR') {
               iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="scan-outline" size={iconSize} color={iconColor} />
+              return <MaterialCommunityIcons name="qrcode-scan" size={iconSize} color={iconColor} />
             } else if (rn === 'QR card') {
               iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="qr-code-outline" size={iconSize} color={iconColor} />
+              return <MaterialCommunityIcons name="qrcode" size={iconSize} color={iconColor} />
             } else if (rn === 'History') {
               iconColor = focused ? blueColor : '#999';
               return <Ionicons name="book-outline" size={iconSize} color={iconColor} />

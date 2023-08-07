@@ -28,8 +28,8 @@ function Auth({ navigation }: AuthProps) {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black' }}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={{ color: 'black', alignSelf: 'center' }}>
                 Please enter your phone number
             </Text>
             <TextInputMask

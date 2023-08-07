@@ -115,8 +115,8 @@ function Registration({ navigation, route }: RegistrationProps) {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: 'black' }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+                <Text style={{ color: 'black', alignSelf: 'center' }}>
                     Lets create an account for
                 </Text>
                 <Text style={{ color: 'black' }}>

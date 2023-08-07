@@ -34,6 +34,7 @@ const Con = {
     AppleGrayDark: 'rgb(99, 99, 102)',
     AppleGray6: 'rgb(242, 242, 247)',
     AppleOrange: 'rgb(255, 149, 0)',
+    LoyalClubColor: '#0d322b',
 
     // LOCAL
     // 'http://localhost:3000/api' 

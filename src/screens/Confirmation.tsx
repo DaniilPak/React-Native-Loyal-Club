@@ -45,11 +45,11 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
         >
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: 'black' }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+                <Text style={{ color: 'black', alignSelf: 'center' }}>
                     Your account exists, please enter a password
                 </Text>
-                <Text style={{ color: 'black' }}>
+                <Text style={{ color: 'black', alignSelf: 'center' }}>
                     {phone}
                 </Text>
                 <TextInput
