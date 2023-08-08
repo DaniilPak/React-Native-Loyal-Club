@@ -1,20 +1,114 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator, Modal } from 'react-native';
-import { getBusinessInfoByBid } from '../utils/api';
+import { View, StyleSheet, FlatList, ActivityIndicator, Modal, Text } from 'react-native';
+import { getBusinessClients, getBusinessInfoByBid } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import moment from 'moment';
 import ReceiptRow from '../components/ReceiptRow';
 import PressableIcon from '../components/PressableIcon.';
 import GrayButton from '../components/GrayButton';
+import TextBlockV2 from '../components/TextBlockV2';
 
 interface SettingsProps {
     navigation: any;
     route: any;
 }
 
-function History({ route, navigation }: SettingsProps) {
+const Tab = createMaterialTopTabNavigator();
+
+const HistoryTabs = ({ navigation, route }: SettingsProps) => {
+    return (
+        <Tab.Navigator
+            screenOptions={{ swipeEnabled: false }}
+        >
+            <Tab.Screen name="HistoryPart" component={History} initialParams={{ navigation: navigation }} />
+            <Tab.Screen name="BusinessClients" component={BusinessClients} />
+        </Tab.Navigator>
+    );
+};
+
+function BusinessClients() {
+    const [businessClients, setBusinessClients] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const initFunc = async () => {
+        const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+        const isWorker = asyncdata.userData.type == 'Worker';
+        const isBusiness = asyncdata.userData.type == 'Business';
+
+        let clients = [];
+
+        if (isWorker) {
+            clients = await getBusinessClients(asyncdata.userData.workBusiness);
+        } else if (isBusiness) {
+            clients = await getBusinessClients(asyncdata.userData.business);
+        } else {
+            console.log("Error with getting clients occured");
+        }
+
+        console.log("clients", clients);
+        setBusinessClients(clients);
+        setIsLoaded(true);
+    }
+
+    const onRefresh = () => {
+        try {
+            setIsRefreshing(true);
+            // Indicate that loading started
+            setIsLoaded(false);
+            initFunc();
+        } catch {
+            Con.DEBUG && console.log("Failed to refresh");
+        } finally {
+            setIsRefreshing(false);
+        }
+    }
+
+    useEffect(() => {
+        initFunc();
+    }, []);
+
+    const HeaderComponent = () => (
+        <View style={{ marginVertical: 25 }}>
+            <TextBlockV2 text={`${businessClients.length} клиентов`} />
+        </View>
+    );
+
+    const renderItem = function ({ item }: any) {
+        return (
+            <ReceiptRow
+                text={`${item.name} ${item.surname}`}
+                secondaryText={`${item.phoneNumber}`}
+                value={``}
+                valueSecondary={``}
+                valueThird={``}
+                onPress={() => { }}
+            />
+        );
+    }
+
+    return (
+        <View>
+            {isLoaded &&
+                <FlatList
+                    data={businessClients}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item._id}
+                    ListHeaderComponent={<HeaderComponent />}
+                    refreshing={isRefreshing}
+                    onRefresh={onRefresh}
+                />
+            }
+        </View>
+    );
+}
+
+function History({ route }: SettingsProps) {
+    const { navigation } = route.params;
+
     const [receipts, setReceipts] = useState([]);
     const [currencySign, setCurrencySign] = useState('');
     const [businessId, setBusinessId] = useState('');
@@ -229,4 +323,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default History;
+export default HistoryTabs;

@@ -15,18 +15,18 @@ function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading
 
     const handlePressIn = () => {
         Animated.spring(scaleAnim, {
-        toValue: 0.9, // Desired smaller size
-        useNativeDriver: true,
+            toValue: 0.95, // Desired smaller size
+            useNativeDriver: true,
         }).start();
     };
 
     const handlePressOut = () => {
         Animated.spring(scaleAnim, {
-        toValue: 1, // Back to original size
-        useNativeDriver: true,
+            toValue: 1, // Back to original size
+            useNativeDriver: true,
         }).start();
     };
-  
+
     if (!icon) {
         return (
             <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>

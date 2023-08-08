@@ -331,3 +331,17 @@ export async function setFcmToken(userId: string, fcmToken?: string) {
         throw error; // You can choose to handle the error here or propagate it
     }
 }
+
+export async function getBusinessClients(businessId: string) {
+    try {
+        const requestData = {
+            "businessId": businessId,
+        };
+
+        const response = await axios.post(`${Con.api}/business/clients`, requestData);
+        return response.data;
+    } catch (error) {
+        Con.DEBUG && console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
