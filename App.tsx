@@ -33,6 +33,7 @@ import Registration from './src/screens/Registration';
 import Loading from './src/screens/Loading';
 import AccountDeletion from './src/screens/AccountDeletion';
 import { displayNotification, getFCMToken, requestNotificationPermission } from './src/utils/notification';
+import Announcements from './src/screens/Announcements';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -71,7 +72,7 @@ function HomeStack() {
               return <MaterialCommunityIcons name="qrcode-scan" size={iconSize} color={iconColor} />
             } else if (rn === 'QR card') {
               iconColor = focused ? blueColor : '#999';
-              return <MaterialCommunityIcons name="qrcode" size={iconSize} color={iconColor} />
+              return <Ionicons name="qr-code" size={iconSize} color={iconColor} />
             } else if (rn === 'History') {
               iconColor = focused ? blueColor : '#999';
               return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
@@ -233,6 +234,7 @@ function App() {
               <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
               <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
               <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
+              <Stack.Screen name="Announcements" component={Announcements} />
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>

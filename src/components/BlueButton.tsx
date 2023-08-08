@@ -17,6 +17,7 @@ function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading
         Animated.spring(scaleAnim, {
             toValue: 0.95, // Desired smaller size
             useNativeDriver: true,
+            speed: 120,
         }).start();
     };
 
@@ -24,6 +25,7 @@ function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading
         Animated.spring(scaleAnim, {
             toValue: 1, // Back to original size
             useNativeDriver: true,
+            speed: 120,
         }).start();
     };
 

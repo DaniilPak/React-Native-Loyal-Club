@@ -15,6 +15,7 @@ const ShrinkableContainer = (props: any) => {
     Animated.spring(scaleAnim, {
       toValue: 1, // Back to original size
       useNativeDriver: true,
+      speed: 120,
     }).start();
   };
 

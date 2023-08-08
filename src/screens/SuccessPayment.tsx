@@ -20,13 +20,15 @@ function SuccessPayment({ route, navigation }: SuccessPaymentProps) {
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={styles.tip}>
-                {`${receiptResponse.purchaseAmount} ${receiptResponse.currencySign}`} Payment successfull
-            </Text>
-            <Text style={styles.bonusGotText}>
-                {`Given ${receiptResponse.bonusAmount} ${receiptResponse.currencySign} bonus`}
-            </Text>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ alignItems: 'center' }}>
+                <Text style={styles.tip}>
+                    {`${receiptResponse.purchaseAmount} ${receiptResponse.currencySign}`} Payment successfull
+                </Text>
+                <Text style={styles.bonusGotText}>
+                    {`Given ${receiptResponse.bonusAmount} ${receiptResponse.currencySign} bonus`}
+                </Text>
+            </View>
 
             <BlueButton title='Go Home' onPress={goHome} />
         </View>

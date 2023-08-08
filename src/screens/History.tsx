@@ -46,10 +46,10 @@ function BusinessClients() {
         } else if (isBusiness) {
             clients = await getBusinessClients(asyncdata.userData.business);
         } else {
-            console.log("Error with getting clients occured");
+            Con.DEBUG && console.log("Error with getting clients occured");
         }
 
-        console.log("clients", clients);
+        Con.DEBUG && console.log("clients", clients);
         setBusinessClients(clients);
         setIsLoaded(true);
     }

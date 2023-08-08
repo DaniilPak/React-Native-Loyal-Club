@@ -345,3 +345,43 @@ export async function getBusinessClients(businessId: string) {
         throw error; // You can choose to handle the error here or propagate it
     }
 }
+
+export async function makeAnnouncement(jwtToken: string, businessId: string, announceBody: string) {
+    try {
+        const requestData = {
+            "businessId": businessId,
+            "announceBody": announceBody,
+        };
+
+        const headers = {
+            Authorization: jwtToken, // Replace "your_access_token" with your actual token
+        };
+
+        const config = {
+            headers: headers,
+        };
+
+        const response = await axios.post(`${Con.api}/business/announce`, requestData, config);
+        return response.data;
+    } catch (error) {
+        Con.DEBUG && console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+export async function removeFcmToken(userId: string) {
+    try {
+        const requestData = {
+            "userId": userId,
+        };
+
+        const response = await axios.post(`${Con.api}/user/removefcmtoken`, requestData);
+        return response.data;
+    } catch (error) {
+        Con.DEBUG && console.error(error);
+        throw error; // You can choose to handle the error here or propagate it
+    }
+}
+
+
+

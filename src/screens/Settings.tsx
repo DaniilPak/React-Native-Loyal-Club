@@ -8,6 +8,7 @@ Ionicons.loadFont();
 import NavigationRow from '../components/NavigationRow';
 import GrayButton from '../components/GrayButton';
 import { AuthContext } from '../contexts/AuthContext';
+import { removeFcmToken } from '../utils/api';
 
 interface SettingsProps {
     navigation: any;
@@ -55,6 +56,8 @@ function Settings({ route, navigation }: SettingsProps) {
                     text: 'Sign out',
                     style: 'destructive',
                     onPress: () => {
+                        // Remove FCM token for not getting notifications
+                        removeFcmToken(userData._id);
                         // Handle delete logic here
                         signOut();
                     },

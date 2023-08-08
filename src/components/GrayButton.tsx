@@ -14,6 +14,7 @@ function GrayButton({ title, onPress }: GrayButtonProps) {
         Animated.spring(scaleAnim, {
             toValue: 0.95, // Desired smaller size
             useNativeDriver: true,
+            speed: 120,
         }).start();
     };
 
@@ -21,6 +22,7 @@ function GrayButton({ title, onPress }: GrayButtonProps) {
         Animated.spring(scaleAnim, {
             toValue: 1, // Back to original size
             useNativeDriver: true,
+            speed: 120,
         }).start();
     };
 

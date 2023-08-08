@@ -25,6 +25,10 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
     const [userData, setUserData] = useState([]);
     const [businessDetails, setBusinessDetails] = useState([]);
 
+    const manageAnnouncements = () => {
+        navigation.navigate("Announcements");
+    }
+
     const manageWorkersOnPress = () => {
         navigation.navigate("ManageWorkers");
     }
@@ -96,6 +100,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
 
     return (
         <View style={{ flex: 1, marginTop: 10 }}>
+            <NavigationRow text='Announcements' onPress={manageAnnouncements} />
             <NavigationRow text='Manage Workers' onPress={manageWorkersOnPress} />
             {businessDetails && <NavigationRowExtended text='Loyalty Percent' secondaryText={`${businessDetails.loyalPercent} %`} onPress={loyaltyPercentOnPress} />}
 
