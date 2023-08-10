@@ -9,7 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 MaterialCommunityIcons.loadFont();
 
 import Con from './src/constants';
-import FlashMessage, { showMessage } from "react-native-flash-message";
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import messaging from '@react-native-firebase/messaging';
 
 import QRDetail from './src/screens/Details';
@@ -34,90 +34,47 @@ import Loading from './src/screens/Loading';
 import AccountDeletion from './src/screens/AccountDeletion';
 import { displayNotification, getFCMToken, requestNotificationPermission } from './src/utils/notification';
 import Announcements from './src/screens/Announcements';
+import Chat from './src/screens/Chat';
+import Conversation from './src/screens/Conversation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
 
 function HomeStack() {
   let iconSize = 22;
   let blueColor = Con.AppleBlueLight;
 
-  const [userData, setUserData] = useState([]);
-  const [isWorkerOrBusiness, setIsWorkerOrBusiness] = useState(false);
-
-  useEffect(() => {
-    getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-      .then(asyncdata => {
-        setUserData(asyncdata.userData);
-        Con.DEBUG && console.log("userData.type", asyncdata.userData.type);
-        Con.DEBUG && console.log("userData._id", asyncdata.userData._id);
-        const isAdmin = asyncdata.userData.type == 'Business' || asyncdata.userData.type == 'Worker';
-        setIsWorkerOrBusiness(isAdmin);
-      })
-      .catch(err => {
-        Con.DEBUG && console.log(err);
-      });
-  }, []);
-
-  if (isWorkerOrBusiness) {
-    return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconColor;
-            let rn = route.name;
-            if (rn === 'Scan QR') {
-              iconColor = focused ? blueColor : '#999';
-              return <MaterialCommunityIcons name="qrcode-scan" size={iconSize} color={iconColor} />
-            } else if (rn === 'QR card') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="qr-code" size={iconSize} color={iconColor} />
-            } else if (rn === 'History') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
-            } else if (rn === 'Setttings') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />
-            }
+  return (
+    <Tab.Navigator
+      initialRouteName="Chat"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconColor;
+          let rn = route.name;
+          if (rn === 'QR card') {
+            iconColor = focused ? blueColor : '#999';
+            return <Ionicons name="qr-code" size={iconSize} color={iconColor} />;
+          } else if (rn === 'Setttings') {
+            iconColor = focused ? blueColor : '#999';
+            return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />;
+          } else if (rn === 'Chat') {
+            iconColor = focused ? blueColor : '#999';
+            return <Ionicons name="chatbubbles-outline" size={iconSize} color={iconColor} />;
           }
-        })}
-      >
-        <Tab.Screen name="Scan QR" component={HomeScanner} />
-        <Tab.Screen name="History" component={History} />
-        <Tab.Screen name="QR card" component={QRScreen} />
-        <Tab.Screen name="Setttings" component={Settings} />
-      </Tab.Navigator>
-    );
-
-  } else {
-    return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
-            let iconColor;
-            let rn = route.name;
-            if (rn === 'Scan QR') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="scan-outline" size={iconSize} color={iconColor} />
-            } else if (rn === 'QR card') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="qr-code-outline" size={iconSize} color={iconColor} />
-            } else if (rn === 'History') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="book-outline" size={iconSize} color={iconColor} />
-            } else if (rn === 'Setttings') {
-              iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />
-            }
-          }
-        })}
-      >
-        <Tab.Screen name="QR card" component={QRScreen} />
-        <Tab.Screen name="Setttings" component={Settings} />
-      </Tab.Navigator>
-    );
-  }
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          tabBarBadge: 5,
+        }}
+      />
+      <Tab.Screen name="QR card" component={QRScreen} />
+      <Tab.Screen name="Setttings" component={Settings} />
+    </Tab.Navigator>
+  );
 }
 
 function App() {
@@ -126,13 +83,13 @@ function App() {
 
   const init = () => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-      .then(asyncdata => {
-        Con.DEBUG && console.log("App init", asyncdata);
+      .then((asyncdata) => {
+        Con.DEBUG && console.log('App init', asyncdata);
         if (asyncdata.token != null) {
           // Update Auth Setup
           updateAuth()
-            .then(apidata => {
-              Con.DEBUG && console.log("update auth apidata", apidata);
+            .then((apidata) => {
+              Con.DEBUG && console.log('update auth apidata', apidata);
               setToken(apidata.token);
 
               // Saving updated data to LocalStorage
@@ -150,27 +107,28 @@ function App() {
                   const FCMtoken = await getFCMToken();
 
                   // Check data
-                  Con.DEBUG && console.log("User Id: ", userId, "FCM token: ", FCMtoken);
+                  Con.DEBUG && console.log('User Id: ', userId, 'FCM token: ', FCMtoken);
 
                   // Save FCM token to server
                   setFcmToken(userId, FCMtoken)
-                    .then(() => Con.DEBUG && console.log("Set new FCM token successfully"))
-                    .catch(() => Con.DEBUG && console.log("Failed to set new FCM token"));
+                    .then(() => Con.DEBUG && console.log('Set new FCM token successfully'))
+                    .catch(() => Con.DEBUG && console.log('Failed to set new FCM token'));
                 })
                 .then(() => {
                   // Register the foreground listener
-                  messaging().onMessage(async remoteMessage => {
+                  messaging().onMessage(async (remoteMessage) => {
                     Con.DEBUG && console.log('Foreground notification:', remoteMessage);
-                    displayNotification(remoteMessage);
+                    // displayNotification(remoteMessage);
                     // Show Flash message
                     showMessage({
                       message: remoteMessage.notification?.title,
                       description: remoteMessage.notification?.body,
-                      type: "success",
+                      type: 'success',
+                      duration: 5000,
                     });
                   });
                 })
-                .catch(err => Con.DEBUG && console.log("Error with setting up Notifications in App.tsx", err))
+                .catch((err) => Con.DEBUG && console.log('Error with setting up Notifications in App.tsx', err));
 
               // WIpe token for test
               // setToken('');
@@ -178,19 +136,19 @@ function App() {
             .finally(() => {
               setIsLoading(false);
             })
-            .catch(err => {
+            .catch((err) => {
               Con.DEBUG && console.log(err);
-              setIsLoading
-            })
+              setIsLoading;
+            });
         } else {
           setIsLoading(false);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         Con.DEBUG && console.log(err);
         setIsLoading(false);
       });
-  }
+  };
 
   useEffect(() => {
     // Uncomment to reset local data
@@ -209,13 +167,14 @@ function App() {
             setToken(apidata.token);
             init();
           })
-          .catch(err => Con.DEBUG && console.log("Error in App tsx", err));
+          .catch((err) => Con.DEBUG && console.log('Error in App tsx', err));
       },
       signOut: () => {
         setToken('');
         saveArrayToLocalStorage([], Con.API_AUTH_DATA_KEY);
-      }
-    }), []
+      },
+    }),
+    []
   );
 
   if (token) {
@@ -235,6 +194,9 @@ function App() {
               <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
               <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
               <Stack.Screen name="Announcements" component={Announcements} />
+              <Stack.Screen name="Scan QR" component={HomeScanner} />
+              <Stack.Screen name="History" component={History} />
+              <Stack.Screen name="Conversation" component={Conversation} />
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>

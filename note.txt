@@ -9,6 +9,8 @@ to use localhost api type:
 
 adb reverse tcp:3000 tcp:3000
 
+adb reverse tcp:8080 tcp:8080
+
 //// Code documentaion:
 
 // to show Flash Message
