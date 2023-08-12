@@ -6,6 +6,8 @@ import { ReceivedMessage } from '../interfaces/ReceivedMessage';
 import { Message } from '../interfaces/Message';
 import { Chat, MessageType, User } from '@flyerhq/react-native-chat-ui';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { v4 as uuidv4 } from 'uuid';
+import { getLocalUserData } from '../utils/getLocalUserData';
 
 interface ConversationProps {
   navigation: any;
@@ -13,58 +15,91 @@ interface ConversationProps {
 }
 
 function Conversation({ route, navigation }: ConversationProps) {
-  // const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [room, setRoom] = useState('default'); // Default room
+  const { roomId } = route.params;
 
+  // Default user
+  const userDefault: User = {
+    id: 'null',
+    firstName: 'null',
+    lastName: 'null',
+  };
+
+  const [asyncUserData, setAsyncUserData] = useState([]);
+  const [room, setRoom] = useState(roomId);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [user, setUser] = useState<User>(userDefault);
+
+  const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<MessageType.Any[]>([]);
-  const user: User = {
-    id: '06c33e8b-e835-4736-80f4-63f44b66666c',
-    firstName: 'Victor',
-    lastName: 'Last Name',
-    role: 'admin',
+
+  const initFunc = async () => {
+    // Get async user data
+    const asyncUserData = await getLocalUserData();
+    setAsyncUserData(asyncUserData);
+
+    // Generating a user
+    const user: User = {
+      id: asyncUserData.userData._id,
+      firstName: asyncUserData.userData.name,
+      lastName: asyncUserData.surname,
+    };
+
+    // Saving user
+    setUser(user);
   };
 
   const addMessage = (message: MessageType.Text) => {
     setMessages([message, ...messages]);
   };
 
-  const uuidv4 = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.floor(Math.random() * 16);
-      const v = c === 'x' ? r : (r % 4) + 8;
-      return v.toString(16);
-    });
-  };
-
   const handleSendPress = (message: MessageType.PartialText) => {
     const textMessage: MessageType.Text = {
       author: user,
+      roomId: room,
       createdAt: Date.now(),
       id: uuidv4(),
       text: message.text,
       type: 'text',
       status: 'seen',
     };
+
     addMessage(textMessage);
+    console.log('textMessage', textMessage);
+
+    // Making call to webSocket
+    if (socket) {
+      const messageData: Message = {
+        type: 'message', // Specify the data type as 'message'
+        message: textMessage,
+      };
+      socket.send(JSON.stringify(messageData));
+    }
   };
 
   useEffect(() => {
+    initFunc();
+  }, []);
+
+  useEffect(() => {
+    console.log('Connecting to room...', roomId);
+
     const newSocket = new WebSocket('ws://localhost:8080');
+
     newSocket.onopen = () => {
       console.log('WebSocket connected');
-      const joinData: JoinMessage = { type: 'join', room };
+      const joinData: JoinMessage = { type: 'join', room: roomId };
       newSocket.send(JSON.stringify(joinData));
     };
+
     newSocket.onmessage = (message) => {
       const parsedMessage = JSON.parse(message.data);
       if (parsedMessage.type === 'message') {
         const parsedMessage: ReceivedMessage = JSON.parse(message.data);
         console.log('Message got from wss', parsedMessage);
-        setMessages([parsedMessage]);
       }
     };
+
+    // Saving socket
     setSocket(newSocket);
 
     return () => {
@@ -72,32 +107,7 @@ function Conversation({ route, navigation }: ConversationProps) {
     };
   }, [room]);
 
-  const sendMessage = () => {
-    if (socket && inputText.trim() !== '') {
-      const messageData: Message = {
-        type: 'message', // Specify the data type as 'message'
-        room: room,
-        message: {
-          text: inputText.trim(),
-          timestamp: new Date().toISOString(),
-        },
-      };
-      socket.send(JSON.stringify(messageData));
-      setInputText('');
-    }
-  };
-
   return (
-    // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    //   <Text style={{ color: 'black' }}>Chat</Text>
-    //   <View style={{ width: '80%' }}>
-    //     {messages.map((message, index) => (
-    //       <Text style={{ color: 'black' }} key={index}>{`${message.message.timestamp}: ${message.message.text}`}</Text>
-    //     ))}
-    //   </View>
-    //   <TextInput style={{ borderWidth: 1, width: '80%', marginTop: 10, color: 'black' }} value={inputText} onChangeText={(text) => setInputText(text)} />
-    //   <Button title="Send" onPress={sendMessage} />
-    // </View>
     <SafeAreaProvider>
       <Chat showUserNames={true} messages={messages} onSendPress={handleSendPress} user={user} />
     </SafeAreaProvider>
