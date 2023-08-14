@@ -24,7 +24,7 @@ import {
   getUserById,
 } from '../utils/api';
 import { ScrollView } from 'react-native-gesture-handler';
-import DetailsSkeleton from '../skeletons/DetailsSkeleton';
+import Loading from './Loading';
 
 interface QRDetailScreenProps {
   navigation: any;
@@ -284,7 +284,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
           </TouchableWithoutFeedback>
         )}
 
-        {isLoading && <DetailsSkeleton />}
+        {isLoading && <Loading />}
       </ScrollView>
     </KeyboardAvoidingView>
   );
