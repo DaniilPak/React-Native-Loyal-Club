@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Con from '../constants';
 import { getItemFromLocalStorage, saveArrayToLocalStorage } from './async';
+import { MessageType } from '@flyerhq/react-native-chat-ui';
 
 export async function makeAuth(phone: string, password: string): Promise<any> {
   const requestData = {
@@ -381,6 +382,34 @@ export async function getUserRooms(userId: string) {
     };
 
     const response = await axios.post(`${Con.api}/chat/getuserrooms`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function createMessage(message: MessageType.Text) {
+  try {
+    const requestData = {
+      message,
+    };
+
+    const response = await axios.post(`${Con.api}/chat/createmessage`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getRoomMessages(roomId: string) {
+  try {
+    const requestData = {
+      roomId,
+    };
+
+    const response = await axios.post(`${Con.api}/chat/getroommessages`, requestData);
     return response.data;
   } catch (error) {
     Con.DEBUG && console.error(error);
