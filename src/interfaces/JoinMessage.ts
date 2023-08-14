@@ -2,4 +2,5 @@
 export interface JoinMessage {
   type: 'join';
   room: string;
+  userId: string;
 }

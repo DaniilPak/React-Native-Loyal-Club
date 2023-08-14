@@ -36,6 +36,7 @@ import { displayNotification, getFCMToken, requestNotificationPermission } from 
 import Announcements from './src/screens/Announcements';
 import Chat from './src/screens/Chat';
 import Conversation from './src/screens/Conversation';
+import { triggerVibration } from './src/utils/helper';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -118,6 +119,7 @@ function App() {
                   // Register the foreground listener
                   messaging().onMessage(async (remoteMessage) => {
                     Con.DEBUG && console.log('Foreground notification:', remoteMessage);
+                    triggerVibration();
                     // displayNotification(remoteMessage);
                     // Show Flash message
                     showMessage({

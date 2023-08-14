@@ -4,6 +4,7 @@ import Con from '../constants';
 import NavigationRow from '../components/NavigationRow';
 import { getLocalUserData } from '../utils/getLocalUserData';
 import { getUserRooms } from '../utils/api';
+import ChatRow from '../components/ChatRow';
 
 interface ChatProps {
   navigation: any;
@@ -14,8 +15,8 @@ function Chat({ route, navigation }: ChatProps) {
   const [asyncUserData, setAsyncUserData] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
 
-  const navigateToConversation = (roomId: string) => {
-    navigation.navigate('Conversation', { roomId });
+  const navigateToConversation = (roomId: string, roomName: string) => {
+    navigation.navigate('Conversation', { roomId, userId: asyncUserData.userData._id, roomName });
   };
 
   const initFunc = async () => {
@@ -33,7 +34,12 @@ function Chat({ route, navigation }: ChatProps) {
   };
 
   const renderItem = ({ item }: any) => (
-    <NavigationRow text={`${item.roomId}`} onPress={() => navigateToConversation(item.roomId)} />
+    <ChatRow
+      text={`${item.roomName}`}
+      secondaryText={item.lastMessage}
+      isSeen={item.isSeen}
+      onPress={() => navigateToConversation(item.roomId, item.roomName)}
+    />
   );
 
   useEffect(() => {
