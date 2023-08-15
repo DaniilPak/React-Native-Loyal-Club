@@ -416,3 +416,17 @@ export async function getRoomMessages(roomId: string) {
     throw error; // You can choose to handle the error here or propagate it
   }
 }
+
+export async function getBusinessReceipts(businessId: string) {
+  try {
+    const requestData = {
+      businessId,
+    };
+
+    const response = await axios.post(`${Con.api}/receipt/getbusinessreceipts`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
