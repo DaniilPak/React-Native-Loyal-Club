@@ -236,15 +236,15 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
     };
   }, []);
 
-  return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled
-      keyboardVerticalOffset={100}
-    >
-      <ScrollView ref={scrollViewRef} style={{ marginBottom: 15, flex: 1 }}>
-        {!isLoading && (
+  if (!isLoading) {
+    return (
+      <KeyboardAvoidingView
+        style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        enabled
+        keyboardVerticalOffset={100}
+      >
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: 15, flex: 1 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
@@ -282,12 +282,12 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
               />
             </View>
           </TouchableWithoutFeedback>
-        )}
-
-        {isLoading && <Loading />}
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
+  } else {
+    return <Loading />;
+  }
 }
 
 const styles = StyleSheet.create({

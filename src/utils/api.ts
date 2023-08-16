@@ -430,3 +430,18 @@ export async function getBusinessReceipts(businessId: string) {
     throw error; // You can choose to handle the error here or propagate it
   }
 }
+
+export async function markUserRoomAsSeen(userId: string, roomId: string) {
+  try {
+    const requestData = {
+      userId,
+      roomId,
+    };
+
+    const response = await axios.post(`${Con.api}/chat/markuserroomasseen`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}

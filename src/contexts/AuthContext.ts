@@ -1,7 +1,7 @@
-import { createContext } from 'react'
+import { createContext } from 'react';
 
 // Authentication test
 export const AuthContext = createContext({
-    signIn: (apidata: any) => { },
-    signOut: () => { },
+  signIn: (apidata: any) => {},
+  signOut: () => {},
 });

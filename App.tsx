@@ -23,7 +23,7 @@ import Confirmation from './src/screens/Confirmation';
 import { AuthContext } from './src/contexts/AuthContext';
 import { getArrayFromLocalStorage, saveArrayToLocalStorage } from './src/utils/async';
 import MyLoyaltyCards from './src/screens/MyLoyaltyCards';
-import { setFcmToken, updateAuth } from './src/utils/api';
+import { getUserRooms, setFcmToken, updateAuth } from './src/utils/api';
 import BusinessSettings from './src/screens/BusinessSettings';
 import SuccessPayment from './src/screens/SuccessPayment';
 import ReceiptDetails from './src/screens/ReceiptDetails';
@@ -37,6 +37,7 @@ import Announcements from './src/screens/Announcements';
 import Chat from './src/screens/Chat';
 import Conversation from './src/screens/Conversation';
 import { triggerVibration } from './src/utils/helper';
+import { getLocalUserData } from './src/utils/getLocalUserData';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,32 @@ const Tab = createBottomTabNavigator();
 function HomeStack() {
   let iconSize = 22;
   let blueColor = Con.AppleBlueLight;
+
+  const [badge, setBadge] = useState();
+
+  const getBadge = async () => {
+    const asyncData = await getLocalUserData();
+
+    // Get User's rooms
+    const userId = asyncData.userData._id;
+    const userRooms = await getUserRooms(userId);
+
+    /// Get unseen user rooms
+    const unseenData = userRooms.userRooms.filter((item) => !item.isSeen);
+
+    if (unseenData.length > 0) {
+      setBadge(unseenData.length);
+    }
+  };
+
+  useEffect(() => {
+    getBadge();
+
+    messaging().onMessage(async (remoteMessage) => {
+      /// Update chat badge
+      getBadge();
+    });
+  }, []);
 
   return (
     <Tab.Navigator
@@ -69,7 +96,7 @@ function HomeStack() {
         name="Chat"
         component={Chat}
         options={{
-          tabBarBadge: 5,
+          tabBarBadge: badge,
         }}
       />
       <Tab.Screen name="QR card" component={QRScreen} />

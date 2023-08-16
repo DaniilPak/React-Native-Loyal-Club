@@ -25,7 +25,9 @@ function ChatRow({ text, secondaryText, isSeen, onPress }: ChatRowProps) {
           {!isSeen && <View style={styles.iconStyle}>{redDot}</View>}
         </View>
 
-        <Text style={styles.textBlockSecondary}>{secondaryText}</Text>
+        <Text style={styles.textBlockSecondary} numberOfLines={1} ellipsizeMode="tail">
+          {secondaryText}
+        </Text>
       </View>
     </TouchableOpacity>
   );
