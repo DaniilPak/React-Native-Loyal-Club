@@ -37,11 +37,14 @@ const Con = {
     LoyalClubColor: '#0d322b',
 
     // LOCAL
-    // 'http://localhost:3000/api' 
+    // 'http://localhost:3000/api',
+    // 'ws://localhost:8080',
 
     // AWS
     // http://18.118.84.185:3000/api
-    api: 'http://18.118.84.185:3000/api',
+    // ws://18.118.84.185:8080
+    api: 'http://169.254.80.85:3000/api',
+    ws: 'ws://169.254.80.85:8080',
     API_AUTH_DATA_KEY: 'authdata',
     PHONE_ASYNC_KEY: 'phone',
     PASSWORD_ASYNC_KEY: 'password',

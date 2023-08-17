@@ -114,7 +114,7 @@ function Conversation({ route, navigation }: ConversationProps) {
 
   useEffect(() => {
     Con.DEBUG && console.log('Connecting to room...', roomId);
-    const newSocket = new WebSocket('ws://localhost:8080');
+    const newSocket = new WebSocket(Con.ws);
 
     newSocket.onopen = () => {
       Con.DEBUG && console.log('WebSocket connected');
