@@ -5,7 +5,6 @@ import { JoinMessage } from '../interfaces/JoinMessage';
 import { ReceivedMessage } from '../interfaces/ReceivedMessage';
 import { Message } from '../interfaces/Message';
 import { Chat, MessageType, User } from '@flyerhq/react-native-chat-ui';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { v4 as uuidv4 } from 'uuid';
 import { getLocalUserData } from '../utils/getLocalUserData';
 import { createMessage, getRoomMessages } from '../utils/api';
@@ -148,7 +147,6 @@ function Conversation({ route, navigation }: ConversationProps) {
 
   if (isLoaded) {
     return (
-      <SafeAreaProvider>
         <Chat
           showUserNames={true}
           messages={messages}
@@ -156,7 +154,6 @@ function Conversation({ route, navigation }: ConversationProps) {
           user={user}
           textInputProps={{ placeholder: 'Сообщение' }}
         />
-      </SafeAreaProvider>
     );
   } else {
     return (

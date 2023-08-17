@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -96,6 +96,7 @@ function HomeStack() {
         name="Chat"
         component={Chat}
         options={{
+          header: () => null,
           title: 'Чаты',
           tabBarBadge: badge,
         }}
@@ -104,6 +105,7 @@ function HomeStack() {
         name="QR card"
         component={QRScreen}
         options={{
+          headerTitleAlign: 'left',
           title: 'Мой QR',
         }}
       />
@@ -111,6 +113,7 @@ function HomeStack() {
         name="Setttings"
         component={Settings}
         options={{
+          header: () => null,
           title: 'Настройки',
         }}
       />
@@ -222,11 +225,11 @@ function App() {
   if (token) {
     // Logged in
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 1)' }}>
+      <SafeAreaProvider>
         <NavigationContainer>
           <AuthContext.Provider value={authContext}>
             <Stack.Navigator>
-              <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
+              <Stack.Screen name="HomeScanner" component={HomeStack} options={{ title: 'LoyalClub', headerTitleAlign: 'left'}}/>
               <Stack.Screen name="QRDetail" component={QRDetail} />
               <Stack.Screen
                 name="MyLoyaltyCards"
@@ -302,7 +305,7 @@ function App() {
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>
-      </SafeAreaView>
+      </SafeAreaProvider>
     );
   } else {
     // Not logged in
