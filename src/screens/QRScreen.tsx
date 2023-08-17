@@ -18,53 +18,67 @@ function QRScreen({ navigation }: QRScreenProps) {
   const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
-      .then((asyncdata) => {
-        Con.DEBUG && console.log('My async data token', asyncdata.userData._id);
-        setQr(asyncdata.userData._id);
-        setUserData(asyncdata.userData);
+    async function fetchData() {
+      try {
+        const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+        const userData = asyncdata.userData;
 
-        // If user is Worker or Business
-        // then allow him functions
-        const isAdmin = asyncdata.userData.type == 'Business' || asyncdata.userData.type == 'Worker';
+        if (!userData) {
+          return;
+        }
+
+        Con.DEBUG && console.log('My async data token', userData._id);
+        setQr(userData._id);
+        setUserData(userData);
+
+        const isAdmin = userData.type === 'Business' || userData.type === 'Worker';
 
         if (isAdmin) {
-          // Allow business functions
-          navigation.setOptions({
-            headerRight: () => (
-              <View style={{ flexDirection: 'row', marginHorizontal: 5 }}>
-                <PressableIcon
-                  onPress={() => {
-                    navigation.navigate('History');
-                  }}
-                  icon="book-outline"
-                />
-                <View style={{ width: 5 }}></View>
-                <PressableIcon2
-                  onPress={() => {
-                    navigation.navigate('Scan QR');
-                  }}
-                  icon="qrcode-scan"
-                />
-              </View>
-            ),
-          });
+          setNavigationOptionsForAdmin();
         }
-      })
-      .catch((err) => {
+
+        setCurrentGreeting();
+      } catch (err) {
         Con.DEBUG && console.log(err);
-      });
-
-    // Assign greeting
-    const currentHour = new Date().getHours();
-
-    if (currentHour < 12) {
-      setGreeting('Доброе утро');
-    } else if (currentHour < 18) {
-      setGreeting('Добрый день');
-    } else {
-      setGreeting('Добрый вечер');
+      }
     }
+
+    function setNavigationOptionsForAdmin() {
+      navigation.setOptions({
+        headerRight: () => (
+          <View style={{ flexDirection: 'row', marginHorizontal: 5 }}>
+            <PressableIcon
+              onPress={() => {
+                navigation.navigate('History');
+              }}
+              icon="book-outline"
+            />
+            <View style={{ width: 5 }}></View>
+            <PressableIcon2
+              onPress={() => {
+                navigation.navigate('Scan QR');
+              }}
+              icon="qrcode-scan"
+            />
+          </View>
+        ),
+      });
+    }
+
+    function setCurrentGreeting() {
+      const currentHour = new Date().getHours();
+      let greeting = 'Добрый вечер';
+
+      if (currentHour < 12) {
+        greeting = 'Доброе утро';
+      } else if (currentHour < 18) {
+        greeting = 'Добрый день';
+      }
+
+      setGreeting(greeting);
+    }
+
+    fetchData();
   }, []);
 
   const myLoyaltyCards = 'Мои карты лояльности';

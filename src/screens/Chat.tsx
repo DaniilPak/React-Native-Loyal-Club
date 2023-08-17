@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, Text, TextInput, Button, FlatList } from 'react-native';
+import { View, ActivityIndicator, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import Con from '../constants';
 import NavigationRow from '../components/NavigationRow';
 import { getLocalUserData } from '../utils/getLocalUserData';
@@ -20,8 +20,6 @@ function Chat({ route, navigation }: ChatProps) {
     /// Mark user room as seen
 
     /// Locally
-    console.log('userRooms', userRooms);
-
     const matchingIndex = userRooms.findIndex((userRoom) => {
       return userRoom.roomId === roomId;
     });
@@ -52,13 +50,11 @@ function Chat({ route, navigation }: ChatProps) {
 
   const initFunc = async () => {
     const asyncData = await getLocalUserData();
-    Con.DEBUG && console.log('Got async user data in Chat.tsx', asyncData);
     setAsyncUserData(asyncData);
 
     // Get User's rooms
     const userId = asyncData.userData._id;
     const userRooms = await getUserRooms(userId);
-    console.log('Got user rooms in Chat.tsx', userRooms);
 
     // Save user rooms
     setUserRooms(userRooms.userRooms);
@@ -72,6 +68,14 @@ function Chat({ route, navigation }: ChatProps) {
       onPress={() => navigateToConversation(item.roomId, item.roomName)}
     />
   );
+
+  const renderEmptyContainer = () => {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>Сходим за бонусами? (:</Text>
+      </View>
+    );
+  };
 
   useEffect(() => {
     // Getting all userRoom relations, which
@@ -87,9 +91,27 @@ function Chat({ route, navigation }: ChatProps) {
 
   return (
     <View style={{ flex: 1, paddingTop: 15 }}>
-      <FlatList data={userRooms} renderItem={renderItem} keyExtractor={(item) => item._id} />
+      <FlatList
+        data={userRooms}
+        renderItem={renderItem}
+        ListEmptyComponent={renderEmptyContainer}
+        keyExtractor={(item) => item._id}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: 'gray',
+  },
+});
 
 export default Chat;

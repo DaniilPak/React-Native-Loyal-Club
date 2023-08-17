@@ -55,7 +55,6 @@ function Conversation({ route, navigation }: ConversationProps) {
     // Load previous messages
     const roomMessagesResponse = await getRoomMessages(roomId);
     const roomMessages = roomMessagesResponse.roomMessages;
-    console.log('roomMessages', roomMessages);
 
     setMessages(roomMessages);
   };
@@ -77,14 +76,12 @@ function Conversation({ route, navigation }: ConversationProps) {
     };
 
     addMessage(textMessage);
-    console.log('textMessage', textMessage);
 
     // Making API call to save message
     // With roomId and appropriate type that
     // differs from websocket message type
     try {
       const messageCreatingResponse = await createMessage(textMessage);
-      console.log('messageCreatingResponse', messageCreatingResponse);
     } catch (error) {
       console.log('Error with saving message ', error.message);
     }
@@ -117,24 +114,19 @@ function Conversation({ route, navigation }: ConversationProps) {
   }, []);
 
   useEffect(() => {
-    console.log('Connecting to room...', roomId);
-
+    Con.DEBUG && console.log('Connecting to room...', roomId);
     const newSocket = new WebSocket('ws://localhost:8080');
 
     newSocket.onopen = () => {
-      console.log('WebSocket connected');
-      console.log('user', user);
+      Con.DEBUG && console.log('WebSocket connected');
       const joinData: JoinMessage = { type: 'join', room: roomId, userId: userId };
       newSocket.send(JSON.stringify(joinData));
     };
 
     newSocket.onmessage = (message) => {
-      console.log('message', message);
       const parsedMessage = JSON.parse(message.data);
       if (parsedMessage.type === 'message') {
         const parsedMessage: any = JSON.parse(message.data);
-        console.log('Message got from wss', parsedMessage.data.message);
-
         const receivedParsedMessage = parsedMessage.data.message;
         addPendingMessages([receivedParsedMessage]);
       }
