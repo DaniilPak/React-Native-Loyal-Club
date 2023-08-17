@@ -12,7 +12,17 @@ function SuccessPayment({ route, navigation }: SuccessPaymentProps) {
   const { receiptResponse } = route.params;
 
   const goHome = () => {
-    navigation.navigate('HomeScanner');
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'HomeScanner',
+          params: {
+            receiptResponse: receiptResponse,
+          },
+        },
+      ],
+    });
   };
 
   useEffect(() => {
