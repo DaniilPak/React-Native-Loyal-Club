@@ -17,9 +17,6 @@ function SuccessPayment({ route, navigation }: SuccessPaymentProps) {
       routes: [
         {
           name: 'HomeScanner',
-          params: {
-            receiptResponse: receiptResponse,
-          },
         },
       ],
     });
