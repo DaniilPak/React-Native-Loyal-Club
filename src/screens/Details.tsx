@@ -56,7 +56,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
   // Loyalty card
   const [existingOrCreatedLoyaltyCard, setExistingOrCreatedLoyaltyCard] = useState([]);
 
-  const buttonOffset = 'Confirm Payment';
+  const buttonOffset = 'Принять оплату';
 
   const handleMoneyChange = (text: string) => {
     setSwitcherEnabled(false);
@@ -247,7 +247,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
         <ScrollView ref={scrollViewRef} style={{ marginBottom: 15, flex: 1 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
-              <TextBlock text={`Client: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
+              <TextBlock text={`Клиент: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
               <TextInputMask
                 type="money"
                 autoFocus={true}
@@ -266,9 +266,9 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                 style={styles.input}
               />
               <TextMultiBlock
-                text1={`Spend bonus ${saveBonus} ${currencySign}`}
-                text2="Loyalty percent"
-                text4="Summary"
+                text1={`Списать бонусы ${saveBonus} ${currencySign}`}
+                text2="Кешбэк"
+                text4="Итого"
                 switcher={switcher}
                 value2={`${loyaltyPercent}%`}
                 value4={`${summary}`}
@@ -279,6 +279,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
                 onPress={confirmPayment}
                 isLoading={buttonIsLoading}
                 isDisabled={buttonDisabled}
+                isShadowDisabled={true}
               />
             </View>
           </TouchableWithoutFeedback>

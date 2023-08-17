@@ -16,6 +16,8 @@ import { makeAuth } from '../utils/api';
 import { AuthContext } from '../contexts/AuthContext';
 import { setItemToLocalStorage } from '../utils/async';
 import Con from '../constants';
+import BlueButton from '../components/BlueButton';
+import { showMessage } from 'react-native-flash-message';
 
 interface ConfirmationProps {
   navigation: any;
@@ -48,6 +50,12 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
       })
       .catch((err) => {
         Con.DEBUG && console.log(err);
+
+        showMessage({
+          message: 'Пароль неверный',
+          description: 'Пожалуйста попробуйте еще раз',
+          type: 'danger',
+        });
       });
   };
 
@@ -59,18 +67,20 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
           style={{ justifyContent: 'center', flex: 1, height: Con.height }}
         >
           <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>Your account exists, please enter a password</Text>
+            <Text style={{ color: 'black', alignSelf: 'center', textAlign: 'center', width: Con.width * 0.9 }}>
+              Ваша учетная запись существует, пожалуйста, введите пароль для
+            </Text>
             <Text style={{ color: 'black', alignSelf: 'center' }}>{phone}</Text>
             <TextInput
               style={styles.input}
               value={password}
               onChangeText={handlePasswordChange}
               secureTextEntry={passwordVisibility}
-              placeholder="Enter your password"
+              placeholder="Введите пароль"
               placeholderTextColor={'gray'}
             />
-            <Button title="Show/Hide" onPress={handlePasswordVisibility} />
-            <GrayButton title="Confirm" onPress={confirmPassword} />
+            <Button title="показать/скрыть" onPress={handlePasswordVisibility} />
+            <BlueButton title="Подтвердить" onPress={confirmPassword} />
           </View>
         </KeyboardAvoidingView>
       </ScrollView>

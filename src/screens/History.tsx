@@ -22,8 +22,13 @@ const Tab = createMaterialTopTabNavigator();
 const HistoryTabs = ({ navigation, route }: SettingsProps) => {
   return (
     <Tab.Navigator screenOptions={{ swipeEnabled: false }}>
-      <Tab.Screen name="HistoryPart" component={History} initialParams={{ navigation: navigation }} />
-      <Tab.Screen name="BusinessClients" component={BusinessClients} />
+      <Tab.Screen
+        name="HistoryPart"
+        component={History}
+        initialParams={{ navigation: navigation }}
+        options={{ title: 'Посещения' }}
+      />
+      <Tab.Screen name="BusinessClients" component={BusinessClients} options={{ title: 'Клиенты' }} />
     </Tab.Navigator>
   );
 };
@@ -72,7 +77,7 @@ function BusinessClients() {
 
   const HeaderComponent = () => (
     <View style={{ marginVertical: 25 }}>
-      <TextBlockV2 text={`${businessClients.length} clients`} />
+      <TextBlockV2 text={`${businessClients.length} клиентов`} />
     </View>
   );
 
@@ -274,7 +279,7 @@ function History({ route }: SettingsProps) {
 
   const HeaderComponent = () => (
     <View style={{ marginVertical: 25 }}>
-      <TextBlockV2 text={`${receipts.length} visits`} />
+      <TextBlockV2 text={`${receipts.length} посещений`} />
     </View>
   );
 
@@ -307,9 +312,9 @@ function History({ route }: SettingsProps) {
       )}
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-          <GrayButton title="Last 7 days" onPress={() => filterByLast7Days()} />
-          <GrayButton title="This month" onPress={() => filterByThisMonth()} />
-          <GrayButton title="All time" onPress={() => filterByAllTime()} />
+          <GrayButton title="За последние 7 дней" onPress={() => filterByLast7Days()} />
+          <GrayButton title="За этот месяц" onPress={() => filterByThisMonth()} />
+          <GrayButton title="За все время" onPress={() => filterByAllTime()} />
         </View>
       </Modal>
       {isLoading && (

@@ -4,47 +4,47 @@ import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 
 interface SuccessPaymentProps {
-    navigation: any;
-    route: any;
+  navigation: any;
+  route: any;
 }
 
 function SuccessPayment({ route, navigation }: SuccessPaymentProps) {
-    const { receiptResponse } = route.params;
+  const { receiptResponse } = route.params;
 
-    const goHome = () => {
-        navigation.navigate("HomeScanner");
-    }
+  const goHome = () => {
+    navigation.navigate('HomeScanner');
+  };
 
-    useEffect(() => {
-        Con.DEBUG && console.log("receiptResponse", receiptResponse);
-    }, []);
+  useEffect(() => {
+    Con.DEBUG && console.log('receiptResponse', receiptResponse);
+  }, []);
 
-    return (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-            <View style={{ alignItems: 'center' }}>
-                <Text style={styles.tip}>
-                    {`${receiptResponse.purchaseAmount} ${receiptResponse.currencySign}`} Payment successfull
-                </Text>
-                <Text style={styles.bonusGotText}>
-                    {`Given ${receiptResponse.bonusAmount} ${receiptResponse.currencySign} bonus`}
-                </Text>
-            </View>
+  return (
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={{ alignItems: 'center' }}>
+        <Text style={styles.tip}>
+          {`${receiptResponse.purchaseAmount} ${receiptResponse.currencySign}`} Оплата прошла успешно
+        </Text>
+        <Text style={styles.bonusGotText}>
+          {`Выписано ${receiptResponse.bonusAmount} ${receiptResponse.currencySign} бонусов`}
+        </Text>
+      </View>
 
-            <BlueButton title='Go Home' onPress={goHome} />
-        </View>
-    );
+      <BlueButton title="Готово" onPress={goHome} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    tip: {
-        color: 'black',
-        textAlignVertical: 'center',
-        fontSize: 18,
-        fontWeight: '500'
-    },
-    bonusGotText: {
-        color: Con.AppleGreenLight,
-    }
+  tip: {
+    color: 'black',
+    textAlignVertical: 'center',
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  bonusGotText: {
+    color: Con.AppleGreenLight,
+  },
 });
 
 export default SuccessPayment;

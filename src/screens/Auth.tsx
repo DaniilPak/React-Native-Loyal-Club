@@ -6,61 +6,59 @@ import BlueButton from '../components/BlueButton';
 import Con from '../constants';
 
 interface AuthProps {
-    navigation: any;
+  navigation: any;
 }
 
 function Auth({ navigation }: AuthProps) {
-    const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-    const logIn = () => {
-        getUserByPhoneNumber(phoneNumber)
-            .then(user => {
-                if (user) {
-                    navigation.navigate("Confirmation", { phone: phoneNumber });
-                } else {
-                    // navigate to registration and creation new user
-                    navigation.navigate("Registration", { phone: phoneNumber });
-                }
-            })
-            .catch(err => {
-                Con.DEBUG && console.log("Cant get user by phone number: ", err);
-            })
-    }
+  const logIn = () => {
+    getUserByPhoneNumber(phoneNumber)
+      .then((user) => {
+        if (user) {
+          navigation.navigate('Confirmation', { phone: phoneNumber });
+        } else {
+          // navigate to registration and creation new user
+          navigation.navigate('Registration', { phone: phoneNumber });
+        }
+      })
+      .catch((err) => {
+        Con.DEBUG && console.log('Cant get user by phone number: ', err);
+      });
+  };
 
-    return (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>
-                Please enter your phone number
-            </Text>
-            <TextInputMask
-                type="custom"
-                options={{
-                    mask: '+7 (999) 999-99-99',
-                }}
-                value={phoneNumber}
-                onChangeText={(formatted) => {
-                    setPhoneNumber(formatted);
-                }}
-                keyboardType="numeric"
-                placeholder="+7"
-                placeholderTextColor="#111"
-                style={styles.input}
-            />
-            <BlueButton title='Log in' onPress={logIn} />
-        </View>
-    );
+  return (
+    <View style={{ flex: 1, justifyContent: 'center' }}>
+      <Text style={{ color: 'black', alignSelf: 'center' }}>Пожалуйста, введите свой номер телефона</Text>
+      <TextInputMask
+        type="custom"
+        options={{
+          mask: '+7 (999) 999-99-99',
+        }}
+        value={phoneNumber}
+        onChangeText={(formatted) => {
+          setPhoneNumber(formatted);
+        }}
+        keyboardType="numeric"
+        placeholder="+7"
+        placeholderTextColor="#111"
+        style={styles.input}
+      />
+      <BlueButton title="Войти" onPress={logIn} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    input: {
-        width: '100%',
-        height: 60,
-        backgroundColor: 'white',
-        textAlign: 'center',
-        color: 'black',
-        marginTop: 25,
-        fontSize: 25
-    },
+  input: {
+    width: '100%',
+    height: 60,
+    backgroundColor: 'white',
+    textAlign: 'center',
+    color: 'black',
+    marginTop: 25,
+    fontSize: 25,
+  },
 });
 
 export default Auth;

@@ -18,9 +18,17 @@ interface BlueButtonProps {
   icon?: any;
   isDisabled?: boolean;
   isLoading?: boolean;
+  isShadowDisabled?: boolean;
 }
 
-function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading = false }: BlueButtonProps) {
+function BlueButton({
+  title,
+  onPress,
+  icon = null,
+  isDisabled = false,
+  isLoading = false,
+  isShadowDisabled = false,
+}: BlueButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -46,7 +54,7 @@ function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading
           activeOpacity={1}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          style={styles.button}
+          style={[styles.button, isShadowDisabled ? null : styles.shadow]}
           onPress={onPress}
           disabled={isDisabled}
         >
@@ -62,7 +70,7 @@ function BlueButton({ title, onPress, icon = null, isDisabled = false, isLoading
           activeOpacity={1}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          style={styles.button}
+          style={[styles.button, isShadowDisabled ? null : styles.shadow]}
           onPress={onPress}
           disabled={isDisabled}
         >
@@ -86,6 +94,16 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     marginTop: 25,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 25,
+    elevation: 25,
   },
   buttonText: {
     color: 'white',

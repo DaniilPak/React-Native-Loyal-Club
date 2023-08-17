@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Animated } from 'react-native';
 import Con from '../constants';
 
-interface GrayButtonProps {
+interface RedButtonProps {
   title: string;
   onPress: any;
 }
 
-function GrayButton({ title, onPress }: GrayButtonProps) {
+function RedButton({ title, onPress }: RedButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -43,7 +43,7 @@ function GrayButton({ title, onPress }: GrayButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Con.AppleGrayLight,
+    backgroundColor: 'white',
     paddingVertical: 14,
     borderRadius: 17,
     alignItems: 'center',
@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
     elevation: 25,
   },
   buttonText: {
-    color: 'white',
+    color: Con.AppleRedLight,
     fontSize: 19,
     fontWeight: '600',
   },
 });
 
-export default GrayButton;
+export default RedButton;

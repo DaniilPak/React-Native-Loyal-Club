@@ -59,15 +59,15 @@ function QRScreen({ navigation }: QRScreenProps) {
     const currentHour = new Date().getHours();
 
     if (currentHour < 12) {
-      setGreeting('Good morning');
+      setGreeting('Доброе утро');
     } else if (currentHour < 18) {
-      setGreeting('Good afternoon');
+      setGreeting('Добрый день');
     } else {
-      setGreeting('Good evening');
+      setGreeting('Добрый вечер');
     }
   }, []);
 
-  const myLoyaltyCards = 'My loyalty cards';
+  const myLoyaltyCards = 'Мои карты лояльности';
 
   const showMyLoyaltyCards = () => {
     navigation.navigate('MyLoyaltyCards');
@@ -81,11 +81,14 @@ function QRScreen({ navigation }: QRScreenProps) {
         <View>
           <View style={styles.labelContainer}>
             {userData && (
-              <Text style={styles.tip}>
-                {greeting}, {userData.name} {userData.surname}!
-              </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.greeting}>{greeting}, </Text>
+                <Text style={styles.tip}>
+                  {userData.name} {userData.surname}!
+                </Text>
+              </View>
             )}
-            <Text style={styles.tip}>Show Your Personal QR to the Worker</Text>
+            <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
           </View>
           <ShrinkableContainer>
             <View style={styles.mainContainer}>
@@ -106,6 +109,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 25,
     paddingBottom: 25,
+  },
+  greeting: {
+    color: Con.AppleBlueLight,
+    fontSize: 18,
+    marginVertical: 10,
   },
   tip: {
     color: 'black',

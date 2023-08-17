@@ -40,15 +40,15 @@ function Announcements({ route, navigation }: AnnouncementsProps) {
     }
 
     Alert.alert(
-      'Confirmation',
-      'Are you sure you want make Announce? Every customer will receive that message',
+      'Подтвердите действие',
+      'Вы уверены, что хотите сделать объявление? Каждый клиент получит это сообщение',
       [
         {
-          text: 'Cancel',
+          text: 'Не уверен',
           style: 'cancel',
         },
         {
-          text: 'Yes, im sure',
+          text: 'Да, я уверен',
           style: 'destructive',
           onPress: () => {
             confirmAnnounce();
@@ -65,7 +65,7 @@ function Announcements({ route, navigation }: AnnouncementsProps) {
     handleCloseModal();
 
     showMessage({
-      message: 'Announcement created successfully',
+      message: 'Уведомления отправлены успешно!',
       description: `${announcement.peopleNotified} people notified.`,
       type: 'success',
       duration: 5000,
@@ -83,7 +83,7 @@ function Announcements({ route, navigation }: AnnouncementsProps) {
 
   return (
     <View style={{ flex: 1 }}>
-      <BlueButton title="Make Announce!" onPress={makeAnnounce} />
+      <BlueButton title="Сделать анонс" onPress={makeAnnounce} />
 
       <Modal visible={modalVisible} animationType="slide">
         <View style={styles.modalContainer}>
@@ -96,8 +96,8 @@ function Announcements({ route, navigation }: AnnouncementsProps) {
             style={styles.input}
           />
           <View style={{ marginTop: 10 }}>
-            <GrayButton title="Cancel" onPress={handleCloseModal} />
-            <BlueButton title="Save" onPress={handleSaveInputValue} />
+            <GrayButton title="Отменить" onPress={handleCloseModal} />
+            <BlueButton title="Создать" onPress={handleSaveInputValue} />
           </View>
         </View>
       </Modal>

@@ -157,7 +157,13 @@ function Conversation({ route, navigation }: ConversationProps) {
   if (isLoaded) {
     return (
       <SafeAreaProvider>
-        <Chat showUserNames={true} messages={messages} onSendPress={handleSendPress} user={user} />
+        <Chat
+          showUserNames={true}
+          messages={messages}
+          onSendPress={handleSendPress}
+          user={user}
+          textInputProps={{ placeholder: 'Сообщение' }}
+        />
       </SafeAreaProvider>
     );
   } else {

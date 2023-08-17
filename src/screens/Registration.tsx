@@ -132,20 +132,20 @@ function Registration({ navigation, route }: RegistrationProps) {
           style={{ justifyContent: 'center', flex: 1, height: Con.height }}
         >
           <View>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>Lets create an account for</Text>
+            <Text style={{ color: 'black', alignSelf: 'center' }}>Давайте создадим учетную запись для</Text>
             <Text style={{ color: 'black', alignSelf: 'center' }}>{phone}</Text>
             <TextInput
               style={styles.input}
               value={name}
               onChangeText={handleNameChange}
-              placeholder="Name"
+              placeholder="Имя"
               placeholderTextColor={'gray'}
             />
             <TextInput
               style={styles.input}
               value={surname}
               onChangeText={handleSurnameChange}
-              placeholder="Surname"
+              placeholder="Фамилия"
               placeholderTextColor={'gray'}
             />
             <TextInput
@@ -153,12 +153,12 @@ function Registration({ navigation, route }: RegistrationProps) {
               value={password}
               onChangeText={handlePasswordChange}
               secureTextEntry={passwordVisibility}
-              placeholder="Password"
+              placeholder="Пароль"
               placeholderTextColor={'gray'}
             />
-            <Button title="Show/Hide" onPress={handlePasswordVisibility} />
+            <Button title="показать/скрыть" onPress={handlePasswordVisibility} />
             <BlueButton
-              title="Register"
+              title="Зарегистрироваться"
               onPress={registerNew}
               isLoading={isButtonPressed}
               isDisabled={isButtonPressed}
