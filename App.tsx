@@ -96,11 +96,24 @@ function HomeStack() {
         name="Chat"
         component={Chat}
         options={{
+          title: 'Чаты',
           tabBarBadge: badge,
         }}
       />
-      <Tab.Screen name="QR card" component={QRScreen} />
-      <Tab.Screen name="Setttings" component={Settings} />
+      <Tab.Screen
+        name="QR card"
+        component={QRScreen}
+        options={{
+          title: 'Мой QR',
+        }}
+      />
+      <Tab.Screen
+        name="Setttings"
+        component={Settings}
+        options={{
+          title: 'Настройки',
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -215,16 +228,76 @@ function App() {
             <Stack.Navigator>
               <Stack.Screen name="HomeScanner" component={HomeStack} options={{ header: () => null }} />
               <Stack.Screen name="QRDetail" component={QRDetail} />
-              <Stack.Screen name="MyLoyaltyCards" component={MyLoyaltyCards} />
-              <Stack.Screen name="BusinessSettings" component={BusinessSettings} />
-              <Stack.Screen name="SuccessPayment" component={SuccessPayment} />
-              <Stack.Screen name="ReceiptDetails" component={ReceiptDetails} />
-              <Stack.Screen name="ManageWorkers" component={ManageWorkers} />
-              <Stack.Screen name="AddWorkerScanner" component={AddWorkerScanner} />
-              <Stack.Screen name="AccountDeletion" component={AccountDeletion} />
-              <Stack.Screen name="Announcements" component={Announcements} />
-              <Stack.Screen name="Scan QR" component={HomeScanner} />
-              <Stack.Screen name="History" component={History} />
+              <Stack.Screen
+                name="MyLoyaltyCards"
+                component={MyLoyaltyCards}
+                options={{
+                  title: 'Мои карты',
+                }}
+              />
+              <Stack.Screen
+                name="BusinessSettings"
+                component={BusinessSettings}
+                options={{
+                  title: 'Бизнес',
+                }}
+              />
+              <Stack.Screen
+                name="SuccessPayment"
+                component={SuccessPayment}
+                options={{
+                  title: 'Успешная оплата',
+                }}
+              />
+              <Stack.Screen
+                name="ReceiptDetails"
+                component={ReceiptDetails}
+                options={{
+                  title: 'Детали платежа',
+                }}
+              />
+              <Stack.Screen
+                name="ManageWorkers"
+                component={ManageWorkers}
+                options={{
+                  title: 'Сотрудники',
+                }}
+              />
+              <Stack.Screen
+                name="AddWorkerScanner"
+                component={AddWorkerScanner}
+                options={{
+                  title: 'Добавить сотрудника',
+                }}
+              />
+              <Stack.Screen
+                name="AccountDeletion"
+                component={AccountDeletion}
+                options={{
+                  title: 'Удаление Аккаунта',
+                }}
+              />
+              <Stack.Screen
+                name="Announcements"
+                component={Announcements}
+                options={{
+                  title: 'Анонсы',
+                }}
+              />
+              <Stack.Screen
+                name="Scan QR"
+                component={HomeScanner}
+                options={{
+                  title: 'Сканировать QR',
+                }}
+              />
+              <Stack.Screen
+                name="History"
+                component={History}
+                options={{
+                  title: 'История',
+                }}
+              />
               <Stack.Screen name="Conversation" component={Conversation} />
             </Stack.Navigator>
           </AuthContext.Provider>
