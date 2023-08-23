@@ -23,7 +23,7 @@ import Confirmation from './src/screens/Confirmation';
 import { AuthContext } from './src/contexts/AuthContext';
 import { getArrayFromLocalStorage, saveArrayToLocalStorage } from './src/utils/async';
 import MyLoyaltyCards from './src/screens/MyLoyaltyCards';
-import { getUserRooms, setFcmToken, updateAuth } from './src/utils/api';
+import { getBadge, getCurrentUserIdAsync, getUserRooms, setFcmToken, updateAuth } from './src/utils/api';
 import BusinessSettings from './src/screens/BusinessSettings';
 import SuccessPayment from './src/screens/SuccessPayment';
 import ReceiptDetails from './src/screens/ReceiptDetails';
@@ -38,6 +38,7 @@ import Chat from './src/screens/Chat';
 import Conversation from './src/screens/Conversation';
 import { triggerVibration } from './src/utils/helper';
 import { getLocalUserData } from './src/utils/getLocalUserData';
+import { BadgeContext } from './src/contexts/BadgeContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,78 +47,64 @@ function HomeStack() {
   let iconSize = 22;
   let blueColor = Con.AppleBlueLight;
 
-  const [badge, setBadge] = useState();
-
-  const getBadge = async () => {
-    const asyncData = await getLocalUserData();
-
-    // Get User's rooms
-    const userId = asyncData.userData._id;
-    const userRooms = await getUserRooms(userId);
-
-    /// Get unseen user rooms
-    const unseenData = userRooms.userRooms.filter((item) => !item.isSeen);
-
-    if (unseenData.length > 0) {
-      setBadge(unseenData.length);
-    }
-  };
+  const [badge, setBadge] = useState(null);
 
   useEffect(() => {
-    getBadge();
-
-    messaging().onMessage(async (remoteMessage) => {
-      /// Update chat badge
-      getBadge();
+    getBadge().then((badge) => {
+      if (badge > 0) {
+        setBadge(badge);
+      }
     });
   }, []);
 
   return (
-    <Tab.Navigator
-      initialRouteName="Chat"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => {
-          let iconColor;
-          let rn = route.name;
-          if (rn === 'QR card') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="qr-code" size={iconSize} color={iconColor} />;
-          } else if (rn === 'Setttings') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />;
-          } else if (rn === 'Chat') {
-            iconColor = focused ? blueColor : '#999';
-            return <Ionicons name="chatbubbles-outline" size={iconSize} color={iconColor} />;
-          }
-        },
-      })}
-    >
-      <Tab.Screen
-        name="Chat"
-        component={Chat}
-        options={{
-          header: () => null,
-          title: 'Чаты',
-          tabBarBadge: badge,
-        }}
-      />
-      <Tab.Screen
-        name="QR card"
-        component={QRScreen}
-        options={{
-          headerTitleAlign: 'left',
-          title: 'Мой QR',
-        }}
-      />
-      <Tab.Screen
-        name="Setttings"
-        component={Settings}
-        options={{
-          header: () => null,
-          title: 'Настройки',
-        }}
-      />
-    </Tab.Navigator>
+    <BadgeContext.Provider value={{ badge, setBadge }}>
+      <Tab.Navigator
+        initialRouteName="Chat"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            let iconColor;
+            let rn = route.name;
+            if (rn === 'QR card') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="qr-code" size={iconSize} color={iconColor} />;
+            } else if (rn === 'Setttings') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />;
+            } else if (rn === 'Chat') {
+              iconColor = focused ? blueColor : '#999';
+              return <Ionicons name="chatbubbles-outline" size={iconSize} color={iconColor} />;
+            }
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Chat"
+          component={Chat}
+          options={{
+            header: () => null,
+            title: 'Чаты',
+            tabBarBadge: badge,
+          }}
+        />
+        <Tab.Screen
+          name="QR card"
+          component={QRScreen}
+          options={{
+            headerTitleAlign: 'left',
+            title: 'Мой QR',
+          }}
+        />
+        <Tab.Screen
+          name="Setttings"
+          component={Settings}
+          options={{
+            header: () => null,
+            title: 'Настройки',
+          }}
+        />
+      </Tab.Navigator>
+    </BadgeContext.Provider>
   );
 }
 
@@ -196,11 +183,6 @@ function App() {
   };
 
   useEffect(() => {
-    // Uncomment to reset local data
-
-    //// setToken('');
-    //// saveArrayToLocalStorage([], Con.API_AUTH_DATA_KEY);
-
     init();
   }, []);
 
@@ -229,7 +211,11 @@ function App() {
         <NavigationContainer>
           <AuthContext.Provider value={authContext}>
             <Stack.Navigator>
-              <Stack.Screen name="HomeScanner" component={HomeStack} options={{ title: 'LoyalClub', headerTitleAlign: 'left'}}/>
+              <Stack.Screen
+                name="HomeScanner"
+                component={HomeStack}
+                options={{ title: 'LoyalClub', headerTitleAlign: 'left' }}
+              />
               <Stack.Screen name="QRDetail" component={QRDetail} />
               <Stack.Screen
                 name="MyLoyaltyCards"

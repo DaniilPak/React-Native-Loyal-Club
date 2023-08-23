@@ -2,6 +2,7 @@ import axios from 'axios';
 import Con from '../constants';
 import { getItemFromLocalStorage, saveArrayToLocalStorage } from './async';
 import { MessageType } from '@flyerhq/react-native-chat-ui';
+import { getLocalUserData } from './getLocalUserData';
 
 export async function makeAuth(phone: string, password: string): Promise<any> {
   const requestData = {
@@ -444,4 +445,26 @@ export async function markUserRoomAsSeen(userId: string, roomId: string) {
     Con.DEBUG && console.error(error);
     throw error; // You can choose to handle the error here or propagate it
   }
+}
+
+export async function getCurrentUserIdAsync() {
+  try {
+    const asyncData = await getLocalUserData();
+
+    return asyncData.userData._id;
+  } catch (error) {
+    // Handle errors
+    console.error('Error getLocalDataAsync:', error);
+  }
+}
+
+export async function getBadge() {
+  console.log('Get badge called');
+  const userId = await getCurrentUserIdAsync();
+  const userRooms = await getUserRooms(userId);
+
+  /// Get unseen user rooms
+  const unseenData = userRooms.userRooms.filter((item: any) => !item.isSeen);
+
+  return unseenData.length;
 }

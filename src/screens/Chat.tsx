@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, ActivityIndicator, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import Con from '../constants';
 import NavigationRow from '../components/NavigationRow';
 import { getLocalUserData } from '../utils/getLocalUserData';
-import { getUserRooms, markUserRoomAsSeen } from '../utils/api';
+import { getBadge, getCurrentUserIdAsync, getUserRooms, markUserRoomAsSeen } from '../utils/api';
 import ChatRow from '../components/ChatRow';
 import messaging from '@react-native-firebase/messaging';
+import { BadgeContext } from '../contexts/BadgeContext';
 
 interface ChatProps {
   navigation: any;
@@ -13,6 +14,8 @@ interface ChatProps {
 }
 
 function Chat({ route, navigation }: ChatProps) {
+  const { setBadge } = useContext(BadgeContext);
+
   const [asyncUserData, setAsyncUserData] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
 
@@ -81,12 +84,48 @@ function Chat({ route, navigation }: ChatProps) {
     // Getting all userRoom relations, which
     // Represents User's chats
     initFunc();
+  }, []);
 
-    /// Update chats
-    messaging().onMessage(async (remoteMessage) => {
-      /// Update chat chats
-      initFunc();
+  /// Setup websocket2
+  useEffect(() => {
+    Con.DEBUG && console.log('Connecting to websocket2...');
+    const newSocket = new WebSocket(Con.ws2);
+
+    getCurrentUserIdAsync().then((userId) => {
+      if (userId !== null) {
+        // Only set the userId state if the result is not null
+        Con.DEBUG && console.log('userId', userId);
+
+        newSocket.onopen = () => {
+          Con.DEBUG && console.log('WebSocket connected');
+          const joinData = { type: 'join', userId: userId };
+          newSocket.send(JSON.stringify(joinData));
+        };
+
+        newSocket.onmessage = (message) => {
+          const parsedMessage = JSON.parse(message.data);
+          if (parsedMessage.type === Con.updateChatCode) {
+            const parsedMessage: any = JSON.parse(message.data);
+            Con.DEBUG && console.log('parsedMessage', parsedMessage);
+
+            /// Update chats
+            initFunc();
+
+            /// Update badge
+            getBadge().then((badge) => {
+              if (badge > 0) {
+                setBadge(badge);
+              }
+            });
+          }
+          /// another codes etc...
+        };
+      }
     });
+
+    return () => {
+      newSocket.close();
+    };
   }, []);
 
   return (
