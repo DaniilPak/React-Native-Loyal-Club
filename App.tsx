@@ -11,6 +11,7 @@ MaterialCommunityIcons.loadFont();
 import Con from './src/constants';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 import messaging from '@react-native-firebase/messaging';
+import NetInfo from '@react-native-community/netinfo';
 
 import QRDetail from './src/screens/Details';
 import QRScreen from './src/screens/QRScreen';
@@ -184,6 +185,24 @@ function App() {
 
   useEffect(() => {
     init();
+  }, []);
+
+  /// Net state
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (!state.isConnected) {
+        showMessage({
+          message: 'Потеряно соединение с Интернетом.',
+          description: 'Пожалуйста, проверьте ваше подключение.',
+          type: 'danger',
+          duration: 3000,
+        });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const authContext = useMemo(
