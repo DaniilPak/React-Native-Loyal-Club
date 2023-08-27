@@ -7,15 +7,20 @@ import BlueButton from '../components/BlueButton';
 import ShrinkableContainer from '../components/ShrinkableContainer';
 import PressableIcon from '../components/PressableIcon.';
 import PressableIcon2 from '../components/PressableIcon2';
+import Loading from './Loading';
 
 interface QRScreenProps {
   navigation: any;
+  route: any;
 }
 
-function QRScreen({ navigation }: QRScreenProps) {
+function QRScreen({ navigation, route }: QRScreenProps) {
   const [qr, setQr] = useState('');
   const [greeting, setGreeting] = useState('');
   const [userData, setUserData] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const { mainnav } = route.params; // Replace 'variableName' with the actual variable name
 
   useEffect(() => {
     async function fetchData() {
@@ -44,7 +49,7 @@ function QRScreen({ navigation }: QRScreenProps) {
     }
 
     function setNavigationOptionsForAdmin() {
-      navigation.setOptions({
+      mainnav.setOptions({
         headerRight: () => (
           <View style={{ flexDirection: 'row', marginHorizontal: 5 }}>
             <PressableIcon
@@ -78,7 +83,9 @@ function QRScreen({ navigation }: QRScreenProps) {
       setGreeting(greeting);
     }
 
-    fetchData();
+    fetchData().then(() => {
+      setIsLoaded(true);
+    });
   }, []);
 
   const myLoyaltyCards = 'Мои карты лояльности';
@@ -89,33 +96,37 @@ function QRScreen({ navigation }: QRScreenProps) {
 
   const qrSize = Con.width * 0.5;
 
-  return (
-    <View style={styles.parentStyle}>
-      {qr && (
-        <View>
-          <View style={styles.labelContainer}>
-            {userData && (
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.greeting}>{greeting}, </Text>
-                <Text style={styles.tip}>
-                  {userData.name} {userData.surname}!
-                </Text>
-              </View>
-            )}
-            <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
-          </View>
-          <ShrinkableContainer>
-            <View style={styles.mainContainer}>
-              <QRCode value={qr} size={qrSize} color="black" backgroundColor="white" />
+  if (isLoaded) {
+    return (
+      <View style={styles.parentStyle}>
+        {qr && (
+          <View>
+            <View style={styles.labelContainer}>
+              {userData && (
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={styles.greeting}>{greeting}, </Text>
+                  <Text style={styles.tip}>
+                    {userData.name} {userData.surname}!
+                  </Text>
+                </View>
+              )}
+              <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
             </View>
-          </ShrinkableContainer>
+            <ShrinkableContainer>
+              <View style={styles.mainContainer}>
+                <QRCode value={qr} size={qrSize} color="black" backgroundColor="white" />
+              </View>
+            </ShrinkableContainer>
+          </View>
+        )}
+        <View style={styles.lowerContainer}>
+          <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
         </View>
-      )}
-      <View style={styles.lowerContainer}>
-        <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
       </View>
-    </View>
-  );
+    );
+  } else {
+    return <Loading />;
+  }
 }
 
 const styles = StyleSheet.create({

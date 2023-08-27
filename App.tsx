@@ -44,7 +44,7 @@ import { BadgeContext } from './src/contexts/BadgeContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeStack() {
+function HomeStack({ navigation }: any) {
   let iconSize = 22;
   let blueColor = Con.AppleBlueLight;
 
@@ -61,7 +61,7 @@ function HomeStack() {
   return (
     <BadgeContext.Provider value={{ badge, setBadge }}>
       <Tab.Navigator
-        initialRouteName="Chat"
+        initialRouteName="QR card"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             let iconColor;
@@ -91,9 +91,9 @@ function HomeStack() {
         <Tab.Screen
           name="QR card"
           component={QRScreen}
+          initialParams={{ mainnav: navigation }} // Pass your variable here
           options={{
-            headerTitleAlign: 'left',
-            title: 'Мой QR',
+            header: () => null,
           }}
         />
         <Tab.Screen

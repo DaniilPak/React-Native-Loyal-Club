@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 function Auth({ navigation }: AuthProps) {
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('+7 ');
 
   const logIn = () => {
     getUserByPhoneNumber(phoneNumber)
@@ -42,6 +42,7 @@ function Auth({ navigation }: AuthProps) {
         keyboardType="numeric"
         placeholder="+7"
         placeholderTextColor="#111"
+        autoFocus={true}
         style={styles.input}
       />
       <BlueButton title="Войти" onPress={logIn} />

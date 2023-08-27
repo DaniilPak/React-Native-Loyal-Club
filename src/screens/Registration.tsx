@@ -140,6 +140,7 @@ function Registration({ navigation, route }: RegistrationProps) {
               onChangeText={handleNameChange}
               placeholder="Имя"
               placeholderTextColor={'gray'}
+              autoFocus={true}
             />
             <TextInput
               style={styles.input}

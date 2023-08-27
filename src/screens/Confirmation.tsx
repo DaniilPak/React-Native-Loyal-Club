@@ -78,6 +78,7 @@ function Confirmation({ navigation, route }: ConfirmationProps) {
               secureTextEntry={passwordVisibility}
               placeholder="Введите пароль"
               placeholderTextColor={'gray'}
+              autoFocus={true}
             />
             <Button title="показать/скрыть" onPress={handlePasswordVisibility} />
             <BlueButton title="Подтвердить" onPress={confirmPassword} />
