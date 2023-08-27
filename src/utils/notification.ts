@@ -48,7 +48,7 @@ export async function displayNotification(remoteMessage: any) {
 
 export async function requestNotificationPermission() {
   try {
-    await notifee.requestPermission();
+    await notifee.requestPermission({ sound: true, announcement: true });
   } catch (error) {
     Con.DEBUG && console.error('Error while requesting notification permission:', error);
   }
