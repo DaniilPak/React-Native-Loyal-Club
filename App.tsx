@@ -40,6 +40,9 @@ import Conversation from './src/screens/Conversation';
 import { triggerVibration } from './src/utils/helper';
 import { getLocalUserData } from './src/utils/getLocalUserData';
 import { BadgeContext } from './src/contexts/BadgeContext';
+import { View } from 'react-native';
+import PressableIcon from './src/components/PressableIcon.';
+import PressableIcon2 from './src/components/PressableIcon2';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -56,6 +59,35 @@ function HomeStack({ navigation }: any) {
         setBadge(badge);
       }
     });
+
+    /// Set Worker | Business panel
+    getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
+      .then((asyncdata) => {
+        const isAdmin = asyncdata.userData.type === 'Business' || asyncdata.userData.type === 'Worker';
+
+        if (isAdmin) {
+          navigation.setOptions({
+            headerRight: () => (
+              <View style={{ flexDirection: 'row', marginHorizontal: 5 }}>
+                <PressableIcon
+                  onPress={() => {
+                    navigation.navigate('History');
+                  }}
+                  icon="book-outline"
+                />
+                <View style={{ width: 5 }}></View>
+                <PressableIcon2
+                  onPress={() => {
+                    navigation.navigate('Scan QR');
+                  }}
+                  icon="qrcode-scan"
+                />
+              </View>
+            ),
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -91,7 +123,6 @@ function HomeStack({ navigation }: any) {
         <Tab.Screen
           name="QR card"
           component={QRScreen}
-          initialParams={{ mainnav: navigation }} // Pass your variable here
           options={{
             header: () => null,
           }}

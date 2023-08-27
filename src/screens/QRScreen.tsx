@@ -5,22 +5,15 @@ import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 import ShrinkableContainer from '../components/ShrinkableContainer';
-import PressableIcon from '../components/PressableIcon.';
-import PressableIcon2 from '../components/PressableIcon2';
-import Loading from './Loading';
 
 interface QRScreenProps {
   navigation: any;
-  route: any;
 }
 
-function QRScreen({ navigation, route }: QRScreenProps) {
+function QRScreen({ navigation }: QRScreenProps) {
   const [qr, setQr] = useState('');
   const [greeting, setGreeting] = useState('');
   const [userData, setUserData] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  const { mainnav } = route.params; // Replace 'variableName' with the actual variable name
 
   useEffect(() => {
     async function fetchData() {
@@ -36,38 +29,10 @@ function QRScreen({ navigation, route }: QRScreenProps) {
         setQr(userData._id);
         setUserData(userData);
 
-        const isAdmin = userData.type === 'Business' || userData.type === 'Worker';
-
-        if (isAdmin) {
-          setNavigationOptionsForAdmin();
-        }
-
         setCurrentGreeting();
       } catch (err) {
         Con.DEBUG && console.log(err);
       }
-    }
-
-    function setNavigationOptionsForAdmin() {
-      mainnav.setOptions({
-        headerRight: () => (
-          <View style={{ flexDirection: 'row', marginHorizontal: 5 }}>
-            <PressableIcon
-              onPress={() => {
-                navigation.navigate('History');
-              }}
-              icon="book-outline"
-            />
-            <View style={{ width: 5 }}></View>
-            <PressableIcon2
-              onPress={() => {
-                navigation.navigate('Scan QR');
-              }}
-              icon="qrcode-scan"
-            />
-          </View>
-        ),
-      });
     }
 
     function setCurrentGreeting() {
@@ -83,9 +48,7 @@ function QRScreen({ navigation, route }: QRScreenProps) {
       setGreeting(greeting);
     }
 
-    fetchData().then(() => {
-      setIsLoaded(true);
-    });
+    fetchData();
   }, []);
 
   const myLoyaltyCards = 'Мои карты лояльности';
@@ -96,47 +59,42 @@ function QRScreen({ navigation, route }: QRScreenProps) {
 
   const qrSize = Con.width * 0.5;
 
-  if (isLoaded) {
-    return (
-      <View style={styles.parentStyle}>
-        {qr && (
-          <View>
-            <View style={styles.labelContainer}>
-              {userData && (
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.greeting}>{greeting}, </Text>
-                  <Text style={styles.tip}>
-                    {userData.name} {userData.surname}!
-                  </Text>
-                </View>
-              )}
-              <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
-            </View>
-            <ShrinkableContainer>
-              <View style={styles.mainContainer}>
-                <QRCode value={qr} size={qrSize} color="black" backgroundColor="white" />
+  return (
+    <View style={styles.parentStyle}>
+      {qr && (
+        <View>
+          <View style={styles.labelContainer}>
+            {userData && (
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.greeting}>{greeting}, </Text>
+                <Text style={styles.tip}>
+                  {userData.name} {userData.surname}!
+                </Text>
               </View>
-            </ShrinkableContainer>
+            )}
+            <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
           </View>
-        )}
-        <View style={styles.lowerContainer}>
-          <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+          <ShrinkableContainer>
+            <View style={styles.mainContainer}>
+              <QRCode value={qr} size={qrSize} color="black" backgroundColor="white" />
+            </View>
+          </ShrinkableContainer>
         </View>
+      )}
+      <View style={styles.lowerContainer}>
+        <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
       </View>
-    );
-  } else {
-    return <Loading />;
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   labelContainer: {
-    alignItems: 'center',
     paddingTop: 25,
     paddingBottom: 25,
   },
   greeting: {
-    color: Con.AppleBlueLight,
+    color: 'black',
     fontSize: 18,
     marginVertical: 10,
   },
