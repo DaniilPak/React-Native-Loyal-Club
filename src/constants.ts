@@ -41,9 +41,9 @@ const Con = {
   // AWS
   // http://18.118.84.185:3000/api
   // ws://18.118.84.185:8080
-  api: 'http://localhost:3000/api',
-  ws: 'ws://localhost:8080/websocket1',
-  ws2: 'ws://localhost:8080/websocket2',
+  api: 'http://18.118.84.185:3000/api',
+  ws: 'ws://18.118.84.185:8080/websocket1',
+  ws2: 'ws://18.118.84.185:8080/websocket2',
   API_AUTH_DATA_KEY: 'authdata',
   PHONE_ASYNC_KEY: 'phone',
   PASSWORD_ASYNC_KEY: 'password',
