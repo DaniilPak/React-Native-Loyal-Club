@@ -12,14 +12,12 @@ interface ReceiptDetailsProps {
 }
 
 function ReceiptDetails({ route }: ReceiptDetailsProps) {
-  const { _receiptId, businessId } = route.params;
+  const { _receiptId } = route.params;
   const [detailedReceipt, setDetailedReceipt] = useState([]);
   const [businessObject, setBusinessObject] = useState([]);
   const [allSet, setAllSet] = useState(false);
 
   useEffect(() => {
-    Con.DEBUG && console.log('Receipt details init ', _receiptId, 'businessId: ', businessId);
-
     getDetailedReceipt(_receiptId)
       .then((detailedReceipt) => {
         Con.DEBUG && console.log('Got detailed receipt', detailedReceipt);

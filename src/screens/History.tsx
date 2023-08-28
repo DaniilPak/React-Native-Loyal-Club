@@ -128,7 +128,7 @@ function History({ route }: SettingsProps) {
 
   const receiptDetails = (_receiptId: string) => {
     Con.DEBUG && console.log('Receipt details', _receiptId);
-    navigation.navigate('ReceiptDetails', { _receiptId, businessId: businessId });
+    navigation.navigate('ReceiptDetails', { _receiptId });
   };
 
   const onRefresh = () => {

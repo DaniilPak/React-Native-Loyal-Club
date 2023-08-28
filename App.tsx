@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -88,6 +88,34 @@ function HomeStack({ navigation }: any) {
         }
       })
       .catch((err) => console.log(err));
+
+    /// Handle on Notification press event
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      console.log('Notification caused app to open from background state:', remoteMessage);
+
+      const navType = remoteMessage.data.type;
+      if (navType === null) {
+        console.log('Message data type is null');
+        return;
+      }
+
+      try {
+        if (navType === 'ReceiptDetails') {
+          const receiptId = remoteMessage.data.receiptId;
+          navigation.navigate(navType, { _receiptId: receiptId });
+        } else if (navType === 'Conversation') {
+          const [userId, roomId, roomName] = await Promise.all([
+            getCurrentUserIdAsync(),
+            remoteMessage.data.roomId,
+            remoteMessage.data.roomName,
+          ]);
+
+          navigation.navigate('Conversation', { roomId, userId, roomName });
+        }
+      } catch (error) {
+        console.error('Error while navigating:', error);
+      }
+    });
   }, []);
 
   return (
@@ -125,6 +153,7 @@ function HomeStack({ navigation }: any) {
           component={QRScreen}
           options={{
             header: () => null,
+            title: 'Мой QR',
           }}
         />
         <Tab.Screen
