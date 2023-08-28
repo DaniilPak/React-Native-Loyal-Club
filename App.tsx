@@ -89,8 +89,7 @@ function HomeStack({ navigation }: any) {
       })
       .catch((err) => console.log(err));
 
-    /// Handle on Notification press event
-    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    const notificationActionHandler = async (remoteMessage: any) => {
       console.log('Notification caused app to open from background state:', remoteMessage);
 
       const navType = remoteMessage.data.type;
@@ -115,7 +114,19 @@ function HomeStack({ navigation }: any) {
       } catch (error) {
         console.error('Error while navigating:', error);
       }
+    };
+
+    /// Handle on Notification press event
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      notificationActionHandler(remoteMessage);
     });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        notificationActionHandler(remoteMessage);
+      });
   }, []);
 
   return (
