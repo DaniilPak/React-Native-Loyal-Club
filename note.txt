@@ -1,7 +1,12 @@
 // Before release
-update release.keystore 
+1. check constants api endpoint
+2. change version 
+3. build aab
+./gradlew bundleRelease
 
-check constants api endpoint
+///
+
+update release.keystore 
 
 npx react-native run-android
 
