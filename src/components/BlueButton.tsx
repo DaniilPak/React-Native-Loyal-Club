@@ -54,7 +54,7 @@ function BlueButton({
           activeOpacity={1}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          style={[styles.button, isShadowDisabled ? null : styles.shadow]}
+          style={[styles.button, isShadowDisabled ? null : styles.shadow, isDisabled ? styles.disabledButton : null]}
           onPress={onPress}
           disabled={isDisabled}
         >
@@ -70,7 +70,7 @@ function BlueButton({
           activeOpacity={1}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          style={[styles.button, isShadowDisabled ? null : styles.shadow]}
+          style={[styles.button, isShadowDisabled ? null : styles.shadow, isDisabled ? styles.disabledButton : null]}
           onPress={onPress}
           disabled={isDisabled}
         >
@@ -110,6 +110,10 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: '600',
     marginRight: 10,
+  },
+  disabledButton: {
+    backgroundColor: 'gray', // Color for disabled state
+    opacity: 0.5, // Reduced opacity
   },
 });
 
