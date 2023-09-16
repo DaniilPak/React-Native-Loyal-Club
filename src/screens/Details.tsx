@@ -25,6 +25,7 @@ import {
 } from '../utils/api';
 import { ScrollView } from 'react-native-gesture-handler';
 import Loading from './Loading';
+import { showMessage } from 'react-native-flash-message';
 
 interface QRDetailScreenProps {
   navigation: any;
@@ -46,7 +47,7 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
   const [summary, setSummary] = useState('');
 
   const [switcherEnabled, setSwitcherEnabled] = useState(false);
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
   // API data
@@ -59,6 +60,13 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
   const buttonOffset = 'Принять оплату';
 
   const handleMoneyChange = (text: string) => {
+    /// If text is not empty enable button and hide dim
+    if (text.trim() !== '') {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+
     setSwitcherEnabled(false);
     recalculateSummary();
     // Remove all non-digit characters
@@ -70,6 +78,17 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
   };
 
   const confirmPayment = () => {
+    /// Check if money value (user input is not empty)
+    if (moneyValue.trim() === '') {
+      showMessage({
+        message: 'Ошибка',
+        description: 'Сначала введите сумму чека',
+        type: 'warning',
+      });
+
+      return;
+    }
+
     Con.DEBUG && console.log('Button triggered', summary);
 
     // Button management
@@ -143,6 +162,17 @@ function QRDetail({ route, navigation }: QRDetailScreenProps) {
   };
 
   const onSwitcherChange = () => {
+    /// Check if money value (user input is not empty)
+    if (moneyValue.trim() === '') {
+      showMessage({
+        message: 'Ошибка',
+        description: 'Сначала введите сумму чека',
+        type: 'warning',
+      });
+
+      return;
+    }
+
     setSwitcherEnabled(!switcherEnabled);
     recalculateSummary();
   };
