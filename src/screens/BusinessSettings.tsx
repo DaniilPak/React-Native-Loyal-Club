@@ -67,15 +67,15 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
       updateBusinessLoyaltyPercent(userData.token, numberValue, userData.userData.business)
         .then(() => {
           showMessage({
-            message: `Loyalty percent successfully updated to ${numberValue}%`,
-            description: "Let's continue work!",
+            message: `Успешно`,
+            description: `Процент лояльности изменен на  ${numberValue}%`,
             type: 'success',
           });
         })
         .catch((err) => {
           showMessage({
-            message: 'Failed to update loyalty percent',
-            description: 'please check that percent is correct',
+            message: 'Ошибка',
+            description: 'Не удалось обновить процент лояльности',
             type: 'danger',
           });
         });
