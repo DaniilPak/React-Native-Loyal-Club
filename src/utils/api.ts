@@ -265,7 +265,13 @@ export async function getUserByPhoneNumber(phoneNumber: string) {
   }
 }
 
-export async function createNewUser(phoneNumber: string, name: string, surname: string, password: string) {
+export async function createNewUser(
+  phoneNumber: string,
+  name: string,
+  surname: string,
+  birthDate: Date,
+  password: string
+) {
   try {
     const requestData = {
       type: 'Client',
@@ -277,6 +283,7 @@ export async function createNewUser(phoneNumber: string, name: string, surname: 
       phoneNumber: phoneNumber,
       name: name,
       surname: surname,
+      birthDate: birthDate,
       password: password,
     };
 

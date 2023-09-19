@@ -17,17 +17,14 @@ import { setItemToLocalStorage } from '../utils/async';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 import { pushAlert } from '../utils/alert';
-import ReCAPTCHA from 'react-native-recaptcha-v2';
+
+import DatePicker from 'react-native-date-picker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { showMessage } from 'react-native-flash-message';
 
 interface RegistrationProps {
   navigation: any;
   route: any;
-}
-
-interface Errors {
-  name?: string;
-  surname?: string;
-  password?: string;
 }
 
 function Registration({ navigation, route }: RegistrationProps) {
@@ -39,24 +36,32 @@ function Registration({ navigation, route }: RegistrationProps) {
   const [surname, setSurname] = useState('');
   const [password, setPassword] = useState('');
 
+  const [date, setDate] = useState(new Date());
+  const [dateEntered, setDateEntered] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
 
   const validateForm = (name: string, surname: string, password: string) => {
-    let errors: Errors = {};
+    const errors: any[] = [];
 
     if (!name.trim()) {
-      errors.name = 'Name is required';
+      errors.push('Введите имя');
     }
 
     if (!surname.trim()) {
-      errors.surname = 'Surname is required';
+      errors.push('Введите фамилию');
+    }
+
+    if (!dateEntered) {
+      errors.push('Выберите дату рождения');
     }
 
     if (!password.trim()) {
-      errors.password = 'Password is required';
+      errors.push('Введите пароль');
     } else if (password.length < 6) {
-      errors.password = 'Password should be at least 6 characters long';
+      errors.push('Пароль должен быть длиной не менее 6 символов');
     }
 
     return errors;
@@ -78,29 +83,27 @@ function Registration({ navigation, route }: RegistrationProps) {
     setPasswordVisibility(!passwordVisibility);
   };
 
-  const okFunc = () => {
-    Con.DEBUG && console.log('Ok');
-  };
-
   const registerNew = () => {
-    setIsButtonPressed(true);
-
     // Validate
     const errors = validateForm(name, surname, password);
 
-    const errorKeys = Object.entries(errors);
-    Con.DEBUG && console.log('Errors: ', errorKeys);
+    console.log('Errors: ', errors);
 
-    if (errorKeys.length > 0) {
-      errorKeys.forEach((err) => {
-        pushAlert('Error', err[1], okFunc);
+    if (errors.length > 0) {
+      showMessage({
+        message: 'Ошибка',
+        description: errors[0],
+        type: 'warning',
       });
 
       return;
     }
 
+    // Disable register button
+    setIsButtonPressed(true);
+
     // Create new user
-    createNewUser(phone, name, surname, password)
+    createNewUser(phone, name, surname, date, password)
       .then((newUser) => {
         Con.DEBUG && console.log('newUser', newUser);
 
@@ -132,8 +135,9 @@ function Registration({ navigation, route }: RegistrationProps) {
           style={{ justifyContent: 'center', flex: 1, height: Con.height }}
         >
           <View>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>Давайте создадим учетную запись для</Text>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>{phone}</Text>
+            <Text style={{ color: 'black', alignSelf: 'center' }}>
+              Добро пожаловать! Давайте начнем с регистрации и создания чего-то волшебного вместе." 💫✨
+            </Text>
             <TextInput
               style={styles.input}
               value={name}
@@ -149,6 +153,25 @@ function Registration({ navigation, route }: RegistrationProps) {
               placeholder="Фамилия"
               placeholderTextColor={'gray'}
             />
+            <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
+              {!dateEntered && <Text style={styles.textPlaceholder}>{`Выбрать дату рождения`}</Text>}
+              {dateEntered && <Text style={styles.input}>{`${date.toLocaleDateString()}`}</Text>}
+            </TouchableOpacity>
+            <DatePicker
+              modal
+              mode="date"
+              open={open}
+              date={date}
+              onConfirm={(date) => {
+                console.log('Date: ', date, typeof date);
+                setDateEntered(true);
+                setOpen(false);
+                setDate(date);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
             <TextInput
               style={styles.input}
               value={password}
@@ -158,6 +181,7 @@ function Registration({ navigation, route }: RegistrationProps) {
               placeholderTextColor={'gray'}
             />
             <Button title="показать/скрыть" onPress={handlePasswordVisibility} />
+
             <BlueButton
               title="Зарегистрироваться"
               onPress={registerNew}
@@ -178,8 +202,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     textAlign: 'center',
     color: 'black',
-    marginTop: 25,
+    marginTop: 10,
     fontSize: 25,
+  },
+  textPlaceholder: {
+    color: 'gray',
+    marginTop: 10,
+    fontSize: 25,
+    textAlign: 'center',
   },
 });
 
