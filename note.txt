@@ -67,5 +67,8 @@ modalContent: {
 
 /// LoyaltyCard standard
 
-size: 243px x 153px
+standard CR80 card in the digital world in terms of pixels
+300 DPI
+
+size: 1012.5px x 637.5px
 aspect ratio: 1.5882 -  0.6293
