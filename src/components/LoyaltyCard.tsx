@@ -2,14 +2,27 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Image } from 'react-native';
 import Con from '../constants';
 import ShrinkableContainer from './ShrinkableContainer';
+import * as Progress from 'react-native-progress';
 
 interface LoyaltyCardProps {
   businessName: string;
   bonusAmount: string;
   pictureUrl: string;
+  prevLvl: string;
+  nextLvl: string;
+  progressStat: string;
+  progressVal: number;
 }
 
-function LoyaltyCard({ businessName, bonusAmount, pictureUrl }: LoyaltyCardProps) {
+function LoyaltyCard({
+  businessName,
+  bonusAmount,
+  pictureUrl,
+  prevLvl,
+  nextLvl,
+  progressStat,
+  progressVal,
+}: LoyaltyCardProps) {
   const borderRadius = 35;
 
   return (
@@ -25,13 +38,23 @@ function LoyaltyCard({ businessName, bonusAmount, pictureUrl }: LoyaltyCardProps
         <Text style={styles.businessName}>{businessName}</Text>
         <View
           style={{
-            flex: 0.1,
+            flex: 0.25,
+            alignItems: 'center',
+            justifyContent: 'center',
             flexDirection: 'row',
           }}
-        ></View>
+        >
+          {/* Spent metrics */}
+          <Text style={{ color: 'white', position: 'absolute', top: -12 }}>{progressStat}</Text>
+          {/* Current lvl */}
+          <Text style={{ color: 'white', paddingHorizontal: 7 }}>{prevLvl}</Text>
+          <Progress.Bar progress={progressVal} width={Con.width * 0.58} color="rgba(255, 255, 255, 1)" />
+          {/* Next lvl */}
+          <Text style={{ color: 'white', paddingHorizontal: 7 }}>{nextLvl}</Text>
+        </View>
         <View
           style={{
-            flex: 0.25,
+            flex: 0.3,
             flexDirection: 'row',
           }}
         >
@@ -61,7 +84,6 @@ const styles = StyleSheet.create({
   },
   bonusTip: {
     color: 'white',
-    fontSize: 18,
     paddingHorizontal: 20,
   },
   canvas: {
