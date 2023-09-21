@@ -5,7 +5,7 @@ Ionicons.loadFont();
 import Con from '../constants';
 import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { getLoyaltyCardDetails, getUserById } from '../utils/api';
+import { getBusinessInfoByBid, getLoyaltyCardDetails, getUserById } from '../utils/api';
 import LoyaltyCard from '../components/LoyaltyCard';
 
 interface MyLoyaltyCardsScreenProps {
@@ -44,9 +44,14 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
       const apiLoyaltyCards = user.loyaltyCards;
 
       const loyaltyCardPromises = apiLoyaltyCards.map((loyaltyCardId) => getLoyaltyCardDetails(loyaltyCardId));
-
       const tempLoyaltyCards = await Promise.all(loyaltyCardPromises);
-      Con.DEBUG && console.log('++++++++', tempLoyaltyCards);
+
+      /// Getting business data to get loyalty percent and show
+      /// to user
+      for (const lc of tempLoyaltyCards) {
+        const businessData = await getBusinessInfoByBid(lc.business);
+        lc.businessData = businessData;
+      }
 
       // Sorting the array alphabetically
       tempLoyaltyCards.sort((a, b) => {
@@ -75,8 +80,11 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
   }, []);
 
   const renderItem = ({ item }: any) => (
-    // <TextBlockV2 text={`${item.businessName} bonus: ${item.bonusAmount} ${item.currencySign}`} />
-    <LoyaltyCard businessName={item.businessName} bonusAmount={`${item.bonusAmount} ${item.currencySign}`} />
+    <LoyaltyCard
+      businessName={`${item.businessData.loyalPercent}%`}
+      bonusAmount={`${item.bonusAmount} ${item.currencySign}`}
+      pictureUrl={item.businessData.pictureUrl}
+    />
   );
 
   return (

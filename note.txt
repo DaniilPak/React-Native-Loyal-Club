@@ -64,3 +64,8 @@ modalContent: {
     alignItems: 'center',
     borderRadius: 4,
 },
+
+/// LoyaltyCard standard
+
+size: 243px x 153px
+aspect ratio: 1.5882 -  0.6293
