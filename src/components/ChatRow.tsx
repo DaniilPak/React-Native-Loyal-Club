@@ -4,6 +4,7 @@ import Con from '../constants';
 import Octicons from 'react-native-vector-icons/Octicons';
 Octicons.loadFont();
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Avatar } from 'react-native-paper';
 
 interface ChatRowProps {
   text: string;
@@ -20,14 +21,17 @@ function ChatRow({ text, secondaryText, isSeen, onPress }: ChatRowProps) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.buttonContainer}>
-        <View style={styles.textBlockContainer}>
-          <Text style={styles.textBlock}>{text}</Text>
-          {!isSeen && <View style={styles.iconStyle}>{redDot}</View>}
-        </View>
+        <Avatar.Text size={45} label={`${text[0]}`} />
+        <View style={{ width: '80%', marginLeft: 15 }}>
+          <View style={styles.textBlockContainer}>
+            <Text style={styles.textBlock}>{text}</Text>
+            {!isSeen && <View style={styles.iconStyle}>{redDot}</View>}
+          </View>
 
-        <Text style={styles.textBlockSecondary} numberOfLines={1} ellipsizeMode="tail">
-          {secondaryText}
-        </Text>
+          <Text style={styles.textBlockSecondary} numberOfLines={1} ellipsizeMode="tail">
+            {secondaryText}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -43,6 +47,7 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: 'white',
     padding: 17,
+    flexDirection: 'row',
   },
   textBlockContainer: {
     flexDirection: 'row',

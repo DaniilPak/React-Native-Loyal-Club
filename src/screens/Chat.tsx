@@ -135,6 +135,7 @@ function Chat({ route, navigation }: ChatProps) {
         renderItem={renderItem}
         ListEmptyComponent={renderEmptyContainer}
         keyExtractor={(item) => item._id}
+        contentContainerStyle={{ paddingBottom: 50 }}
       />
     </View>
   );
