@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 import ShrinkableContainer from '../components/ShrinkableContainer';
+import { getBusinessInfoByBid, getLastUsedLoyaltyCard } from '../utils/api';
+import LoyaltyCard from '../components/LoyaltyCard';
 
 interface QRScreenProps {
   navigation: any;
@@ -14,6 +16,18 @@ function QRScreen({ navigation }: QRScreenProps) {
   const [qr, setQr] = useState('');
   const [greeting, setGreeting] = useState('');
   const [userData, setUserData] = useState([]);
+
+  /// Last used loyalty card states
+  const [selectedLvl, setSelectedLvl] = useState([]);
+  const [bonusAmountWithCurrency, setBonusAmountWithCurrency] = useState('');
+  const [pictureUrl, setPictureUrl] = useState('');
+  const [nextLevelName, setNextLevelName] = useState('');
+  const [progressStat, setProgressStat] = useState('');
+  const [progressVal, setProgressVal] = useState(0);
+
+  const [loyaltyCardIsLoaded, setLoyaltyCardIsLoaded] = useState(false);
+
+  const myLoyaltyCards = 'Мои карты лояльности';
 
   useEffect(() => {
     async function fetchData() {
@@ -25,11 +39,60 @@ function QRScreen({ navigation }: QRScreenProps) {
           return;
         }
 
-        Con.DEBUG && console.log('My async data token', userData._id);
+        Con.DEBUG && console.log('My userId', userData._id);
         setQr(userData._id);
         setUserData(userData);
 
         setCurrentGreeting();
+
+        /// Get last used loyalty card
+        const lastUsedLoyaltyCard = await getLastUsedLoyaltyCard(userData._id);
+        console.log('lastUsedLoyaltyCard', lastUsedLoyaltyCard);
+
+        if (!lastUsedLoyaltyCard) {
+          return;
+        }
+
+        const lastUsedLoyaltyCardBusinessData = await getBusinessInfoByBid(lastUsedLoyaltyCard.business);
+        console.log('lastUsedLoyaltyCard.business)', lastUsedLoyaltyCard);
+        console.log('lastUsedLoyaltyCardBusinessData', lastUsedLoyaltyCardBusinessData);
+
+        const bonusAmountWithCurrency = `${lastUsedLoyaltyCard.bonusAmount} ${lastUsedLoyaltyCardBusinessData.currencySign}`;
+        const businessLoyaltyLvls = lastUsedLoyaltyCardBusinessData.loyaltyLevels;
+        const currentLoyaltyLvl = lastUsedLoyaltyCard.loyaltyCardLevel;
+
+        const selectedLvl = businessLoyaltyLvls.find((level: any) => level.name === currentLoyaltyLvl);
+        const currentLoyaltyLevelIndex = businessLoyaltyLvls.findIndex(
+          (level: any) => level.name === currentLoyaltyLvl
+        );
+
+        let nextLevelName = 'Max';
+        let nextLevelMinSpending = 0;
+
+        if (currentLoyaltyLevelIndex !== -1 && currentLoyaltyLevelIndex < businessLoyaltyLvls.length - 1) {
+          const nextLevel = businessLoyaltyLvls[currentLoyaltyLevelIndex + 1];
+          nextLevelName = nextLevel.name;
+          nextLevelMinSpending = nextLevel.minSpending;
+        } else {
+          console.log('No next level');
+        }
+
+        /// Total spend calculate
+        const totalSpent = lastUsedLoyaltyCard.totalSpent;
+        const progressVal = totalSpent / nextLevelMinSpending;
+
+        /// Assigning states
+        setSelectedLvl(selectedLvl);
+        setBonusAmountWithCurrency(bonusAmountWithCurrency);
+        setPictureUrl(lastUsedLoyaltyCardBusinessData.pictureUrl);
+        setNextLevelName(nextLevelName);
+        setProgressStat(
+          `${totalSpent} ${lastUsedLoyaltyCardBusinessData.currencySign} / ${nextLevelMinSpending} ${lastUsedLoyaltyCardBusinessData.currencySign}`
+        );
+        setProgressVal(progressVal);
+
+        /// LC is loaded
+        setLoyaltyCardIsLoaded(true);
       } catch (err) {
         Con.DEBUG && console.log(err);
       }
@@ -51,28 +114,33 @@ function QRScreen({ navigation }: QRScreenProps) {
     fetchData();
   }, []);
 
-  const myLoyaltyCards = 'Мои карты лояльности';
-
   const showMyLoyaltyCards = () => {
     navigation.navigate('MyLoyaltyCards');
   };
 
-  const qrSize = Con.width * 0.5;
+  /// 0.9 is width of the qr card
+  /// 0.6293 is CR80 proportion
+  /// 0.9 is height of CR80
+  const qrSize = Con.width * 0.9 * 0.6293 * 0.9;
 
   return (
-    <View style={styles.parentStyle}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 100,
+      }}
+    >
       {qr && (
         <View>
           <View style={styles.labelContainer}>
             {userData && (
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.greeting}>{greeting}, </Text>
-                <Text style={styles.tip}>
-                  {userData.name} {userData.surname}!
+                <Text style={styles.greeting}>
+                  {greeting}, {userData.name}!
                 </Text>
               </View>
             )}
-            <Text style={styles.tip}>Покажите свой QR сотруднику</Text>
           </View>
           <ShrinkableContainer>
             <View style={styles.mainContainer}>
@@ -83,8 +151,21 @@ function QRScreen({ navigation }: QRScreenProps) {
       )}
       <View style={styles.lowerContainer}>
         <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+
+        {/* Last used loyalty card */}
+        {loyaltyCardIsLoaded && (
+          <LoyaltyCard
+            businessName={`${selectedLvl.name} ${selectedLvl.percent}%`}
+            bonusAmount={bonusAmountWithCurrency}
+            pictureUrl={pictureUrl}
+            prevLvl={`${selectedLvl.name}`}
+            nextLvl={nextLevelName}
+            progressStat={progressStat}
+            progressVal={progressVal}
+          />
+        )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -95,12 +176,7 @@ const styles = StyleSheet.create({
   },
   greeting: {
     color: 'black',
-    fontSize: 18,
-    marginVertical: 10,
-  },
-  tip: {
-    color: 'black',
-    fontSize: 18,
+    fontSize: 25,
     marginVertical: 10,
   },
   mainContainer: {
@@ -108,10 +184,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
     width: Con.width * 0.9,
-    paddingTop: 25,
-    paddingBottom: 25,
+    height: Con.width * 0.9 * 0.6293,
     backgroundColor: 'white',
-    borderRadius: 25,
+    borderRadius: 35,
 
     shadowColor: '#000',
     shadowOffset: {
@@ -125,12 +200,6 @@ const styles = StyleSheet.create({
   lowerContainer: {
     flex: 1,
     width: '100%',
-  },
-  parentStyle: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

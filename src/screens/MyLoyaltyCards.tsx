@@ -85,23 +85,22 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     const currentLoyaltyLvl = item.loyaltyCardLevel;
 
     const selectedLvl = businessLoyaltyLvls.find((level: any) => level.name === currentLoyaltyLvl);
-    const bronzeIndex = businessLoyaltyLvls.findIndex((level: any) => level.name === currentLoyaltyLvl);
+    const currentLoyaltyLevelIndex = businessLoyaltyLvls.findIndex((level: any) => level.name === currentLoyaltyLvl);
 
     let nextLevelName = 'Max';
-    let nextLevelHolder = null;
+    let nextLevelMinSpending = 0;
 
-    if (bronzeIndex !== -1 && bronzeIndex < businessLoyaltyLvls.length - 1) {
-      const nextLevel = businessLoyaltyLvls[bronzeIndex + 1];
+    if (currentLoyaltyLevelIndex !== -1 && currentLoyaltyLevelIndex < businessLoyaltyLvls.length - 1) {
+      const nextLevel = businessLoyaltyLvls[currentLoyaltyLevelIndex + 1];
       nextLevelName = nextLevel.name;
-      nextLevelHolder = nextLevel;
+      nextLevelMinSpending = nextLevel.minSpending;
     } else {
       console.log('No next level');
     }
 
     /// Total spend calculate
     const totalSpent = item.totalSpent;
-    const needSpentToLvlUp = nextLevelHolder.minSpending;
-    const progressVal = totalSpent / needSpentToLvlUp;
+    const progressVal = totalSpent / nextLevelMinSpending;
 
     return (
       <LoyaltyCard
@@ -110,7 +109,7 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
         pictureUrl={item.businessData.pictureUrl}
         prevLvl={`${selectedLvl.name}`}
         nextLvl={`${nextLevelName}`}
-        progressStat={`${totalSpent} ${item.currencySign} / ${needSpentToLvlUp} ${item.currencySign}`}
+        progressStat={`${totalSpent} ${item.currencySign} / ${nextLevelMinSpending} ${item.currencySign}`}
         progressVal={progressVal}
       />
     );
