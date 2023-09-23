@@ -123,6 +123,7 @@ function Conversation({ route, navigation }: ConversationProps) {
     };
 
     newSocket.onmessage = (message) => {
+      console.log('message', message);
       const parsedMessage = JSON.parse(message.data);
       if (parsedMessage.type === 'message') {
         const parsedMessage: any = JSON.parse(message.data);
@@ -147,13 +148,13 @@ function Conversation({ route, navigation }: ConversationProps) {
 
   if (isLoaded) {
     return (
-        <Chat
-          showUserNames={true}
-          messages={messages}
-          onSendPress={handleSendPress}
-          user={user}
-          textInputProps={{ placeholder: 'Сообщение' }}
-        />
+      <Chat
+        showUserNames={true}
+        messages={messages}
+        onSendPress={handleSendPress}
+        user={user}
+        textInputProps={{ placeholder: 'Сообщение' }}
+      />
     );
   } else {
     return (
