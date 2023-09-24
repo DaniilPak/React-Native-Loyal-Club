@@ -121,7 +121,7 @@ function QRScreen({ navigation }: QRScreenProps) {
   /// 0.9 is width of the qr card
   /// 0.6293 is CR80 proportion
   /// 0.9 is height of CR80
-  const qrSize = Con.width * 0.9 * 0.6293 * 0.9;
+  const qrSize = Con.width * 0.9 * 0.6293 * 0.85;
 
   return (
     <ScrollView
