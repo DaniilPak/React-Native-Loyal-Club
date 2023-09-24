@@ -47,15 +47,12 @@ function QRScreen({ navigation }: QRScreenProps) {
 
         /// Get last used loyalty card
         const lastUsedLoyaltyCard = await getLastUsedLoyaltyCard(userData._id);
-        console.log('lastUsedLoyaltyCard', lastUsedLoyaltyCard);
 
         if (!lastUsedLoyaltyCard) {
           return;
         }
 
         const lastUsedLoyaltyCardBusinessData = await getBusinessInfoByBid(lastUsedLoyaltyCard.business);
-        console.log('lastUsedLoyaltyCard.business)', lastUsedLoyaltyCard);
-        console.log('lastUsedLoyaltyCardBusinessData', lastUsedLoyaltyCardBusinessData);
 
         const bonusAmountWithCurrency = `${lastUsedLoyaltyCard.bonusAmount} ${lastUsedLoyaltyCardBusinessData.currencySign}`;
         const businessLoyaltyLvls = lastUsedLoyaltyCardBusinessData.loyaltyLevels;
