@@ -4,6 +4,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import { getUserByPhoneNumber } from '../utils/api';
 import BlueButton from '../components/BlueButton';
 import Con from '../constants';
+import { showMessage } from 'react-native-flash-message';
 
 interface AuthProps {
   navigation: any;
@@ -12,7 +13,19 @@ interface AuthProps {
 function Auth({ navigation }: AuthProps) {
   const [phoneNumber, setPhoneNumber] = useState('+7 ');
 
+  const phoneNumberRequiredLength = 18;
+
   const logIn = () => {
+    if (phoneNumber.length < phoneNumberRequiredLength) {
+      showMessage({
+        message: 'Ошибка',
+        description: 'Номер телефона неверного формата',
+        type: 'warning',
+      });
+
+      return;
+    }
+
     getUserByPhoneNumber(phoneNumber)
       .then((user) => {
         if (user) {

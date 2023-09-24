@@ -129,22 +129,19 @@ function Registration({ navigation, route }: RegistrationProps) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ justifyContent: 'center', flex: 1, height: Con.height }}
         >
           <View>
-            <Text style={{ color: 'black', alignSelf: 'center' }}>
-              Добро пожаловать! Давайте начнем с регистрации и создания чего-то волшебного вместе." 💫✨
-            </Text>
+            <Text style={styles.regText}>Добро пожаловать! Давайте начнем с регистрации</Text>
             <TextInput
               style={styles.input}
               value={name}
               onChangeText={handleNameChange}
               placeholder="Имя"
               placeholderTextColor={'gray'}
-              autoFocus={true}
             />
             <TextInput
               style={styles.input}
@@ -153,6 +150,7 @@ function Registration({ navigation, route }: RegistrationProps) {
               placeholder="Фамилия"
               placeholderTextColor={'gray'}
             />
+            <Text style={styles.regText}> Укажите дату рождения и получайте от нас подарки!</Text>
             <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
               {!dateEntered && <Text style={styles.textPlaceholder}>{`Выбрать дату рождения`}</Text>}
               {dateEntered && <Text style={styles.input}>{`${date.toLocaleDateString()}`}</Text>}
@@ -172,6 +170,7 @@ function Registration({ navigation, route }: RegistrationProps) {
                 setOpen(false);
               }}
             />
+            <Text style={styles.regText}>Защита с минимумом: 6 символов</Text>
             <TextInput
               style={styles.input}
               value={password}
@@ -196,6 +195,13 @@ function Registration({ navigation, route }: RegistrationProps) {
 }
 
 const styles = StyleSheet.create({
+  regText: {
+    marginTop: 10,
+    color: 'gray',
+    alignSelf: 'center',
+    textAlign: 'center',
+    fontSize: 18,
+  },
   input: {
     width: '100%',
     height: 60,
