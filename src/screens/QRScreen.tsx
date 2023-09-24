@@ -128,7 +128,7 @@ function QRScreen({ navigation }: QRScreenProps) {
       contentContainerStyle={{
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 100,
+        paddingBottom: 25,
       }}
     >
       {qr && (
@@ -175,8 +175,9 @@ const styles = StyleSheet.create({
     paddingBottom: 25,
   },
   greeting: {
-    color: 'black',
+    color: '#333',
     fontSize: 25,
+    fontWeight: '800',
     marginVertical: 10,
   },
   mainContainer: {
@@ -188,14 +189,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 35,
 
-    shadowColor: '#000',
+    shadowColor: 'gray',
     shadowOffset: {
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOpacity: 0.01,
+    shadowRadius: 1,
+    elevation: 100,
   },
   lowerContainer: {
     flex: 1,
