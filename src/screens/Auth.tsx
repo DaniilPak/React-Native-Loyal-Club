@@ -58,7 +58,7 @@ function Auth({ navigation }: AuthProps) {
         autoFocus={true}
         style={styles.input}
       />
-      <BlueButton title="Войти" onPress={logIn} />
+      <BlueButton title="Продолжить" onPress={logIn} />
     </View>
   );
 }
