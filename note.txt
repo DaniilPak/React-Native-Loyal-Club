@@ -79,3 +79,9 @@ aspect ratio: 1.5882 -  0.6293
 1. Adjust new fields for LoyaltyCardModel in compass
 2. Adjust new fileds for Business Model
 3. Add timestamp to LoyaltyCards
+
+/// Conventions about margin between objects in app
+
+Universal marginTop: 15px 
+
+Components: BlueButton, LoyaltyCard

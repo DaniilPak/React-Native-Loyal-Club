@@ -58,6 +58,9 @@ const Con = {
   iconColor: 'rgb(0, 122, 255)',
 
   borderSize: 220,
+
+  /// Used in Qr Card, HalfScreenButtons, LoyaltyCard
+  universalBorderRadius: 40,
 };
 
 export default Con;

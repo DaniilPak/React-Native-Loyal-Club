@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '90%',
     alignSelf: 'center',
-    marginTop: 25,
+    marginTop: 15,
   },
   shadow: {
     shadowColor: '#000',

@@ -23,7 +23,7 @@ function LoyaltyCard({
   progressStat,
   progressVal,
 }: LoyaltyCardProps) {
-  const borderRadius = 35;
+  const borderRadius = Con.universalBorderRadius;
 
   return (
     <ShrinkableContainer>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    borderRadius: 35,
+    borderRadius: Con.universalBorderRadius,
     backgroundColor: 'rgba(0, 0, 0, 0.1)', // Adjust the opacity (last value) for the desired dimming effect
   },
   businessName: {
@@ -90,10 +90,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'white',
     height: Con.width * 0.9 * 0.6293,
-    borderRadius: 35,
+    borderRadius: Con.universalBorderRadius,
     width: Con.width * 0.9,
     alignSelf: 'center',
-    marginTop: 25,
+    marginTop: 15,
 
     shadowColor: '#000',
     shadowOffset: {

@@ -7,6 +7,8 @@ import BlueButton from '../components/BlueButton';
 import ShrinkableContainer from '../components/ShrinkableContainer';
 import { getBusinessInfoByBid, getLastUsedLoyaltyCard } from '../utils/api';
 import LoyaltyCard from '../components/LoyaltyCard';
+import HalfScreenButtons from '../components/HalfScreenButton';
+import HalfScreenButtonsContainer from '../components/HalfScreenButtonsContainer';
 
 interface QRScreenProps {
   navigation: any;
@@ -28,6 +30,7 @@ function QRScreen({ navigation }: QRScreenProps) {
   const [loyaltyCardIsLoaded, setLoyaltyCardIsLoaded] = useState(false);
 
   const myLoyaltyCards = 'Мои карты лояльности';
+  const myAbonnements = 'Мои абонементы';
 
   useEffect(() => {
     async function fetchData() {
@@ -115,6 +118,10 @@ function QRScreen({ navigation }: QRScreenProps) {
     navigation.navigate('MyLoyaltyCards');
   };
 
+  const showMyAbonnements = () => {
+    navigation.navigate('MyLoyaltyCards');
+  };
+
   /// 0.9 is width of the qr card
   /// 0.6293 is CR80 proportion
   /// 0.9 is height of CR80
@@ -147,7 +154,10 @@ function QRScreen({ navigation }: QRScreenProps) {
         </View>
       )}
       <View style={styles.lowerContainer}>
-        <BlueButton title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+        <HalfScreenButtonsContainer>
+          <HalfScreenButtons title={myLoyaltyCards} onPress={showMyLoyaltyCards} />
+          <HalfScreenButtons title={myAbonnements} onPress={showMyAbonnements} />
+        </HalfScreenButtonsContainer>
 
         {/* Last used loyalty card */}
         {loyaltyCardIsLoaded && (
@@ -168,8 +178,8 @@ function QRScreen({ navigation }: QRScreenProps) {
 
 const styles = StyleSheet.create({
   labelContainer: {
-    paddingTop: 25,
-    paddingBottom: 25,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   greeting: {
     color: '#333',
@@ -184,7 +194,7 @@ const styles = StyleSheet.create({
     width: Con.width * 0.9,
     height: Con.width * 0.9 * 0.6293,
     backgroundColor: 'white',
-    borderRadius: 35,
+    borderRadius: Con.universalBorderRadius,
 
     shadowColor: 'gray',
     shadowOffset: {
