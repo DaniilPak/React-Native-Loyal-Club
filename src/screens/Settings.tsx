@@ -17,6 +17,12 @@ interface SettingsProps {
 }
 
 function Settings({ route, navigation }: SettingsProps) {
+  const accountTypeTitle = 'Тип аккаунта';
+  const loyalClubAbonnementsTitle = 'LoyalClub: Абонементы';
+  const businessTitle = 'Бизнес';
+  const quitTitle = 'Выйти';
+  const deleteAccountTitle = 'Удалить аккаунт';
+
   const [userData, setUserData] = useState([]);
 
   const { signOut } = useContext(AuthContext);
@@ -38,6 +44,10 @@ function Settings({ route, navigation }: SettingsProps) {
 
   const businessSettingsOnPress = () => {
     navigation.navigate('BusinessSettings');
+  };
+
+  const abonnementsOnPress = () => {
+    navigation.navigate('Abonnements');
   };
 
   const accountDeletionOnPress = () => {
@@ -72,17 +82,24 @@ function Settings({ route, navigation }: SettingsProps) {
     <View style={{ flex: 1 }}>
       {userData && (
         <View>
-          <TextBlock text={`Тип аккаунта: ${userData.type}`} icon={userTypeIcon}></TextBlock>
+          <TextBlock text={`${accountTypeTitle}: ${userData.type}`} icon={userTypeIcon}></TextBlock>
           <TextBlock text={`${userData.name} ${userData.surname}`} icon={userNameIcon}></TextBlock>
           <TextBlock text={`${userData.phoneNumber}`} icon={phoneIcon}></TextBlock>
           {/* Show settings only for business */}
           {userData.type == 'Business' && (
             <View style={styles.settingsContainer}>
-              <NavigationRow text="Бизнес" onPress={businessSettingsOnPress} />
+              <NavigationRow text={businessTitle} onPress={businessSettingsOnPress} />
+              <NavigationRow text={loyalClubAbonnementsTitle} onPress={abonnementsOnPress} />
             </View>
           )}
-          <NavigationRow text="Удаление аккаунта" onPress={accountDeletionOnPress} />
-          <RedButton title="Выйти" onPress={signOutAlert} />
+          {/* Show settings only for workers  */}
+          {userData.type == 'Worker' && (
+            <View style={styles.settingsContainer}>
+              <NavigationRow text={loyalClubAbonnementsTitle} onPress={abonnementsOnPress} />
+            </View>
+          )}
+          <NavigationRow text={deleteAccountTitle} onPress={accountDeletionOnPress} />
+          <RedButton title={quitTitle} onPress={signOutAlert} />
         </View>
       )}
     </View>

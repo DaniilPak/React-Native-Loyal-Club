@@ -43,6 +43,12 @@ import { BadgeContext } from './src/contexts/BadgeContext';
 import { View } from 'react-native';
 import PressableIcon from './src/components/PressableIcon.';
 import PressableIcon2 from './src/components/PressableIcon2';
+import Abonnements from './src/screens/Abonnements';
+import UserAbonnements from './src/screens/UserAbonnements';
+import CreateAbonnement from './src/screens/CreateAbonnement';
+import AllAbonnements from './src/screens/AllAbonnements';
+import ScanAbonnement from './src/screens/ScanAbonnement';
+import ScanAbonnementDetails from './src/screens/ScanAbonnementDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -375,6 +381,48 @@ function App() {
                 component={History}
                 options={{
                   title: 'История',
+                }}
+              />
+              <Stack.Screen
+                name="Abonnements"
+                component={Abonnements}
+                options={{
+                  title: 'Абонементы',
+                }}
+              />
+              <Stack.Screen
+                name="UserAbonnements"
+                component={UserAbonnements}
+                options={{
+                  title: 'Мои абонементы',
+                }}
+              />
+              <Stack.Screen
+                name="ScanAbonnement"
+                component={ScanAbonnement}
+                options={{
+                  title: 'Сканировать абонемент',
+                }}
+              />
+              <Stack.Screen
+                name="ScanAbonnementDetails"
+                component={ScanAbonnementDetails}
+                options={{
+                  title: 'Детали абонемента',
+                }}
+              />
+              <Stack.Screen
+                name="CreateAbonnement"
+                component={CreateAbonnement}
+                options={{
+                  title: 'Создать абонемент',
+                }}
+              />
+              <Stack.Screen
+                name="AllAbonnements"
+                component={AllAbonnements}
+                options={{
+                  title: 'Все абонементы',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />

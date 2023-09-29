@@ -119,7 +119,7 @@ function QRScreen({ navigation }: QRScreenProps) {
   };
 
   const showMyAbonnements = () => {
-    navigation.navigate('MyLoyaltyCards');
+    navigation.navigate('UserAbonnements');
   };
 
   /// 0.9 is width of the qr card
