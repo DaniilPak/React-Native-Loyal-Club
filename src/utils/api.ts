@@ -489,3 +489,44 @@ export async function getBadge() {
 
   return unseenData.length;
 }
+
+export async function createAbonnement(
+  name: string,
+  currency: string,
+  price: number,
+  value: number,
+  startDate: Date,
+  endDate: Date,
+  cliendId: string,
+  businessId: string,
+  createdByUserId: string
+) {
+  try {
+    const requestData = {
+      name: name,
+      currency: currency,
+      price: price,
+      value: value,
+      totalValue: value,
+      startDate: startDate,
+      endDate: endDate,
+      clientId: cliendId,
+      businessId: businessId,
+      createdByUserId: createdByUserId,
+    };
+
+    // const headers = {
+    //   Authorization: jwtToken, // Replace "your_access_token" with your actual token
+    // };
+
+    // const config = {
+    //   headers: headers,
+    // };
+
+    const response = await axios.post(`${Con.api}/abonnement`, requestData);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}

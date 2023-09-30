@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { Text } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { getArrayFromLocalStorage } from '../utils/async';
 import Con from '../constants';
@@ -140,7 +141,7 @@ function QRScreen({ navigation }: QRScreenProps) {
           <View style={styles.labelContainer}>
             {userData && (
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.greeting}>
+                <Text variant="headlineMedium">
                   {greeting}, {userData.name}!
                 </Text>
               </View>

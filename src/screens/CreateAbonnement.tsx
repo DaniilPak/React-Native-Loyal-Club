@@ -3,11 +3,12 @@ import { View, Modal, StyleSheet, TextInput, Alert, Image, Text } from 'react-na
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 import GrayButton from '../components/GrayButton';
-import { makeAnnouncement } from '../utils/api';
+import { getUserById, makeAnnouncement } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { showMessage } from 'react-native-flash-message';
 import NavigationRow from '../components/NavigationRow';
 import { BarCodeReadEvent, RNCamera } from 'react-native-camera';
+import { pushAlert } from '../utils/alert';
 
 interface CreateAbonnementProps {
   navigation: any;
@@ -19,19 +20,34 @@ function CreateAbonnement({ route, navigation }: CreateAbonnementProps) {
   const [isReaded, setIsReaded] = useState(false);
 
   const handleBarCodeRead = (event: BarCodeReadEvent) => {
-    console.log(event.data);
+    if (isReaded) {
+      Con.DEBUG && console.log('Qr is readed');
+      return;
+    }
+
+    console.log('event.data', event.data);
+
+    const qrReadedCode = event.data;
+
+    getUserById(qrReadedCode)
+      .then((user) => {
+        console.log('User got: ', user);
+
+        if (user) {
+          navigation.navigate('CreateAbonnementDetails', { qrData: event.data });
+        }
+      })
+      .catch((err) => {
+        console.log('Cant get user in home scanner: ', err);
+
+        // User not found
+        setIsReaded(true);
+
+        pushAlert('QR-код не зарегистрирован в системе', 'Пожалуйста, попробуйте действительный QR-код', () => {
+          setIsReaded(false);
+        });
+      });
   };
-
-  const [asyncdata, setAsyncdata] = useState([]);
-
-  const initFunc = async () => {
-    const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
-    setAsyncdata(asyncdata);
-  };
-
-  useEffect(() => {
-    initFunc();
-  }, []);
 
   return (
     <View style={styles.container}>

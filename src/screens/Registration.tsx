@@ -150,7 +150,7 @@ function Registration({ navigation, route }: RegistrationProps) {
               placeholder="Фамилия"
               placeholderTextColor={'gray'}
             />
-            <Text style={styles.regText}> Укажите дату рождения и получайте от нас подарки!</Text>
+            <Text style={styles.regText}>Укажите дату рождения и получайте от нас подарки!</Text>
             <TouchableOpacity style={styles.input} onPress={() => setOpen(true)}>
               {!dateEntered && <Text style={styles.textPlaceholder}>{`Выбрать дату рождения`}</Text>}
               {dateEntered && <Text style={styles.input}>{`${date.toLocaleDateString()}`}</Text>}
