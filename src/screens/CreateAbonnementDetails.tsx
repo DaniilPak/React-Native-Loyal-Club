@@ -25,6 +25,7 @@ import Loading from './Loading';
 import TextBlock from '../components/TextBlock';
 import { TextInputMask } from 'react-native-masked-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+Ionicons.loadFont();
 import { Picker } from '@react-native-picker/picker';
 
 interface CreateAbonnementDetailsProps {
@@ -90,6 +91,11 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
     }
 
     /// If all is ok
+
+    // Button management
+    setButtonDisabled(true);
+    setButtonIsLoading(true);
+
     const startDate: Date = new Date();
     const endDate: Date = new Date(startDate);
     endDate.setDate(startDate.getDate() + daysBeforeExpiration);

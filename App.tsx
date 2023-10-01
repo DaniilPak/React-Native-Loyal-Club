@@ -51,6 +51,8 @@ import ScanAbonnement from './src/screens/ScanAbonnement';
 import ScanAbonnementDetails from './src/screens/ScanAbonnementDetails';
 import CreateAbonnementDetails from './src/screens/CreateAbonnementDetails';
 import SuccessAbonnementCreation from './src/screens/SuccessAbonnementCreation';
+import AbonnementVisitConfirmation from './src/screens/AbonnementVisitConfirmation';
+import SuccessVisitCreation from './src/screens/SuccessVisitCreation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -439,6 +441,20 @@ function App() {
                 component={AllAbonnements}
                 options={{
                   title: 'Все абонементы',
+                }}
+              />
+              <Stack.Screen
+                name="AbonnementVisitConfirmation"
+                component={AbonnementVisitConfirmation}
+                options={{
+                  title: 'Подтверждение визита',
+                }}
+              />
+              <Stack.Screen
+                name="SuccessVisitCreation"
+                component={SuccessVisitCreation}
+                options={{
+                  title: 'Успешное создание визита',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />

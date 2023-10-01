@@ -523,10 +523,54 @@ export async function createAbonnement(
     //   headers: headers,
     // };
 
-    const response = await axios.post(`${Con.api}/abonnement`, requestData);
+    const response = await axios.post(`${Con.api}/abonnement/creation`, requestData);
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAbonnementsByUserIdAndBusinessId(userId: string, businessId: string) {
+  try {
+    const requestData = {
+      userId: userId,
+      businessId: businessId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/getbyuseridandbusinessid`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAbonnementById(abonnementId: string) {
+  try {
+    const requestData = {
+      abonnementId: abonnementId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function createVisit(abonnementId: string, value: number) {
+  try {
+    const requestData = {
+      abonnementId: abonnementId,
+      value: value,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/visits`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
     throw error; // You can choose to handle the error here or propagate it
   }
 }
