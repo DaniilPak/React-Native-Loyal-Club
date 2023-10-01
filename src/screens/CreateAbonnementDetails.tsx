@@ -71,6 +71,8 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
     const costOfAbonnementWithoutCurrencySign = costOfAbonnement.replace(/[^0-9]/g, '');
     const numberFormattedCostOfAbonnement = parseInt(costOfAbonnementWithoutCurrencySign);
 
+    console.log('numberFormattedCostOfAbonnement', numberFormattedCostOfAbonnement);
+
     // Validate visit form
     const errors = validateForm(
       abonnementValue,
@@ -260,7 +262,7 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
                 <TextInputMask
                   type="custom" // Specify the type as 'custom' for your own masking pattern
                   options={{
-                    mask: '999 999 999', // Customize the mask pattern for days (you can adjust it)
+                    mask: '999999999', // Customize the mask pattern for days (you can adjust it)
                   }}
                   value={abonnementValue.toString()} // Pass your input value here
                   onChangeText={handleAbonnementValueChange} // Handle the input change

@@ -51,7 +51,7 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
   const [asyncdata, setAsyncdata] = useState([]);
   const [abonnementDetails, setAbonnementDetails] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
@@ -151,7 +151,7 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
       setButtonDisabled(true);
     }
 
-    setAbonnementValue(value);
+    setAbonnementValue(parseInt(value));
   };
 
   useEffect(() => {
@@ -176,13 +176,9 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
               <View style={styles.inputContainer}>
                 <Text style={styles.tipText}>{`Вычесть ${abonnementDetails.currency}`}</Text>
                 <TextInputMask
-                  type="money"
+                  type="custom"
                   options={{
-                    precision: 0,
-                    separator: '.',
-                    delimiter: ' ',
-                    unit: '',
-                    suffixUnit: '',
+                    mask: '999999999', // Customize the mask pattern for days (you can adjust it)
                   }}
                   value={abonnementValue.toString()} // Assuming costOfAbonnement is a number
                   onChangeText={handleAbonnementValueChange}

@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  FlatList,
 } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
@@ -27,32 +28,130 @@ Ionicons.loadFont();
 import { Text } from 'react-native-paper';
 import NavigationRowExtended from '../components/NavigationRowExtended';
 import { timeLeftUntilDate } from '../utils/helper';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import EmptyListMessage from '../components/EmptyListMessage';
 
 interface ScanAbonnementDetailsProps {
   navigation: any;
   route: any;
 }
 
-function ScanAbonnementDetails({ route, navigation }: ScanAbonnementDetailsProps) {
+const Tab = createMaterialTopTabNavigator();
+
+const ScanAbonnementDetails = ({ navigation, route }: ScanAbonnementDetailsProps) => {
   const { qrData } = route.params;
+
+  return (
+    <Tab.Navigator screenOptions={{ swipeEnabled: false }}>
+      <Tab.Screen
+        name="ActiveAbonnements"
+        component={ActiveAbonnements}
+        initialParams={{ navigation: navigation, qrData: qrData }}
+        options={{ title: 'Активные' }}
+      />
+      <Tab.Screen
+        name="InactiveAbonnements"
+        component={InactiveAbonnements}
+        initialParams={{ navigation: navigation, qrData: qrData }}
+        options={{ title: 'Неактивные' }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+interface ActiveAbonnementsProps {
+  route: any;
+}
+
+function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
+  const { navigation, qrData } = route.params;
   const clientId = qrData;
 
-  const [asyncdata, setAsyncdata] = useState([]);
   const [client, setClient] = useState([]);
   const [abonnements, setAbonnements] = useState([]);
+  const [businessDetails, setBusinessDetails] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  /// Methods
+  const initFunc = async () => {
+    try {
+      const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
+
+      /// Get clients info
+      const user = await getUserById(clientId);
+      setClient(user);
+
+      /// Get business info
+      const businessId =
+        asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
+      const businessDetails = await getBusinessInfoByBid(businessId);
+      setBusinessDetails(businessDetails);
+
+      /// Get abonnement info
+      const abonnements = await getAbonnementsByUserIdAndBusinessId(user._id, businessDetails._id);
+      console.log('Abonnements: ', abonnements);
+
+      const activeAbonnements = abonnements.filter((abon: any) => abon.isActive === true);
+      setAbonnements(activeAbonnements);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    initFunc();
+  }, []);
+
+  if (!isLoading) {
+    return (
+      <FlatList
+        data={abonnements}
+        keyExtractor={(abonnement) => abonnement._id}
+        renderItem={({ item: abonnement }) => (
+          <NavigationRowExtended
+            text={`${abonnement.name} ${abonnement.price} ${businessDetails.currencySign}`}
+            secondaryText={`${abonnement.value}/${abonnement.totalValue} ${
+              abonnement.currency
+            }\nдо окончания: ${timeLeftUntilDate(abonnement.endDate)}`}
+            onPress={() => {
+              navigation.navigate('AbonnementVisitConfirmation', {
+                abonnementId: abonnement._id,
+                clientId: client._id,
+              });
+            }}
+          />
+        )}
+        ListEmptyComponent={<EmptyListMessage title="Нет активных абонементов" />}
+        ListHeaderComponent={<Text variant="displaySmall" style>{`${client.name} ${client.surname}`}</Text>}
+        ListHeaderComponentStyle={{ padding: 15 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      />
+    );
+  } else {
+    return <Loading />;
+  }
+}
+
+interface InactiveAbonnements {
+  route: any;
+}
+
+function InactiveAbonnements({ route }: InactiveAbonnements) {
+  const { navigation, qrData } = route.params;
+  const clientId = qrData;
+
+  const [client, setClient] = useState([]);
   const [inactiveAbonnements, setInactiveAbonnements] = useState([]);
   const [businessDetails, setBusinessDetails] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   /// Methods
-  const goToAbonnementVisitConfirmation = (abonnementId: string) => {
-    navigation.navigate('AbonnementVisitConfirmation', { abonnementId });
-  };
-
   const initFunc = async () => {
     const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
-    setAsyncdata(asyncdata);
 
     /// Get clients info
     const user = await getUserById(clientId);
@@ -68,10 +167,7 @@ function ScanAbonnementDetails({ route, navigation }: ScanAbonnementDetailsProps
     const abonnements = await getAbonnementsByUserIdAndBusinessId(user._id, businessDetails._id);
     console.log('Abonnements: ', abonnements);
 
-    const activeAbonnements = abonnements.filter((abon: any) => abon.isActive === true);
     const inactiveAbonnements = abonnements.filter((abon: any) => abon.isActive === false);
-
-    setAbonnements(activeAbonnements);
     setInactiveAbonnements(inactiveAbonnements);
   };
 
@@ -81,77 +177,27 @@ function ScanAbonnementDetails({ route, navigation }: ScanAbonnementDetailsProps
 
   if (!isLoading) {
     return (
-      <KeyboardAvoidingView style={styles.keyboardAvoidingViewStyle} enabled keyboardVerticalOffset={100}>
-        <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{ paddingBottom: 50 }}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
-              <Text variant="displaySmall" style={{ padding: 10 }}>{`${client.name} ${client.surname}`}</Text>
-              <Text variant="headlineMedium" style={{ padding: 10, color: Con.AppleGreenLight }}>
-                Активные
-              </Text>
-              {abonnements.map((abonnement) => (
-                <NavigationRowExtended
-                  key={abonnement._id}
-                  text={`${abonnement.name} ${abonnement.price} ${businessDetails.currencySign}`}
-                  secondaryText={`${abonnement.value}/${abonnement.totalValue} ${
-                    abonnement.currency
-                  }\nдо окончания: ${timeLeftUntilDate(abonnement.endDate)}`}
-                  onPress={() => {
-                    navigation.navigate('AbonnementVisitConfirmation', {
-                      abonnementId: abonnement._id,
-                      clientId: client._id,
-                    });
-                  }}
-                />
-              ))}
-
-              <Text variant="headlineMedium" style={{ padding: 10, color: Con.AppleRedLight }}>
-                Истекшие
-              </Text>
-              {inactiveAbonnements.map((abonnement) => (
-                <NavigationRowExtended
-                  key={abonnement._id}
-                  text={`${abonnement.name} ${abonnement.price} ${businessDetails.currencySign}`}
-                  secondaryText={`${abonnement.value}/${abonnement.totalValue} ${abonnement.currency}`}
-                  onPress={() => {}}
-                />
-              ))}
-            </View>
-          </TouchableWithoutFeedback>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      <FlatList
+        data={inactiveAbonnements}
+        keyExtractor={(abonnement) => abonnement._id}
+        renderItem={({ item: abonnement }) => (
+          <NavigationRowExtended
+            text={`${abonnement.name} ${abonnement.price} ${businessDetails.currencySign}`}
+            secondaryText={`${abonnement.value}/${abonnement.totalValue} ${
+              abonnement.currency
+            }\nдо окончания: ${timeLeftUntilDate(abonnement.endDate)}`}
+            onPress={() => {}}
+          />
+        )}
+        ListEmptyComponent={<EmptyListMessage title="Нет неактивных абонементов" />}
+        ListHeaderComponent={<Text variant="displaySmall" style>{`${client.name} ${client.surname}`}</Text>}
+        ListHeaderComponentStyle={{ padding: 15 }}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      />
     );
   } else {
     return <Loading />;
   }
 }
-
-const styles = StyleSheet.create({
-  keyboardAvoidingViewStyle: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  scrollViewStyle: {
-    flex: 1,
-  },
-  inputContainer: {
-    marginTop: 10,
-  },
-  input: {
-    width: '100%',
-    height: 60,
-    backgroundColor: 'white',
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 30,
-  },
-  tipText: {
-    marginTop: 10,
-    color: 'gray',
-    fontSize: 15,
-    padding: 10,
-  },
-});
 
 export default ScanAbonnementDetails;
