@@ -1,29 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  Modal,
-  StyleSheet,
-  TextInput,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  FlatList,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
 import Con from '../constants';
-import BlueButton from '../components/BlueButton';
-import GrayButton from '../components/GrayButton';
-import { getAbonnementsByUserIdAndBusinessId, getBusinessInfoByBid, getUserById, makeAnnouncement } from '../utils/api';
+import { getAbonnementsByUserIdAndBusinessId, getBusinessInfoByBid, getUserById } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { showMessage } from 'react-native-flash-message';
-import NavigationRow from '../components/NavigationRow';
-import { BarCodeReadEvent, RNCamera } from 'react-native-camera';
 import Loading from './Loading';
-import TextBlock from '../components/TextBlock';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import TextBlockV2 from '../components/TextBlockV2';
 Ionicons.loadFont();
 import { Text } from 'react-native-paper';
 import NavigationRowExtended from '../components/NavigationRowExtended';
@@ -73,26 +54,23 @@ function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  /// Methods
   const initFunc = async () => {
     try {
       const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
-
-      /// Get clients info
       const user = await getUserById(clientId);
+
       setClient(user);
 
-      /// Get business info
       const businessId =
         asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
       const businessDetails = await getBusinessInfoByBid(businessId);
+
       setBusinessDetails(businessDetails);
 
-      /// Get abonnement info
       const abonnements = await getAbonnementsByUserIdAndBusinessId(user._id, businessDetails._id);
-      console.log('Abonnements: ', abonnements);
-
       const activeAbonnements = abonnements.filter((abon: any) => abon.isActive === true);
+      activeAbonnements.sort((a: any, b: any) => b.lastUpdatedTimestamp - a.lastUpdatedTimestamp);
+
       setAbonnements(activeAbonnements);
     } catch (err) {
       console.log(err);
@@ -149,25 +127,22 @@ function InactiveAbonnements({ route }: InactiveAbonnements) {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  /// Methods
   const initFunc = async () => {
     const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
-
-    /// Get clients info
     const user = await getUserById(clientId);
+
     setClient(user);
 
-    /// Get business info
     const businessId =
       asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
     const businessDetails = await getBusinessInfoByBid(businessId);
+
     setBusinessDetails(businessDetails);
 
-    /// Get abonnement info
     const abonnements = await getAbonnementsByUserIdAndBusinessId(user._id, businessDetails._id);
-    console.log('Abonnements: ', abonnements);
-
     const inactiveAbonnements = abonnements.filter((abon: any) => abon.isActive === false);
+    inactiveAbonnements.sort((a: any, b: any) => b.lastUpdatedTimestamp - a.lastUpdatedTimestamp);
+
     setInactiveAbonnements(inactiveAbonnements);
   };
 
@@ -183,9 +158,7 @@ function InactiveAbonnements({ route }: InactiveAbonnements) {
         renderItem={({ item: abonnement }) => (
           <NavigationRowExtended
             text={`${abonnement.name} ${abonnement.price} ${businessDetails.currencySign}`}
-            secondaryText={`${abonnement.value}/${abonnement.totalValue} ${
-              abonnement.currency
-            }\nдо окончания: ${timeLeftUntilDate(abonnement.endDate)}`}
+            secondaryText={`${abonnement.value}/${abonnement.totalValue} ${abonnement.currency}`}
             onPress={() => {}}
           />
         )}

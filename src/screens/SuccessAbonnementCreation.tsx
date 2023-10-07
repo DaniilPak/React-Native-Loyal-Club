@@ -12,7 +12,7 @@ function SuccessAbonnementCreation({ route, navigation }: SuccessAbonnementCreat
   const { receiptResponse } = route.params;
 
   const mainTitle = `Абонемент ${receiptResponse.name} успешно создан!`;
-  const secondaryTitle = `Абонемент содержит ${receiptResponse.value} ${receiptResponse.currency} и был куплен за ${receiptResponse.price}`;
+  const secondaryTitle = `Абонемент содержит ${receiptResponse.value} ${receiptResponse.currency} и был куплен за ${receiptResponse.price} ${receiptResponse.buyCurrency}`;
 
   const goHome = () => {
     navigation.reset({

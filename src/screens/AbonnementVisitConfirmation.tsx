@@ -1,39 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  Modal,
-  StyleSheet,
-  TextInput,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Platform,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
-import GrayButton from '../components/GrayButton';
-import {
-  createVisit,
-  getAbonnementById,
-  getAbonnementsByUserIdAndBusinessId,
-  getBusinessInfoByBid,
-  getUserById,
-  makeAnnouncement,
-} from '../utils/api';
+import { createVisit, getAbonnementById, getUserById } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { showMessage } from 'react-native-flash-message';
-import NavigationRow from '../components/NavigationRow';
-import { BarCodeReadEvent, RNCamera } from 'react-native-camera';
 import Loading from './Loading';
 import TextBlock from '../components/TextBlock';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TextBlockV2 from '../components/TextBlockV2';
 Ionicons.loadFont();
 import { Text } from 'react-native-paper';
-import NavigationRowExtended from '../components/NavigationRowExtended';
 import { TextInputMask } from 'react-native-masked-text';
 import { formatToClassicDateStyle } from '../utils/helper';
 
@@ -55,26 +32,21 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
-  /// Form state
   const [abonnementValue, setAbonnementValue] = useState(0);
 
   const iconSize = 25;
   const iconColor = Con.AppleBlueLight;
   const personIcon = <Ionicons name="person-circle-outline" size={iconSize} color={iconColor} />;
 
-  /// Methods
   const initFunc = async () => {
     try {
       const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
       setAsyncdata(asyncdata);
 
-      /// Get clients info
       const user = await getUserById(clientId);
       setClient(user);
 
-      /// Get abonnement info
       const abonnement = await getAbonnementById(abonnementId);
-      console.log('abonnement: ', abonnement);
       setAbonnementDetails(abonnement);
     } catch (err) {
       Con.DEBUG && console.log(err);
@@ -86,6 +58,7 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
   enum abonnementErrorTypes {
     abonnementValueException = 'Введите количество единиц',
     abonnementInputIsBiggerThanAbonnementValue = 'Введенная единица больше чем есть на балансе абонемента',
+    abonnementExpired = 'Абонемент истёк!',
   }
 
   const validateForm = (abonnementValue: number) => {
@@ -99,11 +72,14 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
       errors.push(abonnementErrorTypes.abonnementInputIsBiggerThanAbonnementValue);
     }
 
+    if (Date.now() > abonnementDetails.endDate) {
+      errors.push(abonnementErrorTypes.abonnementExpired);
+    }
+
     return errors;
   };
 
   const confirmVisit = async () => {
-    // Validate visit form
     const errors = validateForm(abonnementValue);
 
     if (errors.length > 0) {
@@ -116,13 +92,10 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
       return;
     }
 
-    /// If all is ok
-
-    // Button management
     setButtonDisabled(true);
     setButtonIsLoading(true);
 
-    await createVisit(abonnementId, abonnementValue)
+    await createVisit(abonnementId, abonnementValue, asyncdata.token)
       .then((receiptResponse) => {
         console.log('Response from creating visit', receiptResponse);
 
@@ -144,7 +117,6 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
   };
 
   const handleAbonnementValueChange = (value: string) => {
-    /// If text is not empty enable button and hide dim
     if (value.trim() !== '') {
       setButtonDisabled(false);
     } else {
@@ -155,8 +127,6 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
   };
 
   useEffect(() => {
-    console.log(abonnementId, '999');
-
     initFunc();
   }, []);
 
@@ -178,9 +148,9 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
                 <TextInputMask
                   type="custom"
                   options={{
-                    mask: '999999999', // Customize the mask pattern for days (you can adjust it)
+                    mask: '999999999',
                   }}
-                  value={abonnementValue.toString()} // Assuming costOfAbonnement is a number
+                  value={abonnementValue.toString()}
                   onChangeText={handleAbonnementValueChange}
                   keyboardType="numeric"
                   placeholder={`0 ${abonnementDetails.currency}`}

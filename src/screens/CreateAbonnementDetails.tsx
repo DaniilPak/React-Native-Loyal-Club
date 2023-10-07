@@ -1,26 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
-  Modal,
   StyleSheet,
   TextInput,
-  Alert,
-  Image,
   Text,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
-import GrayButton from '../components/GrayButton';
-import { createAbonnement, getBusinessInfoByBid, getUserById, makeAnnouncement } from '../utils/api';
+import { createAbonnement, getBusinessInfoByBid, getUserById } from '../utils/api';
 import { getArrayFromLocalStorage } from '../utils/async';
 import { showMessage } from 'react-native-flash-message';
-import NavigationRow from '../components/NavigationRow';
-import { BarCodeReadEvent, RNCamera } from 'react-native-camera';
 import Loading from './Loading';
 import TextBlock from '../components/TextBlock';
 import { TextInputMask } from 'react-native-masked-text';
@@ -54,7 +47,6 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
   const [buttonIsLoading, setButtonIsLoading] = useState(false);
   const [abonnementCurrenciesState, setAbonnementCurrenciesState] = useState(abonnementCurrencies);
 
-  /// Form
   const [abonnementValue, setAbonnementValue] = useState(0);
   const [abonnementCurrency, setAbonnementCurrency] = useState('');
   const [daysBeforeExpiration, setDaysBeforeExpiration] = useState(0);
@@ -65,15 +57,10 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
   const iconColor = Con.AppleBlueLight;
   const personIcon = <Ionicons name="person-circle-outline" size={iconSize} color={iconColor} />;
 
-  /// Methods
   const confirmCreatingAbonnement = async () => {
-    // get inpout money value
     const costOfAbonnementWithoutCurrencySign = costOfAbonnement.replace(/[^0-9]/g, '');
     const numberFormattedCostOfAbonnement = parseInt(costOfAbonnementWithoutCurrencySign);
 
-    console.log('numberFormattedCostOfAbonnement', numberFormattedCostOfAbonnement);
-
-    // Validate visit form
     const errors = validateForm(
       abonnementValue,
       abonnementCurrency,
@@ -92,33 +79,16 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
       return;
     }
 
-    /// If all is ok
-
-    // Button management
     setButtonDisabled(true);
     setButtonIsLoading(true);
 
     const startDate: Date = new Date();
     const endDate: Date = new Date(startDate);
     endDate.setDate(startDate.getDate() + daysBeforeExpiration);
-    console.log('Start date: ', startDate);
-    console.log('End date: ', endDate);
-
-    console.log(
-      'Abonnement in front: ',
-      abonnementName,
-      abonnementCurrency,
-      numberFormattedCostOfAbonnement,
-      abonnementValue,
-      startDate,
-      endDate,
-      clientId,
-      businessDetails._id,
-      asyncdata.userData._id
-    );
 
     createAbonnement(
       abonnementName,
+      businessDetails.name,
       abonnementCurrency,
       numberFormattedCostOfAbonnement,
       abonnementValue,
@@ -126,11 +96,11 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
       endDate,
       clientId,
       businessDetails._id,
-      asyncdata.userData._id
+      asyncdata.userData._id,
+      businessDetails.currencySign,
+      asyncdata.token
     )
       .then((receiptResponse) => {
-        console.log('Response from creating abonnement', receiptResponse);
-
         navigation.reset({
           index: 0,
           routes: [
@@ -189,7 +159,6 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
   };
 
   const handleAbonnementValueChange = (value: string) => {
-    /// If text is not empty enable button and hide dim
     if (value.trim() !== '') {
       setButtonDisabled(false);
     } else {
@@ -200,7 +169,6 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
   };
 
   const handleAbonnementCurrencyChange = (text: string) => {
-    console.log('New a currency: ', text);
     setAbonnementCurrency(text);
   };
 
@@ -209,7 +177,6 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
   };
 
   const handleCostOfAbonnementChange = (text: string) => {
-    console.log('Const of abonnement value: ', text);
     setCostOfAbonnement(text);
   };
 
@@ -222,19 +189,17 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
       const asyncdata = await getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY);
       setAsyncdata(asyncdata);
 
-      /// Get clients info
       const user = await getUserById(clientId);
       setClient(user);
 
-      /// Get business info
       const businessId =
         asyncdata.userData.type === 'Business' ? asyncdata.userData.business : asyncdata.userData.workBusiness;
       const businessDetails = await getBusinessInfoByBid(businessId);
       const businessCurrency = businessDetails.currencySign;
+
       setBusinessDetails(businessDetails);
       setCurrencySign(businessCurrency);
 
-      /// Set abonnement init currency
       const businessStandardCurrency = { label: businessCurrency, value: businessCurrency };
       setAbonnementCurrenciesState(abonnementCurrencies.concat(businessStandardCurrency));
       setAbonnementCurrency(abonnementCurrencies[0].value);
@@ -302,7 +267,7 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
                   value={daysBeforeExpiration.toString()} // Assuming daysBeforeExpiration is a number
                   onChangeText={handleDaysBeforeExpirationChange}
                   keyboardType="numeric"
-                  placeholder="Срок действия (дней)"
+                  placeholder="Срок действия (в днях)"
                   placeholderTextColor={'gray'}
                   style={styles.input}
                 />
@@ -323,7 +288,7 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
                   value={costOfAbonnement.toString()} // Assuming costOfAbonnement is a number
                   onChangeText={handleCostOfAbonnementChange}
                   keyboardType="numeric"
-                  placeholder="Cost of Abonnement"
+                  placeholder="Цена абонемента"
                   placeholderTextColor={'gray'}
                   style={styles.input}
                 />
@@ -335,7 +300,7 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
                 <TextInput
                   value={abonnementName}
                   onChangeText={(text) => handleAbonnementNameChange(text)}
-                  placeholder="Название абонемента"
+                  placeholder="Название"
                   placeholderTextColor={'gray'}
                   style={styles.input}
                 />

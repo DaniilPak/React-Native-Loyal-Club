@@ -53,6 +53,7 @@ import CreateAbonnementDetails from './src/screens/CreateAbonnementDetails';
 import SuccessAbonnementCreation from './src/screens/SuccessAbonnementCreation';
 import AbonnementVisitConfirmation from './src/screens/AbonnementVisitConfirmation';
 import SuccessVisitCreation from './src/screens/SuccessVisitCreation';
+import AbonnementCompleteInfo from './src/screens/AbonnementCompleteInfo';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -455,6 +456,13 @@ function App() {
                 component={SuccessVisitCreation}
                 options={{
                   title: 'Успешное создание визита',
+                }}
+              />
+              <Stack.Screen
+                name="AbonnementCompleteInfo"
+                component={AbonnementCompleteInfo}
+                options={{
+                  title: 'Информация об абонементе',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />

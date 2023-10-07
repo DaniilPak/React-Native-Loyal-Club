@@ -492,6 +492,7 @@ export async function getBadge() {
 
 export async function createAbonnement(
   name: string,
+  description: string,
   currency: string,
   price: number,
   value: number,
@@ -499,11 +500,14 @@ export async function createAbonnement(
   endDate: Date,
   cliendId: string,
   businessId: string,
-  createdByUserId: string
+  createdByUserId: string,
+  buyCurrency: string,
+  jwtToken: string
 ) {
   try {
     const requestData = {
       name: name,
+      description: description,
       currency: currency,
       price: price,
       value: value,
@@ -513,17 +517,18 @@ export async function createAbonnement(
       clientId: cliendId,
       businessId: businessId,
       createdByUserId: createdByUserId,
+      buyCurrency: buyCurrency,
     };
 
-    // const headers = {
-    //   Authorization: jwtToken, // Replace "your_access_token" with your actual token
-    // };
+    const headers = {
+      Authorization: jwtToken, // Replace "your_access_token" with your actual token
+    };
 
-    // const config = {
-    //   headers: headers,
-    // };
+    const config = {
+      headers: headers,
+    };
 
-    const response = await axios.post(`${Con.api}/abonnement/creation`, requestData);
+    const response = await axios.post(`${Con.api}/abonnement/creation`, requestData, config);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -560,14 +565,78 @@ export async function getAbonnementById(abonnementId: string) {
   }
 }
 
-export async function createVisit(abonnementId: string, value: number) {
+export async function createVisit(abonnementId: string, value: number, jwtToken: string) {
   try {
     const requestData = {
       abonnementId: abonnementId,
       value: value,
     };
 
-    const response = await axios.post(`${Con.api}/abonnement/visits`, requestData);
+    const headers = {
+      Authorization: jwtToken, // Replace "your_access_token" with your actual token
+    };
+
+    const config = {
+      headers: headers,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/visits`, requestData, config);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAllBusinessAbonnementsByBusinessId(businessId: string) {
+  try {
+    const requestData = {
+      businessId: businessId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/showabonnementsforbusiness`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAbonnementsByUserId(userId: string) {
+  try {
+    const requestData = {
+      userId: userId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/getbyuserid`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAbonnementCompleteInfo(abonnementId: string) {
+  try {
+    const requestData = {
+      abonnementId: abonnementId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/getabonnementcompleteinfo`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getAbonnementVisits(abonnementId: string) {
+  try {
+    const requestData = {
+      abonnementId: abonnementId,
+    };
+
+    const response = await axios.post(`${Con.api}/abonnement/getabonnementvisits`, requestData);
     return response.data;
   } catch (error) {
     Con.DEBUG && console.error(error);
