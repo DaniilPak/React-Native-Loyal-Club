@@ -134,7 +134,6 @@ function QRScreen({ navigation }: QRScreenProps) {
         alignItems: 'center',
         justifyContent: 'center',
         paddingBottom: 25,
-        backgroundColor: 'white',
       }}
     >
       {qr && (

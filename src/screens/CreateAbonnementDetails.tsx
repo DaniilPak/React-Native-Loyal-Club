@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
@@ -216,8 +217,8 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
 
   if (!isLoading) {
     return (
-      <KeyboardAvoidingView style={styles.keyboardAvoidingViewStyle} enabled keyboardVerticalOffset={100}>
-        <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{ paddingBottom: 50 }}>
+      <KeyboardAvoidingView style={styles.keyboardAvoidingViewStyle} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled keyboardVerticalOffset={100}>
+        <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{ paddingBottom: 170 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <TextBlock text={`Клиент: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
@@ -242,9 +243,9 @@ function CreateAbonnementDetails({ route, navigation }: CreateAbonnementDetailsP
               <View style={styles.inputContainer}>
                 <Text style={styles.tipText}>Валюта абонемента</Text>
                 <Picker
+                  style={Platform.OS === 'ios' ? null : styles.input}
                   selectedValue={abonnementCurrency}
                   onValueChange={(itemValue, itemIndex) => handleAbonnementCurrencyChange(itemValue)}
-                  style={styles.input}
                 >
                   {abonnementCurrenciesState.map((abonnementCurrency) => (
                     <Picker.Item

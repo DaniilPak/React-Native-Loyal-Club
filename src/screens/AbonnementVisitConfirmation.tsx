@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import Con from '../constants';
 import BlueButton from '../components/BlueButton';
 import { createVisit, getAbonnementById, getUserById } from '../utils/api';
@@ -134,10 +134,11 @@ function AbonnementVisitConfirmation({ route, navigation }: AbonnementVisitConfi
     return (
       <KeyboardAvoidingView
         style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         enabled
         keyboardVerticalOffset={100}
       >
-        <ScrollView style={{ marginBottom: 15, flex: 1 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 170 }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <TextBlock text={`Клиент: ${client.name} ${client.surname}`} icon={personIcon}></TextBlock>
