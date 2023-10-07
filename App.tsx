@@ -166,7 +166,7 @@ function HomeStack({ navigation }: any) {
           component={Chat}
           options={{
             header: () => null,
-            title: 'Чаты',
+            title: 'Сообщения',
             tabBarBadge: badge,
           }}
         />
