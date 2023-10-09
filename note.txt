@@ -73,7 +73,7 @@ standard CR80 card in the digital world in terms of pixels
 size: 1012.5px x 637.5px
 aspect ratio: 1.5882 -  0.6293
 
-/// Before 9.0 Release
+/// Before 10.0 Release
 /// TODO:
 
 1. Adjust new fields for LoyaltyCardModel in compass
