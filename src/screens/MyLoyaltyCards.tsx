@@ -102,11 +102,35 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
     const totalSpent = item.totalSpent;
     const progressVal = totalSpent / nextLevelMinSpending;
 
+    let loyaltyCardPictureUrl;
+
+    // Set picture considering loyalty level
+    switch (currentLoyaltyLvl) {
+      case 'Bronze':
+        loyaltyCardPictureUrl = item.businessData.bronzeCardUrl;
+        break;
+      case 'Silver':
+        loyaltyCardPictureUrl = item.businessData.silverCardUrl;
+        break;
+      case 'Gold':
+        loyaltyCardPictureUrl = item.businessData.goldCardUrl;
+        break;
+      case 'Platinum':
+        loyaltyCardPictureUrl = item.businessData.platinumCardUrl;
+        break;
+      default:
+        // Handle any other cases or provide a default picture
+        loyaltyCardPictureUrl = item.businessData.bronzeCardUrl;
+        break;
+    }
+
+    // End setting loyalty card background pic
+
     return (
       <LoyaltyCard
         businessName={`${selectedLvl.name} ${selectedLvl.percent}%`}
         bonusAmount={bonusAmountWithCurrency}
-        pictureUrl={item.businessData.pictureUrl}
+        pictureUrl={loyaltyCardPictureUrl}
         prevLvl={`${selectedLvl.name}`}
         nextLvl={`${nextLevelName}`}
         progressStat={`${totalSpent} ${item.currencySign} / ${nextLevelMinSpending} ${item.currencySign}`}
