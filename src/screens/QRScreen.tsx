@@ -30,8 +30,8 @@ function QRScreen({ navigation }: QRScreenProps) {
 
   const [loyaltyCardIsLoaded, setLoyaltyCardIsLoaded] = useState(false);
 
-  const myLoyaltyCards = 'Мои карты лояльности';
-  const myAbonnements = 'Мои абонементы';
+  const myLoyaltyCards = 'Карты лояльности';
+  const myAbonnements = 'Сертификаты и абонементы';
 
   useEffect(() => {
     async function fetchData() {
@@ -85,7 +85,27 @@ function QRScreen({ navigation }: QRScreenProps) {
         /// Assigning states
         setSelectedLvl(selectedLvl);
         setBonusAmountWithCurrency(bonusAmountWithCurrency);
-        setPictureUrl(lastUsedLoyaltyCardBusinessData.pictureUrl);
+        // Set picture considering loyalty level
+        switch (currentLoyaltyLvl) {
+          case 'Bronze':
+            setPictureUrl(lastUsedLoyaltyCardBusinessData.bronzeCardUrl);
+            break;
+          case 'Silver':
+            setPictureUrl(lastUsedLoyaltyCardBusinessData.silverCardUrl);
+            break;
+          case 'Gold':
+            setPictureUrl(lastUsedLoyaltyCardBusinessData.goldCardUrl);
+            break;
+          case 'Platinum':
+            setPictureUrl(lastUsedLoyaltyCardBusinessData.platinumCardUrl);
+            break;
+          default:
+            // Handle any other cases or provide a default picture
+            setPictureUrl(lastUsedLoyaltyCardBusinessData.bronzeCardUrl);
+            break;
+        }
+
+        // End setting loyalty card background pic
         setNextLevelName(nextLevelName);
         setProgressStat(
           `${totalSpent} ${lastUsedLoyaltyCardBusinessData.currencySign} / ${nextLevelMinSpending} ${lastUsedLoyaltyCardBusinessData.currencySign}`
