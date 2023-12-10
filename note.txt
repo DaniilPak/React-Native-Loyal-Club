@@ -85,3 +85,8 @@ aspect ratio: 1.5882 -  0.6293
 Universal marginTop: 15px 
 
 Components: BlueButton, LoyaltyCard
+
+/// ToDo before 11.0 Release
+
+1. Set bronze, silver etc Urls for Business models that are working right now
+2. Adjust Branch Model to existing businesses
