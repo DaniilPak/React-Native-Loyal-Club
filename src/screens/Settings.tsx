@@ -18,7 +18,7 @@ interface SettingsProps {
 
 function Settings({ route, navigation }: SettingsProps) {
   const accountTypeTitle = 'Тип аккаунта';
-  const loyalClubAbonnementsTitle = 'LoyalClub: Абонементы';
+  const loyalClubAbonnementsTitle = 'Сертификаты и абонементы';
   const businessTitle = 'Бизнес';
   const quitTitle = 'Выйти';
   const deleteAccountTitle = 'Удалить аккаунт';
