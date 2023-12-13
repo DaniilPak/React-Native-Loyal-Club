@@ -3,7 +3,13 @@ import { View, ActivityIndicator, Text, TextInput, Button, FlatList, StyleSheet 
 import Con from '../constants';
 import NavigationRow from '../components/NavigationRow';
 import { getLocalUserData } from '../utils/getLocalUserData';
-import { getBadge, getCurrentUserIdAsync, getUserRooms, markUserRoomAsSeen } from '../utils/api';
+import {
+  getBadge,
+  getCurrentUserIdAsync,
+  getRewardedActionsByUserId,
+  getUserRooms,
+  markUserRoomAsSeen,
+} from '../utils/api';
 import ChatRow from '../components/ChatRow';
 import messaging from '@react-native-firebase/messaging';
 import { BadgeContext } from '../contexts/BadgeContext';
@@ -14,7 +20,7 @@ interface ChatProps {
 }
 
 function Chat({ route, navigation }: ChatProps) {
-  const { setBadge } = useContext(BadgeContext);
+  const { setBadge, setUpdateTrigger, updateTrigger } = useContext(BadgeContext);
 
   const [asyncUserData, setAsyncUserData] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
@@ -110,6 +116,9 @@ function Chat({ route, navigation }: ChatProps) {
 
             /// Update chats
             initFunc();
+
+            /// Update QRScreen
+            setUpdateTrigger(!updateTrigger);
 
             /// Update badge
             getBadge().then((badge) => {

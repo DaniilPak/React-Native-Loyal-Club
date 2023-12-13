@@ -54,6 +54,7 @@ import SuccessAbonnementCreation from './src/screens/SuccessAbonnementCreation';
 import AbonnementVisitConfirmation from './src/screens/AbonnementVisitConfirmation';
 import SuccessVisitCreation from './src/screens/SuccessVisitCreation';
 import AbonnementCompleteInfo from './src/screens/AbonnementCompleteInfo';
+import RewardedActions from './src/screens/RewardedActions';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -63,6 +64,7 @@ function HomeStack({ navigation }: any) {
   let blueColor = Con.AppleBlueLight;
 
   const [badge, setBadge] = useState(null);
+  const [updateTrigger, setUpdateTrigger] = useState(false);
 
   useEffect(() => {
     getBadge().then((badge) => {
@@ -141,7 +143,7 @@ function HomeStack({ navigation }: any) {
   }, []);
 
   return (
-    <BadgeContext.Provider value={{ badge, setBadge }}>
+    <BadgeContext.Provider value={{ badge, setBadge, updateTrigger, setUpdateTrigger }}>
       <Tab.Navigator
         initialRouteName="QR card"
         screenOptions={({ route }) => ({
@@ -463,6 +465,13 @@ function App() {
                 component={AbonnementCompleteInfo}
                 options={{
                   title: 'Информация об абонементе',
+                }}
+              />
+              <Stack.Screen
+                name="RewardedActions"
+                component={RewardedActions}
+                options={{
+                  title: 'Бонусы за действия',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />

@@ -643,3 +643,31 @@ export async function getAbonnementVisits(abonnementId: string) {
     throw error; // You can choose to handle the error here or propagate it
   }
 }
+
+export async function getRewardedActionsByUserId(userId: string) {
+  try {
+    const requestData = {
+      userId: userId,
+    };
+
+    const response = await axios.post(`${Con.api}/rewardedactions/rewardedactionsbyuserid`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function executeRewardAction(rewardedActionId: string) {
+  try {
+    const requestData = {
+      rewardedActionId: rewardedActionId,
+    };
+
+    const response = await axios.post(`${Con.api}/rewardedactions/execute`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}

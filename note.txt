@@ -90,3 +90,6 @@ Components: BlueButton, LoyaltyCard
 
 1. Set bronze, silver etc Urls for Business models that are working right now
 2. Adjust Branch Model to existing businesses
+3. isRewardProposed adjust to all loyalty cards
+4. say that promotion title should be not more than ("Оставьте отзыв о BuddhaSpa в 2GIS и получите 1000 тг бонусов!") 62 symbols
+5. Call actionName like "Отзыв 2ГИС"
