@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView } from 'react-native';
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
@@ -8,7 +8,7 @@ Ionicons.loadFont();
 import NavigationRow from '../components/NavigationRow';
 import GrayButton from '../components/GrayButton';
 import { AuthContext } from '../contexts/AuthContext';
-import { removeFcmToken } from '../utils/api';
+import { getBusinessInfoByBid, removeFcmToken } from '../utils/api';
 import RedButton from '../components/RedButton';
 
 interface SettingsProps {
@@ -22,16 +22,38 @@ function Settings({ route, navigation }: SettingsProps) {
   const businessTitle = 'Бизнес';
   const quitTitle = 'Выйти';
   const deleteAccountTitle = 'Удалить аккаунт';
+  const currentBusinessNameTitle = 'Бизнес';
+  const statisticsTitle = 'Статистика';
 
   const [userData, setUserData] = useState([]);
+  const [currentBusiness, setCurrentBusiness] = useState([]);
 
   const { signOut } = useContext(AuthContext);
+
+  const getCurrentBusinessInfo = async (userData: any) => {
+    const currentUserType = userData.type;
+
+    // Checking if type is either 'Business' or 'Worker'
+    if (currentUserType === 'Business' || currentUserType === 'Worker') {
+      if (currentUserType === 'Business') {
+        const fetchedBusinessInfo = await getBusinessInfoByBid(userData.business);
+        setCurrentBusiness(fetchedBusinessInfo);
+      } else if (currentUserType === 'Worker') {
+        const fetchedBusinessInfo = await getBusinessInfoByBid(userData.workBusiness);
+        setCurrentBusiness(fetchedBusinessInfo);
+      }
+    } else {
+      console.log('Current users type is probably Client');
+    }
+  };
 
   useEffect(() => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then((asyncdata) => {
         Con.DEBUG && console.log('async data settings', asyncdata.userData);
         setUserData(asyncdata.userData);
+
+        getCurrentBusinessInfo(asyncdata.userData);
       })
       .catch((err) => {
         Con.DEBUG && console.log(err);
@@ -41,6 +63,7 @@ function Settings({ route, navigation }: SettingsProps) {
   const userTypeIcon = <Ionicons name="cog-outline" size={Con.iconSize} color={Con.iconColor} />;
   const userNameIcon = <Ionicons name="person-circle-outline" size={Con.iconSize} color={Con.iconColor} />;
   const phoneIcon = <Ionicons name="phone-portrait-sharp" size={Con.iconSize} color={Con.iconColor} />;
+  const currentBusinessIcon = <Ionicons name="business-outline" size={Con.iconSize} color={Con.iconColor} />;
 
   const businessSettingsOnPress = () => {
     navigation.navigate('BusinessSettings');
@@ -48,6 +71,10 @@ function Settings({ route, navigation }: SettingsProps) {
 
   const abonnementsOnPress = () => {
     navigation.navigate('Abonnements');
+  };
+
+  const statisticsOnPress = () => {
+    navigation.navigate('Statistics');
   };
 
   const accountDeletionOnPress = () => {
@@ -79,10 +106,16 @@ function Settings({ route, navigation }: SettingsProps) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
       {userData && (
         <View>
           <TextBlock text={`${accountTypeTitle}: ${userData.type}`} icon={userTypeIcon}></TextBlock>
+          {currentBusiness && (
+            <TextBlock
+              text={`${currentBusinessNameTitle}: ${currentBusiness.name}`}
+              icon={currentBusinessIcon}
+            ></TextBlock>
+          )}
           <TextBlock text={`${userData.name} ${userData.surname}`} icon={userNameIcon}></TextBlock>
           <TextBlock text={`${userData.phoneNumber}`} icon={phoneIcon}></TextBlock>
           {/* Show settings only for business */}
@@ -90,6 +123,7 @@ function Settings({ route, navigation }: SettingsProps) {
             <View style={styles.settingsContainer}>
               <NavigationRow text={businessTitle} onPress={businessSettingsOnPress} />
               <NavigationRow text={loyalClubAbonnementsTitle} onPress={abonnementsOnPress} />
+              <NavigationRow text={statisticsTitle} onPress={statisticsOnPress} />
             </View>
           )}
           {/* Show settings only for workers  */}
@@ -102,7 +136,7 @@ function Settings({ route, navigation }: SettingsProps) {
           <RedButton title={quitTitle} onPress={signOutAlert} />
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 

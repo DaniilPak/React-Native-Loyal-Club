@@ -31,3 +31,5 @@ export function formatToClassicDateStyle(targetDate: string): string {
 export function formatToClassicDateStyleWithTime(targetDate: any) {
   return moment(targetDate).format('DD.MM.YYYY HH:mm');
 }
+
+/// Function to get business id, considering user is Worker or Business Owner
