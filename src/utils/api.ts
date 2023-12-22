@@ -685,3 +685,47 @@ export async function getBusinessBaseStatistics(businessId: string) {
     throw error; // You can choose to handle the error here or propagate it
   }
 }
+
+export async function createVoucher(
+  businessId: string,
+  voucherCode: string,
+  voucherBonusAmount: number,
+  expirationDays: number
+) {
+  try {
+    const requestData = {
+      businessId: businessId,
+      voucherCode: voucherCode,
+      voucherBonusAmount: voucherBonusAmount,
+      expirationDays: expirationDays,
+    };
+
+    const response = await axios.post(`${Con.api}/voucher/createvoucher`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function getBusinessVouchers(businessId: string, jwtToken: string) {
+  try {
+    const requestData = {
+      businessId: businessId,
+    };
+
+    const headers = {
+      Authorization: jwtToken, // Replace "your_access_token" with your actual token
+    };
+
+    const config = {
+      headers: headers,
+    };
+
+    const response = await axios.post(`${Con.api}/voucher/getbusinessvouchers`, requestData, config);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}

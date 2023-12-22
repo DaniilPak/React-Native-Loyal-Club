@@ -56,6 +56,8 @@ import SuccessVisitCreation from './src/screens/SuccessVisitCreation';
 import AbonnementCompleteInfo from './src/screens/AbonnementCompleteInfo';
 import RewardedActions from './src/screens/RewardedActions';
 import Statistics from './src/screens/Statistics';
+import Vouchers from './src/screens/Vouchers';
+import VoucherCreation from './src/screens/VoucherCreation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -480,6 +482,20 @@ function App() {
                 component={Statistics}
                 options={{
                   title: 'Статистика',
+                }}
+              />
+              <Stack.Screen
+                name="Vouchers"
+                component={Vouchers}
+                options={{
+                  title: 'Ваучеры',
+                }}
+              />
+              <Stack.Screen
+                name="VoucherCreation"
+                component={VoucherCreation}
+                options={{
+                  title: 'Создание ваучера',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />

@@ -29,6 +29,10 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
     navigation.navigate('Announcements');
   };
 
+  const manageVouchers = () => {
+    navigation.navigate('Vouchers');
+  };
+
   const manageWorkersOnPress = () => {
     navigation.navigate('ManageWorkers');
   };
@@ -101,6 +105,7 @@ function BusinessSettings({ route, navigation }: BusinessSettingsScreenProps) {
   return (
     <View style={{ flex: 1, marginTop: 10 }}>
       <NavigationRow text="Анонсы" onPress={manageAnnouncements} />
+      <NavigationRow text="Ваучеры" onPress={manageVouchers} />
       <NavigationRow text="Управление сотрудниками" onPress={manageWorkersOnPress} />
       {businessDetails && (
         <NavigationRowExtended
