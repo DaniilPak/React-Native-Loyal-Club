@@ -54,6 +54,20 @@ export async function getLoyaltyCardDetails(_loyaltyCardId: string): Promise<any
   }
 }
 
+export async function getAllLoyaltyCardsByUserId(userId: string): Promise<any> {
+  try {
+    const requestData = {
+      userId: userId,
+    };
+
+    const response = await axios.post(`${Con.api}/loyaltycard/getallloyaltycardsbyuserid`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
 export async function getLastUsedLoyaltyCard(userId: string): Promise<any> {
   try {
     const requestData = {
@@ -723,6 +737,21 @@ export async function getBusinessVouchers(businessId: string, jwtToken: string) 
     };
 
     const response = await axios.post(`${Con.api}/voucher/getbusinessvouchers`, requestData, config);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
+
+export async function applyVoucher(voucherCode: string, userId: string) {
+  try {
+    const requestData = {
+      voucherCode: voucherCode,
+      userId: userId,
+    };
+
+    const response = await axios.post(`${Con.api}/voucher/applyvoucher`, requestData);
     return response.data;
   } catch (error) {
     Con.DEBUG && console.error(error);

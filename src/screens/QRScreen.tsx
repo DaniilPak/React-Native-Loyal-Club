@@ -45,6 +45,7 @@ function QRScreen({ navigation }: QRScreenProps) {
   const myLoyaltyCards = 'Карты лояльности';
   const myAbonnements = 'Сертификаты и абонементы';
   const rewardedBonusesTitle = 'Получить бонусы';
+  const voucherApplyTitle = 'Ввести промокод';
 
   useEffect(() => {
     fetchData();
@@ -214,6 +215,17 @@ function QRScreen({ navigation }: QRScreenProps) {
             )}
           </ShrinkableContainer>
           {/* Rewarded actions end*/}
+          {/* Vouchers */}
+          <ShrinkableContainer
+            onPress={() => {
+              navigation.navigate('ApplyVoucher');
+            }}
+          >
+            <View style={styles.rewardedActionsContainer}>
+              <Text style={styles.buttonText}>{voucherApplyTitle}</Text>
+            </View>
+          </ShrinkableContainer>
+          {/* Vouchers end*/}
           <ShrinkableContainer>
             <View style={styles.mainContainer}>
               <QRCode value={qr} size={qrSize} color="black" backgroundColor="white" />

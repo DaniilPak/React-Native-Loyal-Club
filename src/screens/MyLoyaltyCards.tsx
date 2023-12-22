@@ -5,7 +5,7 @@ Ionicons.loadFont();
 import Con from '../constants';
 import TextBlockV2 from '../components/TextBlockV2';
 import { getArrayFromLocalStorage } from '../utils/async';
-import { getBusinessInfoByBid, getLoyaltyCardDetails, getUserById } from '../utils/api';
+import { getAllLoyaltyCardsByUserId, getBusinessInfoByBid, getLoyaltyCardDetails, getUserById } from '../utils/api';
 import LoyaltyCard from '../components/LoyaltyCard';
 
 interface MyLoyaltyCardsScreenProps {
@@ -41,10 +41,11 @@ function MyLoyaltyCards({ route }: MyLoyaltyCardsScreenProps) {
       Con.DEBUG && console.log('User got: ', user);
 
       setUserData(asyncdata.userData);
-      const apiLoyaltyCards = user.loyaltyCards;
+      // const apiLoyaltyCards = user.loyaltyCards;
 
-      const loyaltyCardPromises = apiLoyaltyCards.map((loyaltyCardId) => getLoyaltyCardDetails(loyaltyCardId));
-      const tempLoyaltyCards = await Promise.all(loyaltyCardPromises);
+      // const loyaltyCardPromises = apiLoyaltyCards.map((loyaltyCardId) => getLoyaltyCardDetails(loyaltyCardId));
+      // const tempLoyaltyCards = await Promise.all(loyaltyCardPromises);
+      const tempLoyaltyCards = await getAllLoyaltyCardsByUserId(asyncdata.userData._id);
 
       /// Getting business data to get loyalty percent and show
       /// to user

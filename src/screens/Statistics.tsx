@@ -47,6 +47,10 @@ function Statistics({ route, navigation }: StatisticsProps) {
         currentBusinessBaseStat.workerStatistics.map((worker, index) => (
           <TextBlockV2 key={index} text={`${worker.workerName}: ${worker.workerStat}`} />
         ))}
+      {currentBusinessBaseStat?.voucherStatistics &&
+        currentBusinessBaseStat.voucherStatistics.map((voucher, index) => (
+          <TextBlockV2 key={index} text={`${voucher.voucherCode}: ${voucher.usedStat}`} />
+        ))}
     </ScrollView>
   );
 }

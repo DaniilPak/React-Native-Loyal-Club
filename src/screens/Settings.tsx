@@ -110,12 +110,13 @@ function Settings({ route, navigation }: SettingsProps) {
       {userData && (
         <View>
           <TextBlock text={`${accountTypeTitle}: ${userData.type}`} icon={userTypeIcon}></TextBlock>
-          {currentBusiness && (
-            <TextBlock
-              text={`${currentBusinessNameTitle}: ${currentBusiness.name}`}
-              icon={currentBusinessIcon}
-            ></TextBlock>
-          )}
+          {userData.type == 'Business' ||
+            (userData.type == 'Worker' && (
+              <TextBlock
+                text={`${currentBusinessNameTitle}: ${currentBusiness.name}`}
+                icon={currentBusinessIcon}
+              ></TextBlock>
+            ))}
           <TextBlock text={`${userData.name} ${userData.surname}`} icon={userNameIcon}></TextBlock>
           <TextBlock text={`${userData.phoneNumber}`} icon={phoneIcon}></TextBlock>
           {/* Show settings only for business */}

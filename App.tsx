@@ -58,6 +58,7 @@ import RewardedActions from './src/screens/RewardedActions';
 import Statistics from './src/screens/Statistics';
 import Vouchers from './src/screens/Vouchers';
 import VoucherCreation from './src/screens/VoucherCreation';
+import ApplyVoucher from './src/screens/ApplyVoucher';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -496,6 +497,14 @@ function App() {
                 component={VoucherCreation}
                 options={{
                   title: 'Создание ваучера',
+                }}
+              />
+
+              <Stack.Screen
+                name="ApplyVoucher"
+                component={ApplyVoucher}
+                options={{
+                  title: 'Ввести промокод',
                 }}
               />
               <Stack.Screen name="Conversation" component={Conversation} />
