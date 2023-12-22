@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView } from 'react-native';
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
@@ -8,8 +8,9 @@ Ionicons.loadFont();
 import NavigationRow from '../components/NavigationRow';
 import GrayButton from '../components/GrayButton';
 import { AuthContext } from '../contexts/AuthContext';
-import { getBusinessInfoByBid, removeFcmToken } from '../utils/api';
+import { getBusinessBaseStatistics, getBusinessInfoByBid, removeFcmToken } from '../utils/api';
 import RedButton from '../components/RedButton';
+import TextBlockV2 from '../components/TextBlockV2';
 
 interface StatisticsProps {
   navigation: any;
@@ -18,20 +19,36 @@ interface StatisticsProps {
 
 function Statistics({ route, navigation }: StatisticsProps) {
   const [userData, setUserData] = useState([]);
-  const [currentBusiness, setCurrentBusiness] = useState([]);
+  const [currentBusinessBaseStat, setCurrentBusinessBaseStat] = useState([]);
 
   useEffect(() => {
     getArrayFromLocalStorage(Con.API_AUTH_DATA_KEY)
       .then((asyncdata) => {
         Con.DEBUG && console.log('async data Statistics', asyncdata.userData);
         setUserData(asyncdata.userData);
+
+        const currentBusinessId = asyncdata.userData.business;
+
+        // Get business statistics
+        getBusinessBaseStatistics(currentBusinessId).then((bstat) => {
+          console.log('Bstat: ', bstat);
+          setCurrentBusinessBaseStat(bstat);
+        });
       })
       .catch((err) => {
         Con.DEBUG && console.log(err);
       });
   }, []);
 
-  return <View style={{ flex: 1 }}></View>;
+  return (
+    <ScrollView>
+      <TextBlockV2 text={`Оставлено отзывов: ${currentBusinessBaseStat?.rewardedActionsLength || 0}`} />
+      {currentBusinessBaseStat?.workerStatistics &&
+        currentBusinessBaseStat.workerStatistics.map((worker, index) => (
+          <TextBlockV2 key={index} text={`${worker.workerName}: ${worker.workerStat}`} />
+        ))}
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({});

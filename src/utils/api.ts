@@ -671,3 +671,17 @@ export async function executeRewardAction(rewardedActionId: string) {
     throw error; // You can choose to handle the error here or propagate it
   }
 }
+
+export async function getBusinessBaseStatistics(businessId: string) {
+  try {
+    const requestData = {
+      businessId: businessId,
+    };
+
+    const response = await axios.post(`${Con.api}/statistic/basestat`, requestData);
+    return response.data;
+  } catch (error) {
+    Con.DEBUG && console.error(error);
+    throw error; // You can choose to handle the error here or propagate it
+  }
+}
