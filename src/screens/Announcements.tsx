@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'center',
+    marginTop: 25,
   },
 });
 
