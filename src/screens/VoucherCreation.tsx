@@ -26,8 +26,7 @@ function VoucherCreation({ route, navigation }: VoucherCreationProps) {
 
   const handleInputChange = (text: any, inputField: string) => {
     if (inputField === 'voucherCode') {
-      const uppercaseCode = text.toUpperCase();
-      setVoucherCode(uppercaseCode);
+      setVoucherCode(text);
     } else if (inputField === 'bonusAmount') {
       setBonusAmount(text);
     } else if (inputField === 'daysBeforeExpiration') {
@@ -62,7 +61,7 @@ function VoucherCreation({ route, navigation }: VoucherCreationProps) {
 
       const createdVoucher = await createVoucher(
         currentBusinessId,
-        voucherCode,
+        voucherCode.toUpperCase(),
         bonusAmountNumber,
         daysBeforeExpirationNumber
       );

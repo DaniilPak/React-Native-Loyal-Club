@@ -15,6 +15,7 @@ interface ApplyVoucherProps {
 
 function ApplyVoucher({ route, navigation }: ApplyVoucherProps) {
   const applyVoucherTitle: string = 'Применить промокод';
+  const applyVoucherPlaceholder: string = 'промокод';
 
   const [userData, setUserData] = useState([]);
   const [voucherCode, setVoucherCode] = useState('');
@@ -22,11 +23,8 @@ function ApplyVoucher({ route, navigation }: ApplyVoucherProps) {
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [buttonIsLoading, setButtonIsLoading] = useState(false);
 
-  const handleInputChange = (text: any, inputField: string) => {
-    if (inputField === 'voucherCode') {
-      const uppercaseCode = text.toUpperCase();
-      setVoucherCode(uppercaseCode);
-    }
+  const handleInputChange = (text: any) => {
+    setVoucherCode(text);
 
     // Check if all fields are filled to enable the button
     if (voucherCode.length > 0) {
@@ -42,7 +40,8 @@ function ApplyVoucher({ route, navigation }: ApplyVoucherProps) {
     setButtonIsLoading(true);
 
     // Sending request
-    const appliedVoucher = await applyVoucher(voucherCode, userData._id);
+    const appliedVoucher = await applyVoucher(voucherCode.toUpperCase(), userData._id);
+    console.log('THe code: ', voucherCode.toUpperCase());
 
     console.log('FFF', appliedVoucher);
 
@@ -91,9 +90,9 @@ function ApplyVoucher({ route, navigation }: ApplyVoucherProps) {
       <TextInput
         placeholderTextColor={'gray'}
         style={styles.input}
-        placeholder="Код ваучера"
+        placeholder={applyVoucherPlaceholder}
         value={voucherCode}
-        onChangeText={(text) => handleInputChange(text, 'voucherCode')}
+        onChangeText={(text) => handleInputChange(text)}
       />
       <BlueButton
         title={applyVoucherTitle}
