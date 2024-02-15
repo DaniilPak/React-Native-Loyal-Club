@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView, Linking } from 'react-native';
 import Con from '../constants';
 import { getArrayFromLocalStorage } from '../utils/async';
 import TextBlock from '../components/TextBlock';
@@ -24,6 +24,7 @@ function Settings({ route, navigation }: SettingsProps) {
   const deleteAccountTitle = 'Удалить аккаунт';
   const currentBusinessNameTitle = 'Бизнес';
   const statisticsTitle = 'Статистика';
+  const privacyPolicyTitle = 'Политика конфиденциальности';
 
   const [userData, setUserData] = useState([]);
   const [currentBusiness, setCurrentBusiness] = useState([]);
@@ -79,6 +80,12 @@ function Settings({ route, navigation }: SettingsProps) {
 
   const accountDeletionOnPress = () => {
     navigation.navigate('AccountDeletion');
+  };
+
+  const privacyPolicyOnPress = () => {
+    const url = 'https://getloyalclub.paksol.ru/privacypolicy.html';
+
+    Linking.openURL(url);
   };
 
   const signOutAlert = () => {
@@ -138,6 +145,7 @@ function Settings({ route, navigation }: SettingsProps) {
               <NavigationRow text={loyalClubAbonnementsTitle} onPress={abonnementsOnPress} />
             </View>
           )}
+          <NavigationRow text={privacyPolicyTitle} onPress={privacyPolicyOnPress} />
           <NavigationRow text={deleteAccountTitle} onPress={accountDeletionOnPress} />
           <RedButton title={quitTitle} onPress={signOutAlert} />
         </View>

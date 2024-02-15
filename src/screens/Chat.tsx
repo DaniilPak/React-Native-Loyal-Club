@@ -138,7 +138,7 @@ function Chat({ route, navigation }: ChatProps) {
   }, []);
 
   return (
-    <View style={{ flex: 1, paddingTop: 15 }}>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={userRooms}
         renderItem={renderItem}
