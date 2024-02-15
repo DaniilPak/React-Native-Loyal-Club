@@ -319,195 +319,194 @@ function App() {
           <AuthContext.Provider value={authContext}>
             <Stack.Navigator>
               <Stack.Screen
-                name="HomeScanner"
+                name={Con.homeScanner}
                 component={HomeStack}
-                options={{ title: 'LoyalClub', headerTitleAlign: 'left' }}
+                options={{ title: Con.homeScannerTitle, headerTitleAlign: 'left' }}
               />
               <Stack.Screen name="QRDetail" component={QRDetail} />
               <Stack.Screen
-                name="MyLoyaltyCards"
+                name={Con.myLoyaltyCards}
                 component={MyLoyaltyCards}
                 options={{
-                  title: 'Мои карты',
+                  title: Con.myLoyaltyCardsTitle,
                 }}
               />
               <Stack.Screen
-                name="BusinessSettings"
+                name={Con.businessSettings}
                 component={BusinessSettings}
                 options={{
-                  title: 'Бизнес',
+                  title: Con.businessSettingsTitle,
                 }}
               />
               <Stack.Screen
-                name="SuccessPayment"
+                name={Con.successPayment}
                 component={SuccessPayment}
                 options={{
-                  title: 'Успешная оплата',
+                  title: Con.successPaymentTitle,
                 }}
               />
               <Stack.Screen
-                name="SuccessAbonnementCreation"
+                name={Con.successAbonnementCreation}
                 component={SuccessAbonnementCreation}
                 options={{
-                  title: 'Успешное создание абонемента',
+                  title: Con.successAbonnementCreationTitle,
                 }}
               />
               <Stack.Screen
-                name="ReceiptDetails"
+                name={Con.receiptDetails}
                 component={ReceiptDetails}
                 options={{
-                  title: 'Детали платежа',
+                  title: Con.receiptDetailsTitle,
                 }}
               />
               <Stack.Screen
-                name="ManageWorkers"
+                name={Con.manageWorkers}
                 component={ManageWorkers}
                 options={{
-                  title: 'Сотрудники',
+                  title: Con.manageWorkersTitle,
                 }}
               />
               <Stack.Screen
-                name="AddWorkerScanner"
+                name={Con.addWorkerScanner}
                 component={AddWorkerScanner}
                 options={{
-                  title: 'Добавить сотрудника',
+                  title: Con.addWorkerScannerTitle,
                 }}
               />
               <Stack.Screen
-                name="AccountDeletion"
+                name={Con.accountDeletion}
                 component={AccountDeletion}
                 options={{
-                  title: 'Удаление Аккаунта',
+                  title: Con.accountDeletionTitle,
                 }}
               />
               <Stack.Screen
-                name="Announcements"
+                name={Con.announcements}
                 component={Announcements}
                 options={{
-                  title: 'Анонсы',
+                  title: Con.announcementsTitle,
                 }}
               />
               <Stack.Screen
-                name="Scan QR"
+                name={Con.scanQR}
                 component={HomeScanner}
                 options={{
-                  title: 'Сканировать QR',
+                  title: Con.scanQRTitle,
                 }}
               />
               <Stack.Screen
-                name="History"
+                name={Con.history}
                 component={History}
                 options={{
-                  title: 'История',
+                  title: Con.historyTitle,
                 }}
               />
               <Stack.Screen
-                name="Abonnements"
+                name={Con.abonnements}
                 component={Abonnements}
                 options={{
-                  title: 'Абонементы',
+                  title: Con.abonnementsTitle,
                 }}
               />
               <Stack.Screen
-                name="UserAbonnements"
+                name={Con.userAbonnements}
                 component={UserAbonnements}
                 options={{
-                  title: 'Мои абонементы',
+                  title: Con.userAbonnementsTitle,
                 }}
               />
               <Stack.Screen
-                name="ScanAbonnement"
+                name={Con.scanAbonnement}
                 component={ScanAbonnement}
                 options={{
-                  title: 'Сканировать абонемент',
+                  title: Con.scanAbonnementTitle,
                 }}
               />
               <Stack.Screen
-                name="ScanAbonnementDetails"
+                name={Con.scanAbonnementDetails}
                 component={ScanAbonnementDetails}
                 options={{
-                  title: 'Детали абонемента',
+                  title: Con.scanAbonnementDetailsTitle,
                 }}
               />
               <Stack.Screen
-                name="CreateAbonnement"
+                name={Con.createAbonnement}
                 component={CreateAbonnement}
                 options={{
-                  title: 'Создать абонемент',
+                  title: Con.createAbonnementTitle,
                 }}
               />
               <Stack.Screen
-                name="CreateAbonnementDetails"
+                name={Con.createAbonnementDetails}
                 component={CreateAbonnementDetails}
                 options={{
-                  title: 'Создание абонемента',
+                  title: Con.createAbonnementDetailsTitle,
                 }}
               />
               <Stack.Screen
-                name="AllAbonnements"
+                name={Con.allAbonnements}
                 component={AllAbonnements}
                 options={{
-                  title: 'Все абонементы',
+                  title: Con.allAbonnementsTitle,
                 }}
               />
               <Stack.Screen
-                name="AbonnementVisitConfirmation"
+                name={Con.abonnementVisitConfirmation}
                 component={AbonnementVisitConfirmation}
                 options={{
-                  title: 'Подтверждение визита',
+                  title: Con.abonnementVisitConfirmationTitle,
                 }}
               />
               <Stack.Screen
-                name="SuccessVisitCreation"
+                name={Con.successVisitCreation}
                 component={SuccessVisitCreation}
                 options={{
-                  title: 'Успешное создание визита',
+                  title: Con.successVisitCreationTitle,
                 }}
               />
               <Stack.Screen
-                name="AbonnementCompleteInfo"
+                name={Con.abonnementCompleteInfo}
                 component={AbonnementCompleteInfo}
                 options={{
-                  title: 'Информация об абонементе',
+                  title: Con.abonnementCompleteInfoTitle,
                 }}
               />
               <Stack.Screen
-                name="RewardedActions"
+                name={Con.rewardedActions}
                 component={RewardedActions}
                 options={{
-                  title: 'Бонусы за действия',
+                  title: Con.rewardedActionsTitle,
                 }}
               />
               <Stack.Screen
-                name="Statistics"
+                name={Con.statistics}
                 component={Statistics}
                 options={{
-                  title: 'Статистика',
+                  title: Con.statisticsTitle,
                 }}
               />
               <Stack.Screen
-                name="Vouchers"
+                name={Con.vouchers}
                 component={Vouchers}
                 options={{
-                  title: 'Ваучеры',
+                  title: Con.vouchersTitle,
                 }}
               />
               <Stack.Screen
-                name="VoucherCreation"
+                name={Con.voucherCreation}
                 component={VoucherCreation}
                 options={{
-                  title: 'Создание ваучера',
+                  title: Con.voucherCreationTitle,
                 }}
               />
-
               <Stack.Screen
-                name="ApplyVoucher"
+                name={Con.applyVoucher}
                 component={ApplyVoucher}
                 options={{
-                  title: 'Ввести промокод',
+                  title: Con.applyVoucherTitle,
                 }}
               />
-              <Stack.Screen name="Conversation" component={Conversation} />
+              <Stack.Screen name={Con.conversation} component={Conversation} />
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>
@@ -528,9 +527,9 @@ function App() {
         <NavigationContainer>
           <AuthContext.Provider value={authContext}>
             <Stack.Navigator>
-              <Stack.Screen name="Auth" component={Auth} options={{ header: () => null }} />
-              <Stack.Screen name="Confirmation" component={Confirmation} options={{ header: () => null }} />
-              <Stack.Screen name="Registration" component={Registration} options={{ header: () => null }} />
+              <Stack.Screen name={Con.auth} component={Auth} options={{ header: () => null }} />
+              <Stack.Screen name={Con.confirmation} component={Confirmation} options={{ header: () => null }} />
+              <Stack.Screen name={Con.registration} component={Registration} options={{ header: () => null }} />
             </Stack.Navigator>
           </AuthContext.Provider>
         </NavigationContainer>
