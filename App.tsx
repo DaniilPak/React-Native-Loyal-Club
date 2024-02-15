@@ -159,7 +159,7 @@ function HomeStack({ navigation }: any) {
               return <Ionicons name="qr-code" size={iconSize} color={iconColor} />;
             } else if (rn === 'Setttings') {
               iconColor = focused ? blueColor : '#999';
-              return <Ionicons name="settings-outline" size={iconSize} color={iconColor} />;
+              return <Ionicons name="person-outline" size={iconSize} color={iconColor} />;
             } else if (rn === 'Chat') {
               iconColor = focused ? blueColor : '#999';
               return <Ionicons name="chatbubbles-outline" size={iconSize} color={iconColor} />;
@@ -168,28 +168,28 @@ function HomeStack({ navigation }: any) {
         })}
       >
         <Tab.Screen
-          name="Chat"
+          name={Con.chat}
           component={Chat}
           options={{
             header: () => null,
-            title: 'Сообщения',
+            title: Con.chatTitle,
             tabBarBadge: badge,
           }}
         />
         <Tab.Screen
-          name="QR card"
+          name={Con.qrCard}
           component={QRScreen}
           options={{
             header: () => null,
-            title: 'Мой QR',
+            title: Con.qrCardTitle,
           }}
         />
         <Tab.Screen
-          name="Setttings"
+          name={Con.setttings}
           component={Settings}
           options={{
             header: () => null,
-            title: 'Настройки',
+            title: Con.setttingsTitle,
           }}
         />
       </Tab.Navigator>

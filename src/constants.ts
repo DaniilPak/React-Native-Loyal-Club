@@ -95,6 +95,9 @@ const Con = {
   auth: 'Auth',
   confirmation: 'Confirmation',
   registration: 'Registration',
+  chat: 'Chat',
+  qrCard: 'QR card',
+  setttings: 'Setttings',
 
   // Titles
   homeScannerTitle: 'LoyalClub',
@@ -125,6 +128,9 @@ const Con = {
   vouchersTitle: 'Ваучеры',
   voucherCreationTitle: 'Создание ваучера',
   applyVoucherTitle: 'Ввести промокод',
+  chatTitle: 'Сообщения',
+  qrCardTitle: 'Мой QR',
+  setttingsTitle: 'Аккаунт',
 };
 
 export default Con;
