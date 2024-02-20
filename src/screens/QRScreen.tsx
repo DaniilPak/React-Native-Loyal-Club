@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Linking } from 'react-native';
 import { Text } from 'react-native-paper';
 import QRCode from 'react-native-qrcode-svg';
 import { getArrayFromLocalStorage } from '../utils/async';
@@ -17,6 +17,7 @@ import HalfScreenButtons from '../components/HalfScreenButton';
 import HalfScreenButtonsContainer from '../components/HalfScreenButtonsContainer';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { BadgeContext } from '../contexts/BadgeContext';
+import SocialButton from '../components/SocialButton';
 Octicons.loadFont();
 
 interface QRScreenProps {
@@ -27,6 +28,8 @@ function QRScreen({ navigation }: QRScreenProps) {
   const [qr, setQr] = useState('');
   const [greeting, setGreeting] = useState('');
   const [userData, setUserData] = useState([]);
+  const [businessName, setBusinessName] = useState('');
+  const [latestBusiness, setLatestBusiness] = useState();
 
   /// Context stuff
   const { updateTrigger } = useContext(BadgeContext);
@@ -52,6 +55,10 @@ function QRScreen({ navigation }: QRScreenProps) {
     // Redirect if reward actions exist
     getRewardedActions();
   }, [updateTrigger]); // This will now only execute when updateTrigger changes
+
+  const linkOnPress = (url: string) => {
+    Linking.openURL(url);
+  };
 
   async function fetchData() {
     try {
@@ -81,6 +88,9 @@ function QRScreen({ navigation }: QRScreenProps) {
       }
 
       const lastUsedLoyaltyCardBusinessData = await getBusinessInfoByBid(lastUsedLoyaltyCard.business);
+
+      setLatestBusiness(lastUsedLoyaltyCardBusinessData);
+      setBusinessName(lastUsedLoyaltyCardBusinessData.name);
 
       const bonusAmountWithCurrency = `${lastUsedLoyaltyCard.bonusAmount} ${lastUsedLoyaltyCardBusinessData.currencySign}`;
       const businessLoyaltyLvls = lastUsedLoyaltyCardBusinessData.loyaltyLevels;
@@ -241,15 +251,34 @@ function QRScreen({ navigation }: QRScreenProps) {
 
         {/* Last used loyalty card */}
         {loyaltyCardIsLoaded && (
-          <LoyaltyCard
-            businessName={`${selectedLvl.name} ${selectedLvl.percent}%`}
-            bonusAmount={bonusAmountWithCurrency}
-            pictureUrl={pictureUrl}
-            prevLvl={`${selectedLvl.name}`}
-            nextLvl={nextLevelName}
-            progressStat={progressStat}
-            progressVal={progressVal}
-          />
+          <View>
+            <View style={styles.labelContainer}>
+              <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
+                <Text variant="headlineMedium">{businessName}</Text>
+              </View>
+            </View>
+            <LoyaltyCard
+              businessName={`${selectedLvl.name} ${selectedLvl.percent}%`}
+              bonusAmount={bonusAmountWithCurrency}
+              pictureUrl={pictureUrl}
+              prevLvl={`${selectedLvl.name}`}
+              nextLvl={nextLevelName}
+              progressStat={progressStat}
+              progressVal={progressVal}
+            />
+            {latestBusiness && latestBusiness.socialButtons && (
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: '100%', paddingLeft: 5, paddingRight: 5 }}>
+                {latestBusiness.socialButtons.map((button: any) => (
+                  <SocialButton
+                    title={button.name}
+                    onPress={() => {
+                      linkOnPress(button.link);
+                    }}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
         )}
       </View>
     </ScrollView>
