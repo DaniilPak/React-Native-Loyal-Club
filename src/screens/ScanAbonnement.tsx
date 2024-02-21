@@ -17,35 +17,18 @@ interface ScanAbonnementProps {
 
 function ScanAbonnement({ route, navigation }: ScanAbonnementProps) {
   const cameraRef = useRef<RNCamera | null>(null);
-  const [isReaded, setIsReaded] = useState(false);
 
   const handleBarCodeRead = (event: BarCodeReadEvent) => {
-    if (isReaded) {
-      Con.DEBUG && console.log('Qr is readed');
-      return;
-    }
-
-    console.log('event.data', event.data);
-
     const qrReadedCode = event.data;
 
     getUserById(qrReadedCode)
       .then((user) => {
-        console.log('User got: ', user);
-
         if (user) {
           navigation.navigate('ScanAbonnementDetails', { qrData: event.data });
         }
       })
       .catch((err) => {
         console.log('Cant get user in home scanner: ', err);
-
-        // User not found
-        setIsReaded(true);
-
-        pushAlert('QR-код не зарегистрирован в системе', 'Пожалуйста, попробуйте действительный QR-код', () => {
-          setIsReaded(false);
-        });
       });
   };
 

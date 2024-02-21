@@ -11,35 +11,18 @@ interface HomeScannerProps {
 
 function HomeScanner({ navigation }: HomeScannerProps) {
   const cameraRef = useRef<RNCamera | null>(null);
-  const [isReaded, setIsReaded] = useState(false);
 
   const handleBarCodeRead = (event: BarCodeReadEvent) => {
-    if (isReaded) {
-      Con.DEBUG && console.log('Qr is readed');
-      return;
-    }
-
-    Con.DEBUG && console.log(event.data);
-
     const qrReadedCode = event.data;
 
     getUserById(qrReadedCode)
       .then((user) => {
-        Con.DEBUG && console.log('User got: ', user);
-
         if (user) {
           navigation.navigate('QRDetail', { qrData: event.data });
         }
       })
       .catch((err) => {
         Con.DEBUG && console.log('Cant get user in home scanner: ', err);
-
-        // User not found
-        setIsReaded(true);
-
-        pushAlert('QR-код не зарегистрирован в системе', 'Пожалуйста, попробуйте действительный QR-код', () => {
-          setIsReaded(false);
-        });
       });
   };
 
