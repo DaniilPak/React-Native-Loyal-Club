@@ -14,9 +14,9 @@ interface AbonnementsProps {
 }
 
 function Abonnements({ route, navigation }: AbonnementsProps) {
-  const scanAbonnement = 'Сканировать абонемент';
-  const showAllAbonnements = 'Все абонементы';
-  const addNewAbonnement = 'Создать абонемент';
+  const scanAbonnement = 'Сканировать сертификат или абонемент';
+  const showAllAbonnements = 'Все сертификаты и абонементы';
+  const addNewAbonnement = 'Создать сертификат или абонемент';
 
   const [asyncdata, setAsyncdata] = useState([]);
 

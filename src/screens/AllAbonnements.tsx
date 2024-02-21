@@ -95,7 +95,7 @@ function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
         data={activeAbonnements}
         keyExtractor={(item) => item._id}
         renderItem={renderAbonnementItem}
-        ListEmptyComponent={<EmptyListMessage title="Нет активных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет активных сертификатов или абонементов" />}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
     );
@@ -163,7 +163,7 @@ function InactiveAbonnements({ route }: InactiveAbonnementsProps) {
         data={inactiveAbonnements}
         keyExtractor={(item) => item._id}
         renderItem={renderAbonnementItem}
-        ListEmptyComponent={<EmptyListMessage title="Нет неактивных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет неактивных сертификатов или абонементов" />}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
     );

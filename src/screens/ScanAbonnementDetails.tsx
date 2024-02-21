@@ -102,7 +102,7 @@ function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
             }}
           />
         )}
-        ListEmptyComponent={<EmptyListMessage title="Нет активных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет активных сертификатов или абонементов" />}
         ListHeaderComponent={<Text variant="displaySmall" style>{`${client.name} ${client.surname}`}</Text>}
         ListHeaderComponentStyle={{ padding: 15 }}
         contentContainerStyle={{ paddingBottom: 100 }}
@@ -162,7 +162,7 @@ function InactiveAbonnements({ route }: InactiveAbonnements) {
             onPress={() => {}}
           />
         )}
-        ListEmptyComponent={<EmptyListMessage title="Нет неактивных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет неактивных сертификатов или абонементов" />}
         ListHeaderComponent={<Text variant="displaySmall" style>{`${client.name} ${client.surname}`}</Text>}
         ListHeaderComponentStyle={{ padding: 15 }}
         contentContainerStyle={{ paddingBottom: 100 }}

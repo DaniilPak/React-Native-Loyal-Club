@@ -33,3 +33,7 @@ export function formatToClassicDateStyleWithTime(targetDate: any) {
 }
 
 /// Function to get business id, considering user is Worker or Business Owner
+
+export function formatNumberWithSpaces(num: number | string): string {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}

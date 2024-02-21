@@ -8,6 +8,7 @@ import NavigationRowSuperExtended from '../components/NavigationRowSuperExtended
 import { timeLeftUntilDate } from '../utils/helper';
 import Loading from './Loading';
 import EmptyListMessage from '../components/EmptyListMessage';
+import AbonnementView from '../components/AbonnementView';
 
 interface UserAbonnementsProps {
   navigation: any;
@@ -50,12 +51,21 @@ function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
   /// Methods
   function renderAbonnementItem({ item }: any) {
     return (
-      <NavigationRowSuperExtended
-        text={`${item.businessDetails.name} - абонемент`}
-        secondaryText={`${item.value}/${item.totalValue} ${item.currency}`}
-        thirdText={`до окончания: ${timeLeftUntilDate(item.endDate)}`}
-        fourthText={`Название: ${item.name}`}
-        fifthText={`Цена: ${item.price} ${item.businessDetails.currencySign}`}
+      // <NavigationRowSuperExtended
+      //   text={`${item.businessDetails.name} - абонемент`}
+      //   secondaryText={`${item.value}/${item.totalValue} ${item.currency}`}
+      //   thirdText={`до окончания: ${timeLeftUntilDate(item.endDate)}`}
+      //   fourthText={`Название: ${item.name}`}
+      //   fifthText={`Цена: ${item.price} ${item.businessDetails.currencySign}`}
+      //   onPress={() => {
+      //     navigation.navigate('AbonnementCompleteInfo', { abonnementId: item._id });
+      //   }}
+      // />
+      <AbonnementView
+        abonnementName={`${item.name}`}
+        pictureUrl={item.businessDetails.abonnementPic}
+        valueLeft={`${item.value}/${item.totalValue} ${item.currency}`}
+        timeLeft={`${timeLeftUntilDate(item.endDate)}`}
         onPress={() => {
           navigation.navigate('AbonnementCompleteInfo', { abonnementId: item._id });
         }}
@@ -90,7 +100,7 @@ function ActiveAbonnements({ route }: ActiveAbonnementsProps) {
         data={activeAbonnements}
         keyExtractor={(item) => item._id}
         renderItem={renderAbonnementItem}
-        ListEmptyComponent={<EmptyListMessage title="Нет активных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет активных сертификатов или абонементов" />}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
     );
@@ -113,12 +123,21 @@ function InactiveAbonnements({ route }: InactiveAbonnementsProps) {
 
   function renderAbonnementItem({ item }: any) {
     return (
-      <NavigationRowSuperExtended
-        text={`${item.businessDetails.name} - абонемент`}
-        secondaryText={`${item.value}/${item.totalValue} ${item.currency}`}
-        thirdText={`до окончания: ${timeLeftUntilDate(item.endDate)}`}
-        fourthText={`Название: ${item.name}`}
-        fifthText={`Цена: ${item.price} ${item.businessDetails.currencySign}`}
+      // <NavigationRowSuperExtended
+      //   text={`${item.businessDetails.name} - абонемент`}
+      //   secondaryText={`${item.value}/${item.totalValue} ${item.currency}`}
+      //   thirdText={`до окончания: ${timeLeftUntilDate(item.endDate)}`}
+      //   fourthText={`Название: ${item.name}`}
+      //   fifthText={`Цена: ${item.price} ${item.businessDetails.currencySign}`}
+      //   onPress={() => {
+      //     navigation.navigate('AbonnementCompleteInfo', { abonnementId: item._id });
+      //   }}
+      // />
+      <AbonnementView
+        abonnementName={`${item.name}`}
+        pictureUrl={item.businessDetails.abonnementPic}
+        valueLeft={`${item.value}/${item.totalValue} ${item.currency}`}
+        timeLeft={`${timeLeftUntilDate(item.endDate)}`}
         onPress={() => {
           navigation.navigate('AbonnementCompleteInfo', { abonnementId: item._id });
         }}
@@ -153,7 +172,7 @@ function InactiveAbonnements({ route }: InactiveAbonnementsProps) {
         data={inactiveAbonnements}
         keyExtractor={(item) => item._id}
         renderItem={renderAbonnementItem}
-        ListEmptyComponent={<EmptyListMessage title="Нет неактивных абонементов" />}
+        ListEmptyComponent={<EmptyListMessage title="Нет неактивных сертификатов или абонементов" />}
         contentContainerStyle={{ paddingBottom: 100 }}
       />
     );
