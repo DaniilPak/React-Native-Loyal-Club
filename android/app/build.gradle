@@ -101,9 +101,9 @@ android {
         missingDimensionStrategy 'react-native-camera', 'general'
         applicationId "com.loyalclub"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 12
-        versionName "12.0"
+        targetSdkVersion 34
+        versionCode 17
+        versionName "17.0"
     }
 
     splits {
