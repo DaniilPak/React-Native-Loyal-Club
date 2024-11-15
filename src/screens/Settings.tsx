@@ -83,7 +83,7 @@ function Settings({ route, navigation }: SettingsProps) {
   };
 
   const privacyPolicyOnPress = () => {
-    const url = 'https://getloyalclub.paksol.ru/privacypolicy.html';
+    const url = Con.privacyPolicy;
 
     Linking.openURL(url);
   };
