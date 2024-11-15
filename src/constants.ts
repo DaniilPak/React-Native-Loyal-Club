@@ -43,13 +43,16 @@ const Con = {
   // ws://18.118.84.185:9000
   // ws://18.118.84.185:9001
 
-  api: 'http://18.118.84.185:3000/api',
-  ws: 'ws://18.118.84.185:9000',
-  ws2: 'ws://18.118.84.185:9001',
+  // New domain http://18.191.146.59
+
+  api: 'http://18.191.146.59:3000/api',
+  ws: 'ws://18.191.146.59:9000',
+  ws2: 'ws://18.191.146.59:9001',
   API_AUTH_DATA_KEY: 'authdata',
   PHONE_ASYNC_KEY: 'phone',
   PASSWORD_ASYNC_KEY: 'password',
   DEBUG: false,
+  privacyPolicy: "http://18.191.146.59:3000/images/image-1726815458918.html",
 
   // Codes
   updateChatCode: 'updatechatcode',
@@ -60,7 +63,7 @@ const Con = {
   borderSize: 220,
 
   /// Used in Qr Card, HalfScreenButtons, LoyaltyCard
-  universalBorderRadius: 40,
+  universalBorderRadius: 10,
 
   homeScanner: 'HomeScanner',
   qrDetail: 'QRDetail',

@@ -83,7 +83,7 @@ function Settings({ route, navigation }: SettingsProps) {
   };
 
   const privacyPolicyOnPress = () => {
-    const url = 'http://18.118.84.185:3000/images/image-1726815458918.html';
+    const url = Con.privacyPolicy;
 
     Linking.openURL(url);
   };

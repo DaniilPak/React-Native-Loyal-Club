@@ -26,7 +26,6 @@ interface QRScreenProps {
 
 function QRScreen({ navigation }: QRScreenProps) {
   const [qr, setQr] = useState('');
-  const [greeting, setGreeting] = useState('');
   const [userData, setUserData] = useState([]);
   const [businessName, setBusinessName] = useState('');
   const [latestBusiness, setLatestBusiness] = useState();
@@ -72,8 +71,6 @@ function QRScreen({ navigation }: QRScreenProps) {
       Con.DEBUG && console.log('My userId', userData._id);
       setQr(userData._id);
       setUserData(userData);
-
-      setCurrentGreeting();
 
       /// Get rewarded actions
       const fetchedRewardedActions = await getRewardedActionsByUserId(userData._id);
@@ -161,19 +158,6 @@ function QRScreen({ navigation }: QRScreenProps) {
     }
   }
 
-  function setCurrentGreeting() {
-    const currentHour = new Date().getHours();
-    let greeting = 'Добрый вечер';
-
-    if (currentHour < 12) {
-      greeting = 'Доброе утро';
-    } else if (currentHour < 18) {
-      greeting = 'Добрый день';
-    }
-
-    setGreeting(greeting);
-  }
-
   const showMyLoyaltyCards = () => {
     navigation.navigate('MyLoyaltyCards');
   };
@@ -202,13 +186,6 @@ function QRScreen({ navigation }: QRScreenProps) {
       {qr && (
         <View>
           <View style={styles.labelContainer}>
-            {userData && (
-              <View style={{ flexDirection: 'row' }}>
-                <Text variant="headlineMedium">
-                  {greeting}, {userData.name}!
-                </Text>
-              </View>
-            )}
           </View>
           {/* Rewarded actions */}
           <ShrinkableContainer
@@ -287,14 +264,8 @@ function QRScreen({ navigation }: QRScreenProps) {
 
 const styles = StyleSheet.create({
   labelContainer: {
-    paddingTop: 20,
+    paddingTop: 10,
     paddingBottom: 20,
-  },
-  greeting: {
-    color: '#333',
-    fontSize: 25,
-    fontWeight: '800',
-    marginVertical: 10,
   },
   mainContainer: {
     alignItems: 'center',
